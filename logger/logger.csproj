@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
+        <Nullable>enable</Nullable>
         <TargetFramework>net5.0</TargetFramework>
         <RootNamespace>Logger</RootNamespace>
     </PropertyGroup>
