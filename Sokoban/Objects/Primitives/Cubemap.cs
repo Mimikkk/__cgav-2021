@@ -4,18 +4,19 @@ using System.Runtime.InteropServices;
 using Silk.NET.OpenGL;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
+using Sokoban;
 using Sokoban.Utilities;
 using Sokoban.Utilities.Extensions;
 
-namespace Sokoban.Primitives
+namespace sokoban.Objects.Primitives
 {
 public class Cubemap : IDisposable
 {
   public string Name { get; }
 
-  public void Bind()
+  public void Bind(int textureSlot = 0)
   {
-    Application.Gl.ActiveTexture(TextureUnit.Texture0);
+    Application.Gl.ActiveTexture(TextureUnit.Texture0 + textureSlot);
     Application.Gl.BindTexture(TextureTarget.TextureCubeMap, Handle);
   }
   public void Dispose() => Application.Gl.DeleteTexture(Handle);
@@ -30,7 +31,7 @@ public class Cubemap : IDisposable
   private void Load()
   {
     Bind();
-    Faces.ForEach(UseFace);
+    Faces.ForEach(LoadImage);
     Application.Gl.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureWrapS, (int)GLEnum.ClampToEdge);
     Application.Gl.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureWrapT, (int)GLEnum.ClampToEdge);
     Application.Gl.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureWrapR, (int)GLEnum.ClampToEdge);
@@ -39,11 +40,11 @@ public class Cubemap : IDisposable
     Application.Gl.GenerateTextureMipmap(Handle);
   }
 
-  private unsafe void UseFace(Path face, int i)
+  private unsafe void LoadImage(Path path, int index)
   {
-    var image = (Image<Rgba32>)Image.Load(face.ToString());
+    var image = (Image<Rgba32>)Image.Load(path.ToString());
     fixed (void* data = &MemoryMarshal.GetReference(image.GetPixelRowSpan(0)))
-      Application.Gl.TexImage2D(TextureTarget.TextureCubeMapPositiveX + i, 0, (int)InternalFormat.Rgba,
+      Application.Gl.TexImage2D(TextureTarget.TextureCubeMapPositiveX + index, 0, (int)InternalFormat.Rgba,
         (uint)image.Width, (uint)image.Height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, data);
   }
 
