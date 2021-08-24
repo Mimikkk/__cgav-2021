@@ -8,8 +8,8 @@ public class Filesystem
   private static readonly Path Platform = Working / "..";
   private static readonly Path Bin = Platform / "..";
   private static readonly Path Project = Bin / "..";
-  private static readonly Path Resources = Project / "resources";
-  public static readonly Path Shaders = Resources / "shaders";
-  public static readonly Path Textures = Resources / "textures";
-  public static readonly Path Objects = Resources / "objects";
+  private static readonly Path Resources = Project / "Resources";
+  public static readonly Path Shaders = Resources / "Shaders";
+  public static readonly Path Textures = Resources / "Textures";
+  public static readonly Path Objects = Resources / "Objects";
 }}

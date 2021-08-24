@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Linq;
 
 namespace Sokoban.Utilities.Extensions
 {
@@ -14,5 +17,11 @@ public static partial class Extension
   {
     if (predicate) action(arg);
   }
+
+  public static IEnumerable<(T item, int index)> Enumerate<T>(this IEnumerable<T> source) =>
+    source.Select((item, index) => (item, index));
+
+  public static void ForEach<T>(this IEnumerable<T> source, Action<T, int> action) =>
+    source.Select((e, i) => (e, i)).ToImmutableList().ForEach(pair => action(pair.e, pair.i));
 }
 }
