@@ -14,26 +14,24 @@ public static class Application
 {
   public static void Run() => Window.Run();
   public static GL Gl { get; private set; } = null!;
-  public static IKeyboard Keyboard { get; private set; } = null!;
-  public static IMouse Mouse { get; private set; } = null!;
 
   static Application()
   {
     Window = Create(Options);
-    Controller.OnLoad(SetupInput);
-    Controller.OnLoad(SetupOpenGl);
-    Controller.OnLoad(() => Window.Center());
-    Controller.OnLoad(() => Controller.OnKeyDown(Key.Escape, Window.Close));
+    Controller.OnLoad(Setup);
+    Controller.OnLoad(SetupController);
   }
 
-  private static void SetupOpenGl() => Gl = GL.GetApi(Window);
-  private static void SetupInput()
+  private static void Setup()
   {
-    InputContext = Window.CreateInput();
-    (InputContext.Keyboards.Count > 0).Then(() => Keyboard = InputContext.Keyboards[0]);
-    (InputContext.Mice.Count > 0).Then(() => Mouse = InputContext.Mice[0]);
+    Window.Center();
+    SetupOpenGl();
+    Controller.Setup(Window);
   }
-
+  private static void SetupOpenGl() => Gl = GL.GetApi(Window);
+  
+  private static void SetupController() => Controller.OnHold(Key.Escape, Window.Close);
+  
   private static readonly WindowOptions Options = new() {
     API = new GraphicsAPI(ContextAPI.OpenGL, ContextProfile.Core, ContextFlags.Debug, new APIVersion(new Version(4, 6, 0))),
     Title = "Grafika Komputerowa i Wizualizacja - Sokoban",
@@ -53,7 +51,6 @@ public static class Application
     IsVisible = true,
     VSync = true
   };
-  private static IInputContext InputContext { get; set; } = null!;
   public static readonly IWindow Window;
 }
 }

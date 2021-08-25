@@ -1,7 +1,7 @@
 ﻿using Logger;
 using Silk.NET.Maths;
 
-namespace sokoban.Objects.Primitives
+namespace sokoban.Objects.Textures
 {
 public class Material
 {

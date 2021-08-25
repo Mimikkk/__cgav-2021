@@ -1,7 +1,7 @@
 ﻿using System;
 using Silk.NET.Maths;
 
-namespace sokoban.Objects
+namespace Sokoban.Objects
 {
 public class Camera
 {

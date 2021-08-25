@@ -2,7 +2,6 @@
 using System.Numerics;
 using Silk.NET.Input;
 using Silk.NET.Maths;
-using Sokoban;
 using Sokoban.Utilities.Extensions;
 
 namespace Sokoban.Controllers
@@ -10,22 +9,22 @@ namespace Sokoban.Controllers
 public static partial class Controller
 {
   public static void OnClick(MouseButton button, Action<Vector2D<double>> action, Func<bool>? when = null) =>
-    Application.Mouse.Click += HandleOnClick(button, action, when);
+    Mouse.Click += HandleOnClick(button, action, when);
 
   public static void OnDoubleClick(MouseButton button, Action<Vector2D<double>> action, Func<bool>? when = null) =>
-    Application.Mouse.DoubleClick += HandleOnClick(button, action, when);
+    Mouse.DoubleClick += HandleOnClick(button, action, when);
 
   public static void OnScroll(Action<Vector2D<double>> action, Func<bool>? when = null) =>
-    Application.Mouse.Scroll += HandleOnScroll(action, when);
+    Mouse.Scroll += HandleOnScroll(action, when);
 
-  public static void OnMouseDown(MouseButton button, Action action, Func<bool>? when = null) =>
-    Application.Mouse.MouseDown += HandleMouseState(button, action, when);
+  public static void OnHold(MouseButton button, Action action, Func<bool>? when = null) =>
+    Mouse.MouseDown += HandleMouseState(button, action, when);
 
-  public static void OnMouseUp(MouseButton button, Action action, Func<bool>? when = null) =>
-    Application.Mouse.MouseUp += HandleMouseState(button, action, when);
+  public static void OnRelease(MouseButton button, Action action, Func<bool>? when = null) =>
+    Mouse.MouseUp += HandleMouseState(button, action, when);
 
-  public static void OnMouseMove(Action<Vector2D<double>> action, Func<bool>? when = null) =>
-    Application.Mouse.MouseMove += HandleMouseMove(action, when);
+  public static void OnMove(Action<Vector2D<double>> action, Func<bool>? when = null) =>
+    Mouse.MouseMove += HandleMouseMove(action, when);
 
 
   private static Action<IMouse, Vector2> HandleMouseMove(Action<Vector2D<double>> action, Func<bool>? predicate = null) =>

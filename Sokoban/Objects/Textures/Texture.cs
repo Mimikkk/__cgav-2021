@@ -7,7 +7,7 @@ using SixLabors.ImageSharp.Processing;
 using Sokoban;
 using Sokoban.Utilities;
 
-namespace sokoban.Objects.Primitives
+namespace sokoban.Objects.Textures
 {
 public class Texture : IDisposable
 {

@@ -1,0 +1,3 @@
+﻿namespace Sokoban.Renderers.Buffers
+{
+}
