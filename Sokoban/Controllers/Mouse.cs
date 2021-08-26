@@ -23,7 +23,7 @@ public static partial class Controller
   public static void OnRelease(MouseButton button, Action action, Func<bool>? when = null) =>
     Mouse.MouseUp += HandleStateChange(button, action, when);
 
-  public static void OnHold(MouseButton button, Action<float> action, Func<bool>? when = null) =>
+  public static void OnHold(MouseButton button, Action<double> action, Func<bool>? when = null) =>
     OnHoldActions.Add(HandleState(button, action, when));
 
   public static void OnMove(Action<Vector2D<float>> action, Func<bool>? when = null) =>
@@ -54,10 +54,10 @@ public static partial class Controller
       (_, stroked, position) => (predicate!() && stroked == wanted).Then(action, position.ToVector2D())
     );
   
-  private static Action<float> HandleState(MouseButton wanted, Action<float> action, Func<bool>? predicate = null) =>
-    (predicate is null).Or<Action<float>>(
-      (dt) => Mouse.IsButtonPressed(wanted).Then(action, dt),
-      (dt) => (predicate!() && Mouse.IsButtonPressed(wanted)).Then(action, dt)
+  private static Action<double> HandleState(MouseButton wanted, Action<double> action, Func<bool>? predicate = null) =>
+    (predicate is null).Or<Action<double>>(
+      dt => Mouse.IsButtonPressed(wanted).Then(action, dt),
+      dt => (predicate!() && Mouse.IsButtonPressed(wanted)).Then(action, dt)
     );
 }
 }

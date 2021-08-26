@@ -18,6 +18,7 @@ public static partial class App
     Window = Create(Options);
     OnLoad(() => Controller.Setup(Window));
     OnLoad(Setup.Run);
+    OnRender(Clear);
   }
 
   public static readonly WindowOptions Options = new() {
@@ -31,6 +32,7 @@ public static partial class App
     PreferredStencilBufferBits = 24,
     ShouldSwapAutomatically = true
   };
+  private const ClearBufferMask ClearMask = ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit | ClearBufferMask.CoverageBufferBitNV;
   public static IWindow Window;
 }
 }

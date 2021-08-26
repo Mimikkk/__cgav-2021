@@ -9,7 +9,7 @@ namespace Sokoban.Controllers
 {
 public static partial class Controller
 {
-  private static void Update(float dt) => OnHoldActions.ForEach(action => action(dt));
+  private static void Update(double dt) => OnHoldActions.ForEach(action => action(dt));
 
   public static void Setup(IWindow window)
   {
@@ -25,6 +25,6 @@ public static partial class Controller
   private static IMouse Mouse { get; set; } = null!;
   private static IKeyboard Keyboard { get; set; } = null!;
   private static IInputContext InputContext { get; set; } = null!;
-  private static readonly List<Action<float>> OnHoldActions = new();
+  private static readonly List<Action<double>> OnHoldActions = new();
 }
 }

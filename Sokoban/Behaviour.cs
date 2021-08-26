@@ -37,10 +37,10 @@ public class Behaviour
     Skybox = new Skybox();
 
     Controller.OnScroll(Camera.ModifyDirection);
-    Controller.OnHold(Key.W, dt => Camera.Position += dt * Camera.Front);
-    Controller.OnHold(Key.S, dt => Camera.Position -= dt * Camera.Front);
-    Controller.OnHold(Key.A, dt => Camera.Position -= dt * Vector3D.Normalize(Vector3D.Cross(Camera.Front, Camera.Up)));
-    Controller.OnHold(Key.D, dt => Camera.Position += dt * Vector3D.Normalize(Vector3D.Cross(Camera.Front, Camera.Up)));
+    Controller.OnHold(Key.W, dt => Camera.Position += (float)dt * Camera.Front);
+    Controller.OnHold(Key.S, dt => Camera.Position -= (float)dt * Camera.Front);
+    Controller.OnHold(Key.A, dt => Camera.Position -= (float)dt * Vector3D.Normalize(Vector3D.Cross(Camera.Front, Camera.Up)));
+    Controller.OnHold(Key.D, dt => Camera.Position += (float)dt * Vector3D.Normalize(Vector3D.Cross(Camera.Front, Camera.Up)));
     Controller.OnMove(position => {
       const float lookSensitivity = 0.1f;
       if (LastMousePosition == default) { LastMousePosition = position; } else
@@ -64,9 +64,8 @@ public class Behaviour
       new Shader(ShaderType.VertexShader, "Basic")
     );
   }
-  public static unsafe void Render(float dt)
+  public static unsafe void Render(double dt)
   {
-    App.Gl.Clear((uint)ClearBufferMask.ColorBufferBit);
 
     Skybox.ShaderConfiguration();
     App.Gl.DrawArrays(PrimitiveType.Triangles, 0, 36);
