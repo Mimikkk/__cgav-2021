@@ -5,44 +5,45 @@ namespace Sokoban.Objects
 {
 public class Camera
 {
-  public Vector3D<double> Position { get; set; }
-  public Vector3D<double> Front { get; set; }
-  public Vector3D<double> Up { get; set; }
-  public double AspectRatio { get; set; }
+  public Vector3D<float> Position { get; set; }
+  public Vector3D<float> Front { get; set; }
+  public Vector3D<float> Up { get; set; }
+  public float AspectRatio { get; set; }
 
-  public double Yaw { get; set; } = -90f;
-  public double Pitch { get; set; }
-  private double Zoom { get; set; } = 45f;
+  public float Yaw { get; set; } = -90f;
+  public float Pitch { get; set; }
+  private float Zoom { get; set; } = 45f;
 
-  public Camera(Vector3D<double> position, Vector3D<double> front, Vector3D<double> up, double aspectRatio)
+  public Camera(Vector3D<float> position, Vector3D<float> front, Vector3D<float> up)
   {
     Position = position;
-    AspectRatio = aspectRatio;
+    AspectRatio = 800.0f / 700.0f;
     Front = front;
     Up = up;
   }
 
-  public void ModifyZoom(double zoomAmount) =>
+  public void ModifyZoom(float zoomAmount) =>
     Zoom = Math.Clamp(Zoom - zoomAmount, 1.0f, 45f);
 
-  public void ModifyDirection(double xOffset, double yOffset)
+  public void ModifyDirection(Vector2D<float> offset) => ModifyDirection(offset.X, offset.Y);
+  public void ModifyDirection(float x, float y)
   {
-    Yaw += xOffset;
-    Pitch -= yOffset;
+    Yaw += x;
+    Pitch -= y;
     Pitch = Math.Clamp(Pitch, -89f, 89f);
 
-    var cameraDirection = new Vector3D<double> {
-      X = Math.Cos(Scalar.DegreesToRadians(Yaw)) * Math.Cos(Scalar.DegreesToRadians(Pitch)),
-      Y = Math.Sin(Scalar.DegreesToRadians(Pitch)),
-      Z = Math.Sin(Scalar.DegreesToRadians(Yaw)) * Math.Cos(Scalar.DegreesToRadians(Pitch)),
+    var cameraDirection = new Vector3D<float> {
+      X = MathF.Cos(Scalar.DegreesToRadians(Yaw)) * MathF.Cos(Scalar.DegreesToRadians(Pitch)),
+      Y = MathF.Sin(Scalar.DegreesToRadians(Pitch)),
+      Z = MathF.Sin(Scalar.DegreesToRadians(Yaw)) * MathF.Cos(Scalar.DegreesToRadians(Pitch)),
     };
     Front = Vector3D.Normalize(cameraDirection);
   }
 
-  public Matrix4X4<double> GetViewMatrix() =>
+  public Matrix4X4<float> GetViewMatrix() =>
     Matrix4X4.CreateLookAt(Position, Position + Front, Up);
 
-  public Matrix4X4<double> GetProjectionMatrix() =>
+  public Matrix4X4<float> GetProjectionMatrix() =>
     Matrix4X4.CreatePerspectiveFieldOfView(Scalar.DegreesToRadians(Zoom), AspectRatio, 0.1f, 100.0f);
 }
 }
