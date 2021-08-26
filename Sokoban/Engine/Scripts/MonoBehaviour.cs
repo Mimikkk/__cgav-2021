@@ -11,8 +11,8 @@ public abstract class MonoBehaviour
     App.OnRender(Render);
   }
 
-  protected abstract void Start();
-  protected abstract void Update(double dt);
-  protected abstract void Render(double dt);
+  protected virtual void Start() {}
+  protected virtual void Update(double dt) {}
+  protected virtual void Render(double dt) {}
 }
 }
