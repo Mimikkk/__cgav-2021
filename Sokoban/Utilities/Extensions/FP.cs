@@ -23,5 +23,11 @@ public static partial class Extension
 
   public static void ForEach<T>(this IEnumerable<T> source, Action<T, int> action) =>
     source.Select((e, i) => (e, i)).ToImmutableList().ForEach(pair => action(pair.e, pair.i));
+
+  public static void ForEach<T>(this IEnumerable<T> source, Action<T> action) =>
+    source.ToImmutableList().ForEach(action);
+
+  public static void ForEach<T,Y>(this IEnumerable<T> source, Func<T, Y> action) =>
+    source.ToImmutableList().ForEach(a => action(a));
 }
 }
