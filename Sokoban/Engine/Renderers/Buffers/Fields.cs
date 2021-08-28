@@ -13,14 +13,14 @@ public readonly struct Fields
 
   public Fields(params (string, int)[] fields)
   {
-    SizeByName = fields.ToImmutableDictionary(field => field.Item1, field => (nuint)field.Item2);
+    SizeByName = fields.ToImmutableDictionary(field => field.Item1, field => (nuint)field.Item2 * sizeof(float));
 
     var offset = 0;
     var offsetByName = new Dictionary<string, nint>();
     foreach (var (field, size) in fields)
     {
       offsetByName[field] = offset;
-      offset += size;
+      offset += size * sizeof(float);
     }
     OffsetByName = offsetByName;
 

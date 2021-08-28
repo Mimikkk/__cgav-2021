@@ -67,7 +67,7 @@ public class Skybox
   };
 
   private static unsafe UniformBufferObject Ubo { get; } = new(0) {
-    Fields = new Fields(("projection", sizeof(Matrix4X4<float>)), ("view", sizeof(Matrix4X4<float>))),
+    Fields = new Fields(("projection", 16), ("view", 16)),
   };
 
   private static ShaderProgram Spo = new(

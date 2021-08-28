@@ -21,7 +21,7 @@ public abstract class BufferObject<TDataType> : IDisposable where TDataType : un
     {
       Count = (uint)data.Length;
       Size = (uint)(Count * sizeof(TDataType));
-      App.Gl.BufferData(bufferType, (nuint)(data.Length * sizeof(TDataType)), d, BufferUsageARB.StaticDraw);
+      App.Gl.BufferData(bufferType, Size, d, BufferUsageARB.StaticDraw);
     }
   }
 

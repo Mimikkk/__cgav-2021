@@ -26,8 +26,10 @@ public class UniformBufferObject : IDisposable
     Handle = App.Gl.GenBuffer();
   }
 
-  public unsafe void SetUniform<T>(string name, T value) where T : unmanaged =>
+  public unsafe void SetUniform<T>(string name, T value) where T : unmanaged
+  {
     App.Gl.BufferSubData(BufferTargetARB.UniformBuffer, Fields.OffsetByName[name], Fields.SizeByName[name], &value);
+  }
 
   private uint Handle { get; }
   private readonly Fields _fields;
@@ -36,7 +38,6 @@ public class UniformBufferObject : IDisposable
     Bind();
     App.Gl.BindBufferBase(BufferTargetARB.UniformBuffer, Index, Handle);
     App.Gl.BufferData(BufferTargetARB.UniformBuffer, Fields.Layout.Size, null, BufferUsageARB.DynamicDraw);
-    Fields.Layout.Size.LogLine();
   }
 }
 }
