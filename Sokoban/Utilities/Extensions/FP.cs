@@ -18,16 +18,59 @@ public static partial class Extension
     if (predicate) action(arg);
   }
 
-  public static IEnumerable<(T item, int index)> Enumerate<T>(this IEnumerable<T> source) =>
-    source.Select((item, index) => (item, index));
+  public static IEnumerable<(T Element, int Index)> Enumerate<T>(this IEnumerable<T> source)
+  {
+    return source.Select((item, index) => (item, index));
+  }
 
-  public static void ForEach<T>(this IEnumerable<T> source, Action<T, int> action) =>
-    source.Select((e, i) => (e, i)).ToImmutableList().ForEach(pair => action(pair.e, pair.i));
+  public static void ForEach<T>(this IEnumerable<T> source, Action<T, int> action)
+  {
+    source.Enumerate().ToImmutableList().ForEach(pair => action(pair.Element, pair.Index));
+  }
 
-  public static void ForEach<T>(this IEnumerable<T> source, Action<T> action) =>
+  public static void ForEach<T>(this IEnumerable<T> source, Action<T, uint> action)
+  {
+    source.Enumerate().ToImmutableList().ForEach(pair => action(pair.Element, (uint)pair.Index));
+  }
+
+  public static void ForEach<T>(this IEnumerable<T> source, Action<T> action)
+  {
     source.ToImmutableList().ForEach(action);
+  }
 
-  public static void ForEach<T,Y>(this IEnumerable<T> source, Func<T, Y> action) =>
+  public static void ForEach<T, Y>(this IEnumerable<T> source, Func<T, Y> action)
+  {
     source.ToImmutableList().ForEach(a => action(a));
+  }
+
+  public static void AggregatedForEach<X, T>(this IEnumerable<T> source, Action<X, T, int> action, Func<X, T, X> what, X initial)
+  {
+    void AggregatedAction(T element, int index)
+    {
+      action(initial, element, index);
+      initial = what(initial, element);
+    }
+    source.ToImmutableList().ForEach(AggregatedAction);
+  }
+
+  public static void AggregatedForEach<X, T>(this IEnumerable<T> source, Action<X, T, uint> action, Func<X, T, X> what, X initial)
+  {
+    void AggregatedAction(T element, uint index)
+    {
+      action(initial, element, index);
+      initial = what(initial, element);
+    }
+    source.ToImmutableList().ForEach(AggregatedAction);
+  }
+
+  public static void AggregatedForEach<X, T>(this IEnumerable<T> source, Action<X, T> action, Func<X, T, X> what, X initial)
+  {
+    void AggregatedAction(T element)
+    {
+      action(initial, element);
+      initial = what(initial, element);
+    }
+    source.ToImmutableList().ForEach(AggregatedAction);
+  }
 }
 }

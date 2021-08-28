@@ -1,42 +1,42 @@
-﻿#nullable enable
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System;
 using Silk.NET.OpenGL;
+using Sokoban.Utilities.Extensions;
 using App = Sokoban.Engine.Application.App;
 
 namespace Sokoban.Engine.Renderers.Buffers
 {
 public class VertexArrayObject : IDisposable
 {
-  public VertexBuffer? VertexBufferObject { get; init; }
-  public IndexBuffer? IndexBufferObject { get; init; }
+  public VertexBuffer? VertexBufferObject { private get; init; }
+  public IndexBuffer? IndexBufferObject { private get; init; }
+  public Layout Layout {
+    private get => _layout;
+    init {
+      _layout = value;
+      ConfigureLayout();
+    }
+  }
 
   public uint Size => IndexBufferObject?.Count ?? (PerVertexSize != 0 ? VertexBufferObject?.Count ?? 0 / PerVertexSize : 0);
   private uint PerVertexSize => Layout.Size * sizeof(float);
 
-  public ElementLayout Layout {
-    get => _layout;
-    init {
-      _layout = value;
-      ReconfigureLayout();
-    }
-  }
 
   public VertexArrayObject() => Handle = App.Gl.GenVertexArray();
 
-  private unsafe void ReconfigureLayout()
+  private unsafe void ConfigureLayout()
   {
     Bind();
-    var offset = 0;
-    for (uint i = 0; i < Layout.Elements.Count; ++i)
+    void ConfigureElement(int offset, int element, uint index)
     {
-      var element = Layout.Elements[(int)i];
-      App.Gl.VertexAttribPointer(i, element, VertexAttribPointerType.Float, false,
-        Layout.Size * sizeof(float), (void*)(offset * sizeof(float)));
-      App.Gl.EnableVertexAttribArray(i);
-      offset += element;
+      App.Gl.VertexAttribPointer(index, element, VertexAttribPointerType.Float, false, Layout.Size, (void*)offset);
+      App.Gl.EnableVertexAttribArray(index);
     }
+    int IncrementOffset(int offset, int element)
+    {
+      return offset + element * sizeof(float);
+    }
+
+    Layout.Elements.AggregatedForEach(ConfigureElement, IncrementOffset, 0);
   }
 
   public void Bind()
@@ -53,18 +53,6 @@ public class VertexArrayObject : IDisposable
   }
 
   private uint Handle { get; }
-  private readonly ElementLayout _layout;
-}
-
-public readonly struct ElementLayout
-{
-  public uint Size { get; }
-  public IReadOnlyList<int> Elements { get; }
-
-  public ElementLayout(params int[] elements)
-  {
-    Size = (uint)elements.Sum();
-    Elements = elements;
-  }
+  private readonly Layout _layout;
 }
 }

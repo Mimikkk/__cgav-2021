@@ -1,4 +1,7 @@
 ﻿#nullable enable
+using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Linq;
 using Silk.NET.Maths;
 using Silk.NET.OpenGL;
 using Sokoban.Engine.Objects.Textures;
@@ -12,7 +15,7 @@ namespace Sokoban.Engine.Objects
 {
 public class Skybox
 {
-  private Cubemap Map { get; } = new("skybox");
+  private Cubemap CubeMap { get; } = new("skybox");
 
   private static readonly float[] Vertices = {
     -1.0f, 1.0f, -1.0f,
@@ -60,22 +63,31 @@ public class Skybox
 
   private static VertexArrayObject Vao { get; } = new() {
     VertexBufferObject = new VertexBuffer(Vertices),
-    Layout = new ElementLayout(3)
+    Layout = new Layout(3)
   };
-  
+
+  private static unsafe UniformBufferObject Ubo { get; } = new(0) {
+    Fields = new Fields(("projection", sizeof(Matrix4X4<float>)), ("view", sizeof(Matrix4X4<float>))),
+  };
+
   private static ShaderProgram Spo = new(
     new Shader(ShaderType.VertexShader, "Skybox"), new Shader(ShaderType.FragmentShader, "Skybox")
   );
 
-  public void ShaderConfiguration()
+  public unsafe void ShaderConfiguration()
   {
     Vao.Bind();
     Spo.Bind();
-    Map.Bind();
+    CubeMap.Bind();
 
     App.Gl.DepthFunc(DepthFunction.Lequal);
-    Spo.SetUniform("projection", Behaviour.Camera.GetProjectionMatrix());
-    Spo.SetUniform("view", Matrix4X4.CreateFromQuaternion(Quaternion<float>.CreateFromRotationMatrix(Behaviour.Camera.GetViewMatrix())));
+
+    var projection = Behaviour.Camera.GetProjectionMatrix();
+    var view = Matrix4X4.CreateFromQuaternion(Quaternion<float>.CreateFromRotationMatrix(Behaviour.Camera.GetViewMatrix()));
+
+    Ubo.Bind();
+    Ubo.SetUniform("projection", projection);
+    Ubo.SetUniform("view", view);
   }
 }
 }

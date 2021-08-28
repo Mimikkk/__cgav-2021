@@ -12,7 +12,7 @@ public readonly struct Vertex
   public Vector3D<float> Tangent { get; }
   public Vector3D<float> BiTangent { get; }
 
-  public static ElementLayout ElementLayout = new(3, 3, 2, 3, 3);
+  public static Layout Layout = new(3, 3, 2, 3, 3);
 
 
   public Vertex(Vector3D<float> position, Vector3D<float> normal, Vector2D<float> textureCoordinate,

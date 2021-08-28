@@ -1,13 +1,21 @@
-﻿#version 330 core
+﻿#version 450 core
+
 layout (location = 0) in vec3 position;
 
-out vec3 textureCoordinate;
+out VertexData {
+    vec3 texture_coordinate;
+} vs_out;
 
-uniform mat4 projection;
-uniform mat4 view;
+layout (binding = 0, std140) uniform MatrixBlock {
+    mat4 projection;
+    mat4 view;
+};
 
-void main()
-{
-    textureCoordinate = position;
-    gl_Position = (projection * view * vec4(position, 1.0)).xyww;
+vec4 calculate_skybox_position() {
+    return (projection * view * vec4(position, 1.0)).xyww;
+}
+
+void main() {
+    vs_out.texture_coordinate = position;
+    gl_Position = calculate_skybox_position();
 }  

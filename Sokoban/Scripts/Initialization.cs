@@ -32,7 +32,7 @@ internal class Behaviour : MonoBehaviour
 
   protected override void Start()
   {
-    Controller.OnRelease(Key.Escape, App.Window.Close);
+    Controller.OnRelease(Key.Escape, App.Close);
 
     Camera = new Camera(Vector3D<float>.UnitZ * 6, Vector3D<float>.UnitZ * -1, Vector3D<float>.UnitY);
     Skybox = new Skybox();
@@ -57,7 +57,7 @@ internal class Behaviour : MonoBehaviour
     VertexArrayObject = new VertexArrayObject {
       VertexBufferObject = new VertexBuffer(Vertices),
       IndexBufferObject = new IndexBuffer(Indices),
-      Layout = new ElementLayout(3),
+      Layout = new Layout(3),
     };
 
     ShaderProgram = new ShaderProgram(
