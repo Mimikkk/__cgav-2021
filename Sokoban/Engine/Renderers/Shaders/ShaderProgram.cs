@@ -31,7 +31,7 @@ public class ShaderProgram : IDisposable
   {
     App.Gl.GetProgram(Handle, GLEnum.LinkStatus, out var status);
     if (status != 0) return;
-    $"<c6 Program> <c124 failed> <c6 to link with error>: <c124 {App.Gl.GetProgramInfoLog(Handle)}>".LogLine();
+    $"<c6 Program|> <c124 failed|> <c6 to link with error|>: <c124 {App.Gl.GetProgramInfoLog(Handle)}|>".LogLine();
     throw new Exception();
   }
 

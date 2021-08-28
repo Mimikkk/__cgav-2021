@@ -66,7 +66,8 @@ public class Skybox
     Layout = new Layout(3)
   };
 
-  private static unsafe UniformBufferObject Ubo { get; } = new(0) {
+  private static UniformBufferObject Ubo { get; } = new() {
+    Binding = 0,
     Fields = new Fields(("projection", 16), ("view", 16)),
   };
 
@@ -74,7 +75,7 @@ public class Skybox
     new Shader(ShaderType.VertexShader, "Skybox"), new Shader(ShaderType.FragmentShader, "Skybox")
   );
 
-  public unsafe void ShaderConfiguration()
+  public void ShaderConfiguration()
   {
     Vao.Bind();
     Spo.Bind();
