@@ -81,8 +81,8 @@ public class Skybox
 
     App.Gl.DepthFunc(DepthFunction.Lequal);
 
-    var projection = Behaviour.Camera.GetProjectionMatrix();
-    var view = Matrix4X4.CreateFromQuaternion(Quaternion<float>.CreateFromRotationMatrix(Behaviour.Camera.GetViewMatrix()));
+    var projection = CameraBehaviour.Camera.GetProjectionMatrix();
+    var view = Matrix4X4.CreateFromQuaternion(Quaternion<float>.CreateFromRotationMatrix(CameraBehaviour.Camera.GetViewMatrix()));
 
     Ubo.Bind();
     Ubo.SetUniform("projection", projection);
