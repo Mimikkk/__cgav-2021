@@ -12,8 +12,8 @@ namespace Sokoban.Scripts
 {
 internal class InitializationBehaviour : MonoBehaviour
 {
-  public override LoadPriority LoadPriority  => LoadPriority.Normal;
-  
+  public override LoadPriority LoadPriority => LoadPriority.Normal;
+
   private static readonly float[] Vertices = {
     0.5f, 0.5f, 0.0f,
     0.5f, -0.5f, 0.0f,
@@ -30,8 +30,6 @@ internal class InitializationBehaviour : MonoBehaviour
 
   protected override void Start()
   {
-    Controller.OnRelease(Key.Escape, App.Close);
-
     VertexArray = new VertexArray {
       VertexBufferObject = new VertexBuffer(Vertices),
       IndexBufferObject = new IndexBuffer(Indices),
@@ -43,9 +41,6 @@ internal class InitializationBehaviour : MonoBehaviour
       ShouldLink = true
     };
   }
-
-  protected override void Update(double dt) { }
-
   protected override unsafe void Render(double dt)
   {
     ShaderProgram.Bind();
