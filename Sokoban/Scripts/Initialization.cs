@@ -3,11 +3,13 @@ using Silk.NET.Maths;
 using Silk.NET.OpenGL;
 using Sokoban.Engine.Objects;
 using Sokoban.Engine.Renderers.Buffers;
+using Sokoban.Engine.Renderers.Buffers.Helpers;
+using Sokoban.Engine.Renderers.Buffers.Objects;
 using Sokoban.Engine.Renderers.Shaders;
 using Sokoban.Engine.Scripts;
 using App = Sokoban.Engine.Application.App;
 using Controller = Sokoban.Engine.Controllers.Controller;
-using Shader = Sokoban.Engine.Renderers.Shaders.Shader;
+using VertexArray = Sokoban.Engine.Renderers.Buffers.Objects.VertexArray;
 
 namespace Sokoban.Scripts
 {
@@ -27,7 +29,7 @@ internal class Behaviour : MonoBehaviour
   private static Skybox Skybox = null!;
   public static Camera Camera = null!;
   private static ShaderProgram ShaderProgram = null!;
-  private static VertexArrayObject VertexArrayObject = null!;
+  private static VertexArray VertexArray = null!;
   private static Vector2D<float> LastMousePosition { get; set; }
 
   protected override void Start()
@@ -54,7 +56,7 @@ internal class Behaviour : MonoBehaviour
       }
     });
 
-    VertexArrayObject = new VertexArrayObject {
+    VertexArray = new VertexArray {
       VertexBufferObject = new VertexBuffer(Vertices),
       IndexBufferObject = new IndexBuffer(Indices),
       Layout = new Layout(3)
@@ -76,8 +78,8 @@ internal class Behaviour : MonoBehaviour
     App.Gl.DrawArrays(PrimitiveType.Triangles, 0, 36);
 
     ShaderProgram.Bind();
-    VertexArrayObject.Bind();
-    App.Gl.DrawElements(PrimitiveType.Triangles, VertexArrayObject.Size, DrawElementsType.UnsignedInt, null);
+    VertexArray.Bind();
+    App.Gl.DrawElements(PrimitiveType.Triangles, VertexArray.Size, DrawElementsType.UnsignedInt, null);
   }
 }
 }

@@ -1,15 +1,14 @@
 ﻿#nullable enable
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Linq;
 using Silk.NET.Maths;
 using Silk.NET.OpenGL;
 using Sokoban.Engine.Objects.Textures;
 using Sokoban.Engine.Renderers.Buffers;
+using Sokoban.Engine.Renderers.Buffers.Helpers;
+using Sokoban.Engine.Renderers.Buffers.Objects;
 using Sokoban.Engine.Renderers.Shaders;
 using Sokoban.Scripts;
 using App = Sokoban.Engine.Application.App;
-using Shader = Sokoban.Engine.Renderers.Shaders.Shader;
+using VertexArray = Sokoban.Engine.Renderers.Buffers.Objects.VertexArray;
 
 namespace Sokoban.Engine.Objects
 {
@@ -60,11 +59,11 @@ public class Skybox
     1.0f, -1.0f, 1.0f
   };
 
-  private static readonly VertexArrayObject Vao = new() {
+  private static readonly VertexArray Vao = new() {
     VertexBufferObject = new VertexBuffer(Vertices),
     Layout = new Layout(3)
   };
-  private static readonly UniformBufferObject Ubo = new("MatrixUniforms") {
+  private static readonly UniformBuffer Ubo = new("MatrixUniforms") {
     Binding = 0,
     Fields = new Fields(("projection", 16), ("view", 16))
   };

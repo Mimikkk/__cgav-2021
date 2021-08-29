@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Logger;
 
-namespace Sokoban.Engine.Renderers.Buffers
+namespace Sokoban.Engine.Renderers.Buffers.Helpers
 {
 public readonly struct Layout
 {

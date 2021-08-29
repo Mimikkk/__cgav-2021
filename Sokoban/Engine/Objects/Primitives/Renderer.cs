@@ -2,12 +2,13 @@
 using Silk.NET.SDL;
 using Sokoban.Engine.Renderers.Buffers;
 using App = Sokoban.Engine.Application.App;
+using VertexArray = Sokoban.Engine.Renderers.Buffers.Objects.VertexArray;
 
 namespace Sokoban.Engine.Objects.Primitives
 {
 public static class Renderer
 {
-    private static unsafe void Draw(VertexArrayObject vao, PrimitiveType primitiveType)
+    private static unsafe void Draw(VertexArray vao, PrimitiveType primitiveType)
     {
         vao.Bind();
         App.Gl.DrawElements(primitiveType, vao.Size, DrawElementsType.UnsignedInt, null);

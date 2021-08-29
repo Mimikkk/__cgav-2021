@@ -2,7 +2,7 @@
 using System.Collections.Immutable;
 using System.Linq;
 
-namespace Sokoban.Engine.Renderers.Buffers
+namespace Sokoban.Engine.Renderers.Buffers.Helpers
 {
 public readonly struct Fields
 {
