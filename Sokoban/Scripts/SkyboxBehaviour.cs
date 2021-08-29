@@ -8,7 +8,9 @@ namespace Sokoban.Scripts
 {
 public class SkyboxBehaviour : MonoBehaviour
 {
+  public override LoadPriority LoadPriority => LoadPriority.VeryHigh;
+
   private static readonly Skybox Skybox = new();
-  protected override void EarlyRender(double dt) => Renderer.Render(Skybox);
+  protected override void Render(double dt) => Renderer.Render(Skybox);
 }
 }

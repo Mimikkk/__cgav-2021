@@ -9,6 +9,8 @@ namespace Sokoban.Scripts
 {
 public class CameraBehaviour : MonoBehaviour
 {
+  public override LoadPriority LoadPriority => LoadPriority.VeryHigh;
+
   public static readonly Camera Camera = new(Vector3D<float>.UnitZ * 6, Vector3D<float>.UnitZ * -1, Vector3D<float>.UnitY);
   private static Vector2D<float> LastMousePosition { get; set; }
   private const float LookSensitivity = 0.1f;

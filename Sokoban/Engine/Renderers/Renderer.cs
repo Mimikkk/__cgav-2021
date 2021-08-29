@@ -11,5 +11,8 @@ public static class Renderer
     skybox.ShaderConfiguration();
     App.Gl.DrawArrays(PrimitiveType.Triangles, 0, 36);
   }
+  
+  
+  
 }
 }

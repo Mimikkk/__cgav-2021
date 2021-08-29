@@ -1,7 +1,5 @@
 ﻿using Silk.NET.Input;
-using Silk.NET.Maths;
 using Silk.NET.OpenGL;
-using Sokoban.Engine.Objects;
 using Sokoban.Engine.Renderers.Buffers.Helpers;
 using Sokoban.Engine.Renderers.Buffers.Objects;
 using Sokoban.Engine.Renderers.Shaders;
@@ -14,6 +12,8 @@ namespace Sokoban.Scripts
 {
 internal class InitializationBehaviour : MonoBehaviour
 {
+  public override LoadPriority LoadPriority  => LoadPriority.Normal;
+  
   private static readonly float[] Vertices = {
     0.5f, 0.5f, 0.0f,
     0.5f, -0.5f, 0.0f,

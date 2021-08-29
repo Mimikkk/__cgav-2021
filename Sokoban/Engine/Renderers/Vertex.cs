@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Silk.NET.Maths;
-using Sokoban.Engine.Renderers.Buffers;
 using Sokoban.Engine.Renderers.Buffers.Helpers;
 
 namespace Sokoban.Engine.Renderers

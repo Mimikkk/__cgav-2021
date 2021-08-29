@@ -4,17 +4,17 @@ namespace Sokoban.Engine.Scripts
 {
 public abstract class MonoBehaviour
 {
-  protected MonoBehaviour()
+  public virtual LoadPriority LoadPriority => LoadPriority.Normal;
+
+  public void Run()
   {
     App.OnLoad(Start);
     App.OnUpdate(Update);
-    App.OnRender(EarlyRender);
     App.OnRender(Render);
   }
 
   protected virtual void Start() { }
   protected virtual void Update(double dt) { }
-  protected virtual void EarlyRender(double dt) { }
   protected virtual void Render(double dt) { }
 }
 }

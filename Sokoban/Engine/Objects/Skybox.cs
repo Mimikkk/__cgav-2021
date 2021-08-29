@@ -2,7 +2,6 @@
 using Silk.NET.Maths;
 using Silk.NET.OpenGL;
 using Sokoban.Engine.Objects.Textures;
-using Sokoban.Engine.Renderers.Buffers;
 using Sokoban.Engine.Renderers.Buffers.Helpers;
 using Sokoban.Engine.Renderers.Buffers.Objects;
 using Sokoban.Engine.Renderers.Shaders;
