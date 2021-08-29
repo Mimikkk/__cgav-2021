@@ -1,7 +1,7 @@
 ﻿#nullable enable
 using Silk.NET.Maths;
 using Silk.NET.OpenGL;
-using Sokoban.Engine.Objects.Textures;
+using Sokoban.Engine.Objects.Primitives.Textures;
 using Sokoban.Engine.Renderers.Buffers.Helpers;
 using Sokoban.Engine.Renderers.Buffers.Objects;
 using Sokoban.Engine.Renderers.Shaders;
@@ -59,7 +59,7 @@ public class Skybox
   };
 
   private static readonly VertexArray Vao = new() {
-    VertexBufferObject = new VertexBuffer(Vertices),
+    VertexBuffer = new VertexBuffer(Vertices),
     Layout = new Layout(3)
   };
   private static readonly UniformBuffer Ubo = new("MatrixUniforms") {

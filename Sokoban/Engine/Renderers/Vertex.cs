@@ -1,50 +1,48 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Silk.NET.Maths;
 using Sokoban.Engine.Renderers.Buffers.Helpers;
+using Sokoban.Utilities.Extensions;
 
 namespace Sokoban.Engine.Renderers
 {
 public readonly struct Vertex
 {
-  private Vector3D<float> Position { get; }
-  public Vector3D<float> Normal { get; }
-  public Vector2D<float> TextureCoordinate { get; }
-  public Vector3D<float> Tangent { get; }
-  public Vector3D<float> BiTangent { get; }
-
-  public static Layout Layout = new(3, 3, 2, 3, 3);
-
-
-  public Vertex(Vector3D<float> position, Vector3D<float> normal, Vector2D<float> textureCoordinate,
-    Vector3D<float> tangent, Vector3D<float> biTangent)
-  {
-    Position = position;
-    Normal = normal;
-    TextureCoordinate = textureCoordinate;
-    Tangent = tangent;
-    BiTangent = biTangent;
+  public Vector3D<float>? Position { get; init; }
+  public Vector3D<float>? Normal { get; init; }
+  public Vector2D<float>? TextureCoordinate { get; init; }
+  public Vector3D<float>? Tangent { get; init; }
+  public Vector3D<float>? BiTangent { get; init; }
+  public bool ManageLayout {
+    init => Layout = new(new[] {
+        Position.HasValue ? 3 : 0,
+        Normal.HasValue ? 3 : 0,
+        TextureCoordinate.HasValue ? 2 : 0,
+        Tangent.HasValue ? 3 : 0,
+        BiTangent.HasValue ? 3 : 0
+      }.Where(x => x > 0)
+      .ToArray());
   }
 
-  public override string ToString()
-  {
-    return "TangentVertex("
-           + $"{Position.X},{Position.Y},{Position.Z};"
-           + $"{Normal.X},{Normal.Y},{Normal.Z};"
-           + $"{TextureCoordinate.X},{TextureCoordinate.Y};"
-           + $"{Tangent.X},{Tangent.Y},{Tangent.Z};"
-           + $"{BiTangent.X},{BiTangent.Y},{BiTangent.Z})";
-  }
+  public Layout Layout { get; private init; }
 
-  // [Pos,TexCords,Norm, Tan, BiTan] Format
-  public IEnumerable<float> Tofloats()
-  {
-    return new[] {
-      Position.X, Position.Y, Position.Z,
-      Normal.X, Normal.Y, Normal.Z,
-      TextureCoordinate.X, TextureCoordinate.Y,
-      Tangent.X, Tangent.Y, Tangent.Z,
-      BiTangent.X, BiTangent.Y, BiTangent.Z
-    };
-  }
+  public override string ToString() =>
+    $"Vertex({Layout.Size}: "
+    + (Position.HasValue ? $"{Position};" : "")
+    + (Normal.HasValue ? $"{Normal};" : "")
+    + (TextureCoordinate.HasValue ? $"{TextureCoordinate};" : "")
+    + (Tangent.HasValue ? $"{Tangent};" : "")
+    + (BiTangent.HasValue ? $"{BiTangent};" : "")
+    + ")";
+
+  public IEnumerable<float> ToFloats() =>
+    new[] {
+      Position?.ToArray(),
+      Normal?.ToArray(),
+      TextureCoordinate?.ToArray(),
+      Tangent?.ToArray(),
+      BiTangent?.ToArray()
+    }.SelectMany(x => x ?? Array.Empty<float>());
 }
 }

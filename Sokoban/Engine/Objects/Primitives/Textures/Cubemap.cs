@@ -8,7 +8,7 @@ using Sokoban.Utilities;
 using Sokoban.Utilities.Extensions;
 using App = Sokoban.Engine.Application.App;
 
-namespace Sokoban.Engine.Objects.Textures
+namespace Sokoban.Engine.Objects.Primitives.Textures
 {
 public class Cubemap : IDisposable
 {

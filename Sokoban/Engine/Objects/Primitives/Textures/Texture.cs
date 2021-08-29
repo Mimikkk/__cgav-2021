@@ -7,7 +7,7 @@ using SixLabors.ImageSharp.Processing;
 using Sokoban.Utilities;
 using App = Sokoban.Engine.Application.App;
 
-namespace Sokoban.Engine.Objects.Textures
+namespace Sokoban.Engine.Objects.Primitives.Textures
 {
 public class Texture : IDisposable
 {

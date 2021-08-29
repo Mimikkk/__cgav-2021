@@ -11,18 +11,18 @@ public class VertexArray : IDisposable
   public void Bind()
   {
     App.Gl.BindVertexArray(Handle);
-    VertexBufferObject?.Bind();
-    IndexBufferObject?.Bind();
+    VertexBuffer?.Bind();
+    IndexBuffer?.Bind();
   }
   public void Dispose()
   {
-    IndexBufferObject?.Dispose();
-    VertexBufferObject?.Dispose();
+    IndexBuffer?.Dispose();
+    VertexBuffer?.Dispose();
     App.Gl.DeleteVertexArray(Handle);
   }
 
-  public VertexBuffer? VertexBufferObject { private get; init; }
-  public IndexBuffer? IndexBufferObject { private get; init; }
+  public VertexBuffer? VertexBuffer { get; init; }
+  public IndexBuffer? IndexBuffer { get; init; }
   public Layout Layout {
     private get => _layout;
     init {
@@ -31,7 +31,7 @@ public class VertexArray : IDisposable
     }
   }
 
-  public uint Size => ((uint?)IndexBufferObject?.Count ?? (PerVertexSize != 0 ? VertexBufferObject?.Size ?? 0 / PerVertexSize : 0)) * sizeof(float);
+  public uint Size => ((uint?)IndexBuffer?.Count ?? (PerVertexSize != 0 ? VertexBuffer?.Size ?? 0 / PerVertexSize : 0)) * sizeof(float);
   private uint PerVertexSize => Layout.Size * sizeof(float);
 
   public VertexArray() => Handle = App.Gl.GenVertexArray();

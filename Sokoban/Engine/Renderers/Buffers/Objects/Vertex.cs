@@ -12,6 +12,6 @@ public class VertexBuffer : Buffer<float>
     Data = vertices.ToArray();
   }
   public VertexBuffer(IEnumerable<Vertex> vertices)
-    : this(vertices.SelectMany(vertex => vertex.Tofloats())) { }
+    : this(vertices.SelectMany(vertex => vertex.ToFloats())) { }
 }
 }

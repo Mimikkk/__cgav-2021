@@ -1,11 +1,9 @@
-﻿using Silk.NET.Input;
-using Silk.NET.OpenGL;
+﻿using Silk.NET.OpenGL;
 using Sokoban.Engine.Renderers.Buffers.Helpers;
 using Sokoban.Engine.Renderers.Buffers.Objects;
 using Sokoban.Engine.Renderers.Shaders;
 using Sokoban.Engine.Scripts;
 using App = Sokoban.Engine.Application.App;
-using Controller = Sokoban.Engine.Controllers.Controller;
 using VertexArray = Sokoban.Engine.Renderers.Buffers.Objects.VertexArray;
 
 namespace Sokoban.Scripts
@@ -31,8 +29,8 @@ internal class InitializationBehaviour : MonoBehaviour
   protected override void Start()
   {
     VertexArray = new VertexArray {
-      VertexBufferObject = new VertexBuffer(Vertices),
-      IndexBufferObject = new IndexBuffer(Indices),
+      VertexBuffer = new VertexBuffer(Vertices),
+      IndexBuffer = new IndexBuffer(Indices),
       Layout = new Layout(3)
     };
     ShaderProgram = new ShaderProgram("Basic") {

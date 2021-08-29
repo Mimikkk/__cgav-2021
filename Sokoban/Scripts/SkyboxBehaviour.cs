@@ -1,6 +1,4 @@
-﻿using Silk.NET.OpenGL;
-using Sokoban.Engine.Application;
-using Sokoban.Engine.Objects;
+﻿using Sokoban.Engine.Objects;
 using Sokoban.Engine.Renderers;
 using Sokoban.Engine.Scripts;
 
