@@ -35,7 +35,7 @@ public class Camera
     var cameraDirection = new Vector3D<float> {
       X = MathF.Cos(Scalar.DegreesToRadians(Yaw)) * MathF.Cos(Scalar.DegreesToRadians(Pitch)),
       Y = MathF.Sin(Scalar.DegreesToRadians(Pitch)),
-      Z = MathF.Sin(Scalar.DegreesToRadians(Yaw)) * MathF.Cos(Scalar.DegreesToRadians(Pitch)),
+      Z = MathF.Sin(Scalar.DegreesToRadians(Yaw)) * MathF.Cos(Scalar.DegreesToRadians(Pitch))
     };
     Front = Vector3D.Normalize(cameraDirection);
   }

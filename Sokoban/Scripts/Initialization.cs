@@ -57,13 +57,14 @@ internal class Behaviour : MonoBehaviour
     VertexArrayObject = new VertexArrayObject {
       VertexBufferObject = new VertexBuffer(Vertices),
       IndexBufferObject = new IndexBuffer(Indices),
-      Layout = new Layout(3),
+      Layout = new Layout(3)
     };
 
-    ShaderProgram = new ShaderProgram(
-      new Shader(ShaderType.FragmentShader, "Basic"),
-      new Shader(ShaderType.VertexShader, "Basic")
-    );
+    ShaderProgram = new ShaderProgram("Basic") {
+      Fragment = default,
+      Vertex = default,
+      ShouldLink = true
+    };
   }
 
   protected override void Update(double dt) { }

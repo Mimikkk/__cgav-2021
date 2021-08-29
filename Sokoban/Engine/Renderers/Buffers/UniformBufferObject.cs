@@ -8,7 +8,8 @@ namespace Sokoban.Engine.Renderers.Buffers
 {
 public class UniformBufferObject : IDisposable
 {
-  public uint Binding {private get; init; }
+  public string Name;
+  public uint Binding { private get; init; }
   public Fields Fields {
     get => _fields;
     init {
@@ -20,8 +21,9 @@ public class UniformBufferObject : IDisposable
   public void Bind() => App.Gl.BindBuffer(BufferTargetARB.UniformBuffer, Handle);
   public void Dispose() => App.Gl.DeleteVertexArray(Handle);
 
-  public UniformBufferObject()
+  public UniformBufferObject(string name)
   {
+    Name = name;
     Handle = App.Gl.GenBuffer();
   }
 

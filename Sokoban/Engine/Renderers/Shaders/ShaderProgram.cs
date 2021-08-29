@@ -12,21 +12,42 @@ namespace Sokoban.Engine.Renderers.Shaders
 public class ShaderProgram : IDisposable
 {
   public uint Handle { get; }
-  private IReadOnlyList<Shader> Shaders { get; }
+  private string Name { get; }
+  private readonly List<Shader> Shaders = new();
 
-  public ShaderProgram(params Shader[] shaders)
-  {
-    Handle = App.Gl.CreateProgram();
-    Shaders = shaders;
-    AttachShaders();
-    Link();
+  public string? Vertex {
+    init => AttachShader(new Shader(ShaderType.VertexShader, value ?? Name));
+  }
+  public string? Fragment {
+    init => AttachShader(new Shader(ShaderType.FragmentShader, value ?? Name));
+  }
+  public bool ShouldLink {
+    init => value.Then(Link);
   }
 
+  public void Bind()
+  {
+    try
+    {
+      App.Gl.UseProgram(Handle);
+    } catch (Exception)
+    {
+      $"<c8 Shader Program '{Name}' not linked|>".LogLine();
+    }
+    ;
+  }
   public void Link()
   {
     App.Gl.LinkProgram(Handle);
     VerifyLinkStatus();
   }
+
+  public ShaderProgram(string name)
+  {
+    Name = name;
+    Handle = App.Gl.CreateProgram();
+  }
+
   private void VerifyLinkStatus()
   {
     App.Gl.GetProgram(Handle, GLEnum.LinkStatus, out var status);
@@ -34,8 +55,6 @@ public class ShaderProgram : IDisposable
     $"<c6 Program|> <c124 failed|> <c6 to link with error|>: <c124 {App.Gl.GetProgramInfoLog(Handle)}|>".LogLine();
     throw new Exception();
   }
-
-  public void Bind() => App.Gl.UseProgram(Handle);
 
   public void SetUniform(string name, int value) =>
     App.Gl.Uniform1(UniformLocation(name), value);
@@ -68,7 +87,11 @@ public class ShaderProgram : IDisposable
   }
 
   private void AttachShaders() => Shaders.ForEach(AttachShader);
-  private void AttachShader(Shader shader) => App.Gl.AttachShader(Handle, shader.Handle);
+  private void AttachShader(Shader shader)
+  {
+    Shaders.Add(shader);
+    App.Gl.AttachShader(Handle, shader.Handle);
+  }
 
   private void DetachShaders() => Shaders.ForEach(DetachShader);
   private void DetachShader(Shader shader) => App.Gl.DetachShader(Handle, shader.Handle);

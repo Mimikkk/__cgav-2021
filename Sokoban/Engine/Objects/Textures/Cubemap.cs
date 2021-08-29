@@ -56,7 +56,7 @@ public class Cubemap : IDisposable
     Path / "Top.jpg",
     Path / "Bottom.jpg",
     Path / "Front.jpg",
-    Path / "Back.jpg",
+    Path / "Back.jpg"
   };
 }
 }

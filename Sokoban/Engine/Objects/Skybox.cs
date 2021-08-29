@@ -16,7 +16,6 @@ namespace Sokoban.Engine.Objects
 public class Skybox
 {
   private Cubemap CubeMap { get; } = new("skybox");
-
   private static readonly float[] Vertices = {
     -1.0f, 1.0f, -1.0f,
     -1.0f, -1.0f, -1.0f,
@@ -61,19 +60,19 @@ public class Skybox
     1.0f, -1.0f, 1.0f
   };
 
-  private static VertexArrayObject Vao { get; } = new() {
+  private static readonly VertexArrayObject Vao = new() {
     VertexBufferObject = new VertexBuffer(Vertices),
     Layout = new Layout(3)
   };
-
-  private static UniformBufferObject Ubo { get; } = new() {
+  private static readonly UniformBufferObject Ubo = new("MatrixUniforms") {
     Binding = 0,
-    Fields = new Fields(("projection", 16), ("view", 16)),
+    Fields = new Fields(("projection", 16), ("view", 16))
   };
-
-  private static ShaderProgram Spo = new(
-    new Shader(ShaderType.VertexShader, "Skybox"), new Shader(ShaderType.FragmentShader, "Skybox")
-  );
+  private static readonly ShaderProgram Spo = new("Skybox") {
+    Vertex = default,
+    Fragment = default,
+    ShouldLink = true
+  };
 
   public void ShaderConfiguration()
   {
