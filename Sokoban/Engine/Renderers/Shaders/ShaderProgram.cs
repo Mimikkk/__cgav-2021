@@ -32,7 +32,7 @@ public class ShaderProgram : IDisposable
       App.Gl.UseProgram(Handle);
     } catch (Exception)
     {
-      $"<c8 Shader Program '{Name}' not linked|>".LogLine();
+      $"<c8 Shader Program {Name} not linked|>".LogLine();
     }
     ;
   }
@@ -52,7 +52,7 @@ public class ShaderProgram : IDisposable
   {
     App.Gl.GetProgram(Handle, GLEnum.LinkStatus, out var status);
     if (status != 0) return;
-    $"<c6 Program|> <c124 failed|> <c6 to link with error|> : <c124 {App.Gl.GetProgramInfoLog(Handle)}|>".LogLine();
+    $"<c6 Shader Program {Name}|> <c124 failed|> <c6 to link with error|> : <c124 {App.Gl.GetProgramInfoLog(Handle)}|>".LogLine();
     throw new Exception();
   }
 
@@ -98,7 +98,7 @@ public class ShaderProgram : IDisposable
 
   public void Dispose() => App.Gl.DeleteProgram(Handle);
 
-  public static ShaderProgram Default = new ShaderProgram("Default") {
+  public static readonly ShaderProgram Default = new("Default") {
     Fragment = default,
     Vertex = default,
     ShouldLink = true,

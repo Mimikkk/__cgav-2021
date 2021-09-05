@@ -1,4 +1,5 @@
 ﻿using System;
+using Silk.NET.Maths;
 using Silk.NET.OpenGL;
 using Silk.NET.Windowing;
 using Sokoban.Utilities.Extensions;
@@ -9,6 +10,7 @@ public static partial class App
 {
   public static void OnLoad(Action action) => Window.Load += action;
   public static void OnClose(Action action) => Window.Closing += action;
+  public static Vector2D<int> Size => Window.Size;
 
   private static class Setup
   {
@@ -23,7 +25,6 @@ public static partial class App
       Gl.Enable(EnableCap.DepthTest);
       Gl.Enable(EnableCap.Blend);
       Gl.Enable(EnableCap.TextureCubeMapSeamless);
-      // Gl.Enable(EnableCap.CullFace);
     }
   }
 

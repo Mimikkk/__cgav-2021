@@ -1,32 +1,28 @@
 ﻿using System;
 using Silk.NET.Maths;
+using Sokoban.Engine.Application;
 
 namespace Sokoban.Engine.Objects
 {
-public class Camera
+public static class Camera
 {
-  public Vector3D<float> Position { get; set; }
-  public Vector3D<float> Front { get; set; }
-  public Vector3D<float> Up { get; set; }
-  public float AspectRatio { get; set; }
+  public static Vector3D<float> Position { get; set; } = Vector3D<float>.Zero;
+  public static Quaternion<float> Orientation { get; set; } = Quaternion<float>.Identity;
 
-  public float Yaw { get; set; } = -90f;
-  public float Pitch { get; set; }
-  private float Zoom { get; set; } = 45f;
+  public static Vector3D<float> Front { get; set; } = -Vector3D<float>.UnitZ;
+  public static Vector3D<float> Up { get; set; } = Vector3D<float>.UnitY;
+  private static float AspectRatio { get; set; } = App.Size.X / (float)App.Size.Y;
 
-  public Camera(Vector3D<float> position, Vector3D<float> front, Vector3D<float> up)
-  {
-    Position = position;
-    AspectRatio = 800.0f / 700.0f;
-    Front = front;
-    Up = up;
-  }
 
-  public void ModifyZoom(float zoomAmount) =>
+  private static float Yaw { get; set; } = -90f;
+  private static float Pitch { get; set; }
+  private static float Zoom { get; set; } = 45f;
+
+  public static void ModifyZoom(float zoomAmount) =>
     Zoom = Math.Clamp(Zoom - zoomAmount, 1.0f, 45f);
 
-  public void ModifyDirection(Vector2D<float> offset) => ModifyDirection(offset.X, offset.Y);
-  public void ModifyDirection(float x, float y)
+  public static void ModifyDirection(Vector2D<float> offset) => ModifyDirection(offset.X, offset.Y);
+  public static void ModifyDirection(float x, float y)
   {
     Yaw += x;
     Pitch -= y;
@@ -40,10 +36,10 @@ public class Camera
     Front = Vector3D.Normalize(cameraDirection);
   }
 
-  public Matrix4X4<float> View =>
+  public static Matrix4X4<float> View =>
     Matrix4X4.CreateLookAt(Position, Position + Front, Up);
 
-  public Matrix4X4<float> Projection =>
+  public static Matrix4X4<float> Projection =>
     Matrix4X4.CreatePerspectiveFieldOfView(Scalar.DegreesToRadians(Zoom), AspectRatio, 0.1f, 100.0f);
 }
 }

@@ -28,7 +28,7 @@ public class Shader : IDisposable
   {
     var infoLog = App.Gl.GetShaderInfoLog(Handle);
     if (string.IsNullOrWhiteSpace(infoLog)) return;
-    $"<c6 Error compiling shader of type|> <c124 {Type}|>, <c6 failed with a message|> <c124 {infoLog}|>".LogLine();
+    $"<c4 Shader {Name}|>::<c6 Error compiling shader of type|> <c124 {Type}|>, <c6 failed with a message|> <c124 {infoLog}|>".LogLine();
     throw new Exception();
   }
 
