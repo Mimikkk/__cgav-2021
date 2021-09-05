@@ -2,9 +2,7 @@
 
 layout (location = 0) in vec3 position;
 
-out VertexData {
-    vec3 texture_coordinate;
-} vs_out;
+out VsOut { vec3 texture_coordinate; } vs_out;
 
 layout (std140, binding = 0) uniform MatrixBlock {
     mat4 view;

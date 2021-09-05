@@ -1,12 +1,15 @@
 #version 450 core
 
-in struct { vec2 texCoord; } vsout;
-out vec4 color;
+in VsOut {
+    vec2 texture_coordinate;
+};
 
 uniform sampler2D diffuse;
 
+out vec4 color;
+
 void main()
 {
-    vec3 dif = texture(diffuse, vsout.texCoord).rgb;
+    vec3 dif = texture(diffuse, texture_coordinate).rgb;
     color = vec4(dif, 1.0);
 }

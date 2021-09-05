@@ -1,17 +1,15 @@
 ﻿#version 450 core
 
-layout (location = 0) out vec4 FragColor;
-
-in VertexData {
-    vec3 texture_coordinate;
-} fs_in;
+in VsOut { vec3 texture_coordinate; };
 
 uniform samplerCube skybox;
 
+layout (location = 0) out vec4 color;
+
 vec4 apply_skybox_cubemap() {
-    return texture(skybox, fs_in.texture_coordinate);
+    return texture(skybox, texture_coordinate);
 }
 
 void main() {
-    FragColor = apply_skybox_cubemap();
+    color = apply_skybox_cubemap();
 }
