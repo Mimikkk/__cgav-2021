@@ -1,8 +1,4 @@
-﻿using System.Linq;
-using Logger;
-using Silk.NET.Maths;
-using Sokoban.Engine.Renderers;
-using Sokoban.Engine.Scripts;
+﻿using Sokoban.Engine.Scripts;
 using Sokoban.Utilities;
 using App = Sokoban.Engine.Application.App;
 
