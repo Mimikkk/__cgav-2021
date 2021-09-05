@@ -23,6 +23,7 @@ public static partial class App
       Gl.Enable(EnableCap.DepthTest);
       Gl.Enable(EnableCap.Blend);
       Gl.Enable(EnableCap.TextureCubeMapSeamless);
+      // Gl.Enable(EnableCap.CullFace);
     }
   }
 

@@ -17,7 +17,7 @@ public class CameraBehaviour : MonoBehaviour
 
   protected override void Start()
   {
-    Controller.OnScroll(Camera.ModifyDirection);
+    Controller.OnScroll(scroll => Camera.ModifyZoom(scroll.Y));
 
     Controller.OnHold(Key.W, MoveForwards);
     Controller.OnHold(Key.S, MoveBackwards);

@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Sokoban.Utilities.Extensions
 {
-public static partial class Extensions
+public static partial class Extension
 {
   public static void Deconstruct<T>(this IList<T> list, out T first, out IList<T> rest)
   {
