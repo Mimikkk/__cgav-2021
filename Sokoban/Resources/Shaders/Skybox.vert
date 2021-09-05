@@ -2,12 +2,12 @@
 
 layout (location = 0) in vec3 position;
 
-out VsOut { vec3 texture_coordinate; } vs_out;
-
 layout (std140, binding = 0) uniform MatrixBlock {
     mat4 view;
     mat4 projection;
 };
+
+out VsOut { vec3 texture_coordinate; } vs_out;
 
 vec4 calculate_skybox_position() {
     return (projection * view * vec4(position, 1.0)).xyww;
