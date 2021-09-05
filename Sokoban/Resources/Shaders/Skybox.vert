@@ -3,6 +3,7 @@
 layout (location = 0) in vec3 position;
 
 layout (std140, binding = 0) uniform CameraBlock {
+    vec3 _;
     mat4 view;
     mat4 projection;
 };

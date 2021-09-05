@@ -33,6 +33,7 @@ public class CameraBehaviour : MonoBehaviour
   protected override void Render(double dt)
   {
     Ubo.Bind();
+    Ubo.SetUniform("position", Camera.Position);
     Ubo.SetUniform("view", Camera.View);
     Ubo.SetUniform("projection", Camera.Projection);
   }
@@ -48,7 +49,7 @@ public class CameraBehaviour : MonoBehaviour
 
   private static readonly UniformBuffer Ubo = new("VPBlock") {
     Binding = 0,
-    Fields = new(("view", 16), ("projection", 16))
+    Fields = new(("position", 4), ("view", 16), ("projection", 16))
   };
 }
 }

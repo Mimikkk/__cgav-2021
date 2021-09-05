@@ -21,8 +21,6 @@ public class PreCubeBehaviour : MonoBehaviour
 
     ShaderProgram.SetUniform("model", Matrix4X4<float>.Identity);
     
-    ShaderProgram.SetUniform("viewPos", Camera.Position);
-
     ShaderProgram.SetUniform("material.diffuse", 0);
     ShaderProgram.SetUniform("material.specular", 1);
     ShaderProgram.SetUniform("material.shininess", 32.0f);

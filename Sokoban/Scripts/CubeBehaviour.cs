@@ -19,17 +19,21 @@ public class CubeBehaviour : MonoBehaviour
 
     Go.Spo!.SetUniform("model", Go.View);
 
-    Go.Spo.SetUniform("viewPos", Camera.Position);
-
     Go.Spo.SetUniform("material.diffuse", 0);
     Go.Spo.SetUniform("material.specular", 1);
     Go.Spo.SetUniform("material.shininess", 32.0f);
 
-    Go.Spo.SetUniform("light.ambient", Go.Mesh.Material.AmbientColor);
-    Go.Spo.SetUniform("light.diffuse", Go.Mesh.Material.DiffuseColor);
-    Go.Spo.SetUniform("light.specular", Go.Mesh.Material.SpecularColor);
+    Go.Spo.SetUniform("light.ambient", AmbientColor);
+    Go.Spo.SetUniform("light.diffuse", DiffuseColor);
+    Go.Spo.SetUniform("light.specular", Vector3D<float>.One);
     Go.Spo.SetUniform("light.position", Camera.Position);
   });
+
+  private static readonly Texture Diffuse = new("SilkBoxed.png");
+  private static readonly Texture Specular = new("SilkSpecular.png");
+
+  private static readonly Vector3D<float> DiffuseColor = new(0.5f);
+  private static readonly Vector3D<float> AmbientColor = new Vector3D<float>(0.2f) * DiffuseColor;
 
   private static readonly float[] Vertices = {
     //X    Y      Z       Normals             U     V
@@ -89,6 +93,7 @@ public class CubeBehaviour : MonoBehaviour
         NormalMap = new("SilkSpecular.png"),
         AmbientColor = new(0.1f),
         DiffuseColor = new(0.5f),
+        SpecularColor = Vector4D<float>.One,
         Shininess = 32.0f,
       },
       Vao = new VertexArray {
