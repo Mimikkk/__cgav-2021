@@ -40,10 +40,10 @@ public class Camera
     Front = Vector3D.Normalize(cameraDirection);
   }
 
-  public Matrix4X4<float> GetViewMatrix() =>
+  public Matrix4X4<float> View =>
     Matrix4X4.CreateLookAt(Position, Position + Front, Up);
 
-  public Matrix4X4<float> GetProjectionMatrix() =>
+  public Matrix4X4<float> Projection =>
     Matrix4X4.CreatePerspectiveFieldOfView(Scalar.DegreesToRadians(Zoom), AspectRatio, 0.1f, 100.0f);
 }
 }

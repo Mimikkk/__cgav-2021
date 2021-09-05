@@ -17,19 +17,19 @@ public static partial class App
       Window.Center();
       SetupOpenGl();
     }
-    private static void SetupOpenGl() => Gl = GL.GetApi(Window);
+    private static void SetupOpenGl()
+    {
+      Gl = GL.GetApi(Window);
+      Gl.Enable(EnableCap.DepthTest);
+      Gl.Enable(EnableCap.Blend);
+      Gl.Enable(EnableCap.TextureCubeMapSeamless);
+    }
   }
 
   private static Action<double> HandleOnDifferential(Action<double> action, Func<bool>? shouldFire = null) =>
-    (shouldFire is null) switch {
-      true  => action,
-      false => dt => shouldFire!().Then(action, dt)
-    };
+    (shouldFire is null).Or(action, dt => shouldFire!().Then(action, dt));
 
   private static Action<double> HandleOnDifferential(Action action, Func<bool>? shouldFire = null) =>
-    (shouldFire is null) switch {
-      true  => _ => action(),
-      false => _ => shouldFire!().Then(action)
-    };
+    HandleOnDifferential(_ => action(), shouldFire);
 }
 }

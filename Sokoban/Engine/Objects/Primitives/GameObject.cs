@@ -35,8 +35,8 @@ public class GameObject
     Spo?.SetUniform("normalMap", 1);
     Spo?.SetUniform("depthMap", 2);
 
-    Spo?.SetUniform("projection", CameraBehaviour.Camera.GetProjectionMatrix());
-    Spo?.SetUniform("view", CameraBehaviour.Camera.GetViewMatrix());
+    Spo?.SetUniform("projection", CameraBehaviour.Camera.Projection);
+    Spo?.SetUniform("view", CameraBehaviour.Camera.View);
     Spo?.SetUniform("model", ViewMatrix);
 
     Spo?.SetUniform("viewPos", CameraBehaviour.Camera.Position);

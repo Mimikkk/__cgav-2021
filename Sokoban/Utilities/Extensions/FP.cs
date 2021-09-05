@@ -7,7 +7,10 @@ namespace Sokoban.Utilities.Extensions
 {
 public static partial class Extension
 {
-  public static T Or<T>(this bool predicate, T ifTrue, T ifFalse) => predicate ? ifTrue : ifFalse;
+  public static T Or<T>(this bool predicate, T ifTrue, T ifFalse) => predicate switch {
+    true  => ifTrue,
+    false => ifFalse
+  };
 
   public static void Then(this bool predicate, Action action)
   {

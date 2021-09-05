@@ -62,10 +62,11 @@ public class Skybox
     VertexBuffer = new VertexBuffer(Vertices),
     Layout = new Layout(3)
   };
-  private static readonly UniformBuffer Ubo = new("MatrixUniforms") {
-    Binding = 0,
-    Fields = new Fields(("projection", 16), ("view", 16))
+
+  private static readonly UniformBuffer Ubo = new("SkyboxBlock") {
+    Fields = new Fields(("view", 16), ("projection", 16))
   };
+
   private static readonly ShaderProgram Spo = new("Skybox") {
     Vertex = default,
     Fragment = default,
@@ -74,18 +75,15 @@ public class Skybox
 
   public void ShaderConfiguration()
   {
+    App.Gl.DepthFunc(DepthFunction.Lequal);
+
     Vao.Bind();
     Spo.Bind();
     CubeMap.Bind();
 
-    App.Gl.DepthFunc(DepthFunction.Lequal);
-
-    var projection = CameraBehaviour.Camera.GetProjectionMatrix();
-    var view = Matrix4X4.CreateFromQuaternion(Quaternion<float>.CreateFromRotationMatrix(CameraBehaviour.Camera.GetViewMatrix()));
-
     Ubo.Bind();
-    Ubo.SetUniform("projection", projection);
-    Ubo.SetUniform("view", view);
+    Ubo.SetUniform("view", Matrix4X4.CreateFromQuaternion(Quaternion<float>.CreateFromRotationMatrix(CameraBehaviour.Camera.View)));
+    Ubo.SetUniform("projection", CameraBehaviour.Camera.Projection);
   }
 }
 }

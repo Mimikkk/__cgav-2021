@@ -25,14 +25,15 @@ public static partial class App
     Title = "Grafika Komputerowa i Wizualizacja - Sokoban",
     Size = new Vector2D<int>(800, 700),
     API = new GraphicsAPI(ContextAPI.OpenGL, ContextProfile.Core, ContextFlags.Default,
-      new APIVersion(4, 5)),
+      new APIVersion(4, 6)),
     FramesPerSecond = 60,
     UpdatesPerSecond = 100,
+    PreferredBitDepth = new(24),
     PreferredDepthBufferBits = 24,
     PreferredStencilBufferBits = 24,
-    ShouldSwapAutomatically = true
+    ShouldSwapAutomatically = true,
   };
-  private const ClearBufferMask ClearMask = ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit | ClearBufferMask.CoverageBufferBitNV;
+  private const ClearBufferMask ClearMask = ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit;
   private static readonly IWindow Window;
 }
 }

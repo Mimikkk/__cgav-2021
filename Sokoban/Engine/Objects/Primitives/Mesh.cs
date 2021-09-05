@@ -12,7 +12,7 @@ public class Mesh
   public int IndexCount => Vao.IndexBuffer?.Count ?? 0;
   public int VertexCount => Vao.VertexBuffer?.Count ?? 0;
 
-  public VertexArray Vao { get; init; }
+  public VertexArray Vao { get; init; } = null!;
 
   public void Log(int depth = 0)
   {

@@ -6,9 +6,9 @@ out VertexData {
     vec3 texture_coordinate;
 } vs_out;
 
-layout (binding = 0, std140) uniform MatrixBlock {
-    mat4 projection;
+layout (std140, binding = 0) uniform MatrixBlock {
     mat4 view;
+    mat4 projection;
 };
 
 vec4 calculate_skybox_position() {
