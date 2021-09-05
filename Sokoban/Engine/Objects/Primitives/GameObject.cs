@@ -1,4 +1,5 @@
-﻿using Silk.NET.Maths;
+﻿using System;
+using Silk.NET.Maths;
 using Silk.NET.OpenGL;
 using Sokoban.Engine.Application;
 using Sokoban.Engine.Renderers.Shaders;
@@ -17,36 +18,21 @@ public class GameObject
   public Quaternion<float> Rotation { get; set; } = Quaternion<float>.Identity;
   public float Scale { get; set; } = 1f;
 
-  public Matrix4X4<float> ViewMatrix => Matrix4X4<float>.Identity
-                                        * Matrix4X4.CreateFromQuaternion(Rotation)
-                                        * Matrix4X4.CreateScale(Scale)
-                                        * Matrix4X4.CreateTranslation(Position);
+  public Matrix4X4<float> View => Matrix4X4<float>.Identity
+                                  * Matrix4X4.CreateFromQuaternion(Rotation)
+                                  * Matrix4X4.CreateScale(Scale)
+                                  * Matrix4X4.CreateTranslation(Position);
 
-  public void ShaderConfiguration()
+  public void Draw(Action shaderConfiguration)
   {
-    Mesh?.Vao.Bind();
-    Spo?.Bind();
+    if (Mesh == null || Spo == null) return;
+    Spo.Bind();
+    Mesh.Vao.Bind();
 
-    Mesh?.Material?.DiffuseTexture?.Bind(0);
-    Mesh?.Material?.NormalTexture?.Bind(1);
-    Mesh?.Material?.DisplacementTexture?.Bind(2);
+    shaderConfiguration();
 
-    Spo?.SetUniform("diffuseMap", 0);
-    Spo?.SetUniform("normalMap", 1);
-    Spo?.SetUniform("depthMap", 2);
-
-    Spo?.SetUniform("projection", CameraBehaviour.Camera.Projection);
-    Spo?.SetUniform("view", CameraBehaviour.Camera.View);
-    Spo?.SetUniform("model", ViewMatrix);
-
-    Spo?.SetUniform("viewPos", CameraBehaviour.Camera.Position);
-    Spo?.SetUniform("lightPos", Vector3D<float>.One);
-    Spo?.SetUniform("heightScale", Scale);
-  }
-  public unsafe void Draw()
-  {
-    ShaderConfiguration();
-    if (Mesh != null) App.Gl.DrawElements(PrimitiveType.Triangles, Mesh.Vao.Size, DrawElementsType.UnsignedInt, null);
+    App.Gl.DrawArrays(PrimitiveType.Triangles, 0, 36);
+    // App.Gl.DrawElements(PrimitiveType.Triangles, Mesh.Vao.Size, DrawElementsType.UnsignedInt, null);
   }
 }
 }

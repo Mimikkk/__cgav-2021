@@ -28,7 +28,7 @@ public class Shader : IDisposable
   {
     var infoLog = App.Gl.GetShaderInfoLog(Handle);
     if (string.IsNullOrWhiteSpace(infoLog)) return;
-    $"<c6 Error compiling shader of type|> <c124 {Type}|>, <c6 failed with error> <c124 {infoLog}|>".LogLine();
+    $"<c6 Error compiling shader of type|> <c124 {Type}|>, <c6 failed with a message|> <c124 {infoLog}|>".LogLine();
     throw new Exception();
   }
 
@@ -36,19 +36,17 @@ public class Shader : IDisposable
   public ShaderType Type { get; }
   public string Name { get; }
 
-  private string Source => Shaderpath.LoadFileToString();
-  private Path Shaderpath => Filesystem.Shaders / $"{Name}{Extension}";
-  private string Extension {
-    get => Type switch {
-      ShaderType.FragmentShader       => ".frag",
-      ShaderType.VertexShader         => ".vert",
-      ShaderType.GeometryShader       => ".geom",
-      ShaderType.TessEvaluationShader => ".tese",
-      ShaderType.TessControlShader    => ".tesc",
-      ShaderType.ComputeShader        => ".comp",
-      _                               => throw new ArgumentOutOfRangeException($"Unsupported ShaderType : {Type}")
-    };
-  }
+  private string Source => Path.LoadFileToString();
+  private Path Path => Filesystem.Shaders / $"{Name}{Extension}";
+  private string Extension => Type switch {
+    ShaderType.FragmentShader       => ".frag",
+    ShaderType.VertexShader         => ".vert",
+    ShaderType.GeometryShader       => ".geom",
+    ShaderType.TessEvaluationShader => ".tese",
+    ShaderType.TessControlShader    => ".tesc",
+    ShaderType.ComputeShader        => ".comp",
+    _                               => throw new ArgumentOutOfRangeException($"Unsupported ShaderType : {Type}")
+  };
 
   public void Dispose()
   {

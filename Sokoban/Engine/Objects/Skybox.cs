@@ -13,7 +13,8 @@ namespace Sokoban.Engine.Objects
 {
 public class Skybox
 {
-  private Cubemap CubeMap { get; } = new("skybox");
+  private static readonly Cubemap CubeMap = new("Skybox");
+
   private static readonly float[] Vertices = {
     -1.0f, 1.0f, -1.0f,
     -1.0f, -1.0f, -1.0f,
@@ -73,6 +74,8 @@ public class Skybox
     ShouldLink = true
   };
 
+  public Camera Camera { private get; init; } = null!;
+
   public void ShaderConfiguration()
   {
     App.Gl.DepthFunc(DepthFunction.Lequal);
@@ -82,8 +85,8 @@ public class Skybox
     CubeMap.Bind();
 
     Ubo.Bind();
-    Ubo.SetUniform("view", Matrix4X4.CreateFromQuaternion(Quaternion<float>.CreateFromRotationMatrix(CameraBehaviour.Camera.View)));
-    Ubo.SetUniform("projection", CameraBehaviour.Camera.Projection);
+    Ubo.SetUniform("view", Matrix4X4.CreateFromQuaternion(Quaternion<float>.CreateFromRotationMatrix(Camera.View)));
+    Ubo.SetUniform("projection", Camera.Projection);
   }
 }
 }

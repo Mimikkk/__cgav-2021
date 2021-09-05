@@ -88,7 +88,7 @@ public static class ObjectLoader
       }
     };
   }
-  private static Material ToMaterial(Assimp.Material raw) => new(raw.Name ?? "Unnamed") {
+  private static Material ToMaterial(Assimp.Material raw) => new() {
     Opacity = raw.Opacity,
     Reflectivity = raw.Reflectivity,
     Shininess = raw.Shininess,
@@ -101,16 +101,16 @@ public static class ObjectLoader
     ReflectiveColor = raw.ColorReflective.ToColor(),
     SpecularColor = raw.ColorSpecular.ToColor(),
     TransparentColor = raw.ColorTransparent.ToColor(),
-    AmbientTexture = raw.TextureAmbient.ToTexture(),
-    DiffuseTexture = raw.TextureDiffuse.ToTexture() ?? Texture.Missing,
-    DisplacementTexture = raw.TextureDisplacement.ToTexture(),
-    EmissiveTexture = raw.TextureEmissive.ToTexture(),
-    HeightTexture = raw.TextureHeight.ToTexture(),
-    NormalTexture = raw.TextureNormal.ToTexture(),
-    OpacityTexture = raw.TextureOpacity.ToTexture(),
-    ReflectionTexture = raw.TextureReflection.ToTexture(),
-    AmbientOcclusionTexture = raw.TextureAmbientOcclusion.ToTexture(),
-    LightMapTexture = raw.TextureLightMap.ToTexture()
+    AmbientMap = raw.TextureAmbient.ToTexture(),
+    DiffuseMap = raw.TextureDiffuse.ToTexture() ?? Texture.Missing,
+    DisplacementMap = raw.TextureDisplacement.ToTexture(),
+    EmissiveMap = raw.TextureEmissive.ToTexture(),
+    HeightMap = raw.TextureHeight.ToTexture(),
+    NormalMap = raw.TextureNormal.ToTexture(),
+    OpacityMap = raw.TextureOpacity.ToTexture(),
+    ReflectionMap = raw.TextureReflection.ToTexture(),
+    AmbientOcclusionMap = raw.TextureAmbientOcclusion.ToTexture(),
+    LightMap = raw.TextureLightMap.ToTexture()
   };
 
   private static Vector3D<float> ToVector3D(Assimp.Vector3D v) => new(v.X, v.Y, v.Z);

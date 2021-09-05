@@ -8,7 +8,10 @@ public class SkyboxBehaviour : MonoBehaviour
 {
   public override LoadPriority LoadPriority => LoadPriority.VeryHigh;
 
-  private static readonly Skybox Skybox = new();
   protected override void Render(double dt) => Renderer.Render(Skybox);
+
+  private static readonly Skybox Skybox = new() {
+    Camera = CameraBehaviour.Camera,
+  };
 }
 }
