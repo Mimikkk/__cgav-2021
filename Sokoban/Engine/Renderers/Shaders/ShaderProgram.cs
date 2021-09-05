@@ -97,11 +97,5 @@ public class ShaderProgram : IDisposable
   private void DetachShader(Shader shader) => App.Gl.DetachShader(Handle, shader.Handle);
 
   public void Dispose() => App.Gl.DeleteProgram(Handle);
-
-  public static readonly ShaderProgram Default = new("Default") {
-    Fragment = default,
-    Vertex = default,
-    ShouldLink = true,
-  };
 }
 }

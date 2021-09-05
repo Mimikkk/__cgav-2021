@@ -22,9 +22,17 @@ public static partial class App
     private static void SetupOpenGl()
     {
       Gl = GL.GetApi(Window);
+      Gl.Enable(GLEnum.Samples, 4);
       Gl.Enable(EnableCap.DepthTest);
       Gl.Enable(EnableCap.Blend);
+      Gl.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
+      Gl.Enable(EnableCap.Multisample);
+      Gl.Enable(EnableCap.LineSmooth);
+      Gl.Enable(EnableCap.InterlaceSgix);
+      Gl.Enable(EnableCap.StencilTest);
       Gl.Enable(EnableCap.TextureCubeMapSeamless);
+      Gl.Hint(HintTarget.LineSmoothHint, HintMode.Nicest);
+      Gl.Hint(HintTarget.PolygonSmoothHint, HintMode.Nicest);
     }
   }
 

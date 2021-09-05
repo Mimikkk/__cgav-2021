@@ -34,7 +34,7 @@ public class Material
     $"<c70 AmbientOcclusionMap|>: {AmbientOcclusionMap?.Name ?? "<c8 None|>"}".LogLine(4 + depth);
     $"<c70 LightMap|>: {LightMap?.Name ?? "<c8 None|>"}".LogLine(4 + depth);
   }
-  public string? Name { get; init;}
+  public string? Name { get; init; }
 
   public float Opacity { get; set; } = 1;
   public float Reflectivity { get; set; }
@@ -54,11 +54,11 @@ public class Material
   public Texture? AmbientOcclusionMap { get; set; }
   public Texture? LightMap { get; set; }
 
-  public Vector4D<float> AmbientColor { get; set; } = Vector4D<float>.UnitW + Vector4D<float>.UnitX;
-  public Vector4D<float> DiffuseColor { get; set; } = Vector4D<float>.One;
-  public Vector4D<float> EmissiveColor { get; set; } = Vector4D<float>.UnitW;
-  public Vector4D<float> ReflectiveColor { get; set; } = Vector4D<float>.UnitW;
-  public Vector4D<float> SpecularColor { get; set; } = Vector4D<float>.One;
-  public Vector4D<float> TransparentColor { get; set; } = Vector4D<float>.UnitW;
+  public Vector4D<float>? AmbientColor { get; set; }
+  public Vector4D<float>? DiffuseColor { get; set; }
+  public Vector4D<float>? EmissiveColor { get; set; }
+  public Vector4D<float>? ReflectiveColor { get; set; }
+  public Vector4D<float>? SpecularColor { get; set; }
+  public Vector4D<float>? TransparentColor { get; set; }
 }
 }

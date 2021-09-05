@@ -11,7 +11,7 @@ public class GameObject
   public string Name { get; init; } = "Unnamed";
 
   public Mesh? Mesh { get; init; }
-  public ShaderProgram? Spo { get; set; } = ShaderProgram.Default;
+  public ShaderProgram? Spo { get; set; }
 
   public Vector3D<float> Position { get; set; } = new(0, 0, 0);
   public Quaternion<float> Rotation { get; set; } = Quaternion<float>.Identity;
