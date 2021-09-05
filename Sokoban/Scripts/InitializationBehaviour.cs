@@ -1,4 +1,7 @@
-﻿using Silk.NET.OpenGL;
+﻿using Logger;
+using Silk.NET.Input;
+using Silk.NET.OpenGL;
+using Sokoban.Engine.Controllers;
 using Sokoban.Engine.Renderers.Buffers.Helpers;
 using Sokoban.Engine.Renderers.Buffers.Objects;
 using Sokoban.Engine.Renderers.Shaders;
@@ -11,6 +14,8 @@ namespace Sokoban.Scripts
 internal class InitializationBehaviour : MonoBehaviour
 {
   public override LoadPriority LoadPriority => LoadPriority.Normal;
+
+  private static bool ShouldRender = true;
 
   private static readonly float[] Vertices = {
     0.5f, 0.5f, 0.0f,
@@ -38,9 +43,15 @@ internal class InitializationBehaviour : MonoBehaviour
       Vertex = default,
       ShouldLink = true
     };
+    Controller.OnPush(Key.GraveAccent, () => {
+      $"<c17 Plane Rendering|>: <c2{ShouldRender}|>".LogLine();
+      ShouldRender = !ShouldRender;
+    });
+
   }
   protected override unsafe void Render(double dt)
   {
+    if (!ShouldRender) return;
     ShaderProgram.Bind();
     VertexArray.Bind();
     App.Gl.DrawElements(PrimitiveType.Triangles, VertexArray.Size, DrawElementsType.UnsignedInt, null);
