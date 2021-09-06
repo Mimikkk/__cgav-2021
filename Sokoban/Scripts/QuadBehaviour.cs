@@ -1,10 +1,11 @@
 ﻿using System;
+using Assimp;
 using Silk.NET.Input;
 using Silk.NET.Maths;
 using Sokoban.Engine.Controllers;
-using Sokoban.Engine.Objects;
 using Sokoban.Engine.Objects.Primitives;
 using Sokoban.Engine.Scripts;
+using Camera = Sokoban.Engine.Objects.Camera;
 
 namespace Sokoban.Scripts
 {
@@ -17,22 +18,32 @@ public class QuadBehaviour : MonoBehaviour
   }
 
 
-  protected override void Render(double dt) => Go.Draw(() => {
-    if (Go.Mesh?.Material == null || Go.Spo == null) return;
+  protected override void Render(double dt)
+  {
+    var model = Matrix4X4<float>.Identity;
+    for (int i = 0; i < 5; i++)
+    {
+      model *= Matrix4X4.CreateTranslation(2 * Vector3D<float>.UnitX);
 
-    Go.Mesh.Material.DiffuseMap?.Bind(0);
-    Go.Mesh.Material.NormalMap?.Bind(1);
-    Go.Mesh.Material.DisplacementMap?.Bind(2);
+      Go.Draw(() => {
+        if (Go.Mesh?.Material == null || Go.Spo == null) return;
 
-    Go.Spo.SetUniform("diffuse_map", 0);
-    Go.Spo.SetUniform("normal_map", 1);
-    Go.Spo.SetUniform("displacement_map", 2);
+        Go.Mesh.Material.DiffuseMap?.Bind(0);
+        Go.Mesh.Material.NormalMap?.Bind(1);
+        Go.Mesh.Material.DisplacementMap?.Bind(2);
 
-    Go.Spo.SetUniform("model", Matrix4X4<float>.Identity);
-    Go.Spo.SetUniform("light_position", Camera.Position);
-    Go.Spo.SetUniform("height_scale", HeightScale);
+        Go.Spo.SetUniform("diffuse_map", 0);
+        Go.Spo.SetUniform("normal_map", 1);
+        Go.Spo.SetUniform("displacement_map", 2);
 
-  });
+        Go.Spo.SetUniform("model", model);
+        Go.Spo.SetUniform("light_position", Camera.Position);
+        Go.Spo.SetUniform("height_scale", HeightScale);
+        Go.Spo.SetUniform("is_discardable", false);
+
+      });
+    }
+  }
 
   private static float HeightScale = 1f;
 

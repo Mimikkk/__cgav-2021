@@ -13,8 +13,10 @@ uniform sampler2D normal_map;
 uniform sampler2D displacement_map;
 
 uniform float height_scale;
+uniform bool is_discardable;
 
 out vec4 color;
+
 
 vec2 MapParallax(vec2 coord, vec3 view_direction) {
 
@@ -68,37 +70,26 @@ bool ShouldDiscard(vec2 vec) {
     return ShouldDiscard(vec.x, vec.y);
 }
 void DiscardTextureCoordinate(vec2 coordinate) {
-    if (ShouldDiscard(coordinate)) discard;
+    if (is_discardable && ShouldDiscard(coordinate)) discard;
 }
 
 void main() {
-    // offset texture coordinates with Parallax Mapping
     vec3 view_direction = normalize(tangent_view_position - tangent_position);
-    vec2 paralax_texture_coord = texture_coordinate;
 
-    paralax_texture_coord = MapParallax(texture_coordinate, view_direction);
-    DiscardTextureCoordinate(paralax_texture_coord);
+    vec2 offset_texture_coord = MapParallax(texture_coordinate, view_direction);
+    DiscardTextureCoordinate(offset_texture_coord);
 
-    // obtain normal from normal map
-    vec3 normal = texture(normal_map, paralax_texture_coord).rgb;
-    normal = normalize(normal * 2.0 - 1.0);
+    vec3 light_direction = normalize(tangent_light_position - tangent_position);
+    vec3 diffuse_color = texture(diffuse_map, offset_texture_coord).rgb;
+    vec3 normal = normalize(2*texture(normal_map, offset_texture_coord).rgb -1);
 
-    // get diffuse color
-    vec3 diffuse_color = texture(diffuse_map, paralax_texture_coord).rgb;
+    vec3 reflect_direction = reflect(-light_direction, normal);
+    vec3 halfway_direction = normalize(light_direction + view_direction);
 
-    // ambient
     vec3 ambient = 0.1 * diffuse_color;
 
-    // diffuse
-    vec3 light_direction = normalize(tangent_light_position - tangent_position);
-    float diff = max(dot(light_direction, normal), 0.0);
-    vec3 diffuse = diff * diffuse_color;
+    vec3 diffuse = max(dot(reflect_direction, normal), 0.0) * diffuse_color;
+    vec3 specular = vec3(0.2) * pow(max(dot(normal, halfway_direction), 0.0), 32.0);
 
-    // specular    
-    vec3 reflect_direction = reflect(-light_direction, normal);
-    vec3 halfwayDirection = normalize(light_direction + view_direction);
-    float spec = pow(max(dot(normal, halfwayDirection), 0.0), 32.0);
-
-    vec3 specular = vec3(0.2) * spec;
     color = vec4(ambient + diffuse + specular, 1.0);
 }

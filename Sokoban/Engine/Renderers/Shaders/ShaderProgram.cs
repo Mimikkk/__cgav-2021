@@ -62,6 +62,8 @@ public class ShaderProgram : IDisposable
     App.Gl.Uniform1(UniformLocation(name), value);
   public void SetUniform(string name, double value) =>
     App.Gl.Uniform1(UniformLocation(name), value);
+  public unsafe void SetUniform(string name, bool value) =>
+    App.Gl.Uniform1(UniformLocation(name), value ? 1 : 0);
 
   public void SetUniform(string name, Vector2D<float> value) =>
     App.Gl.Uniform2(UniformLocation(name), (Vector2)value);
