@@ -9,8 +9,8 @@ public class Mesh
   public string Name { get; init; } = "Unnamed";
   public Material? Material { get; set; }
 
-  public int IndexCount => Vao.IndexBuffer?.Count ?? 0;
-  public int VertexCount => Vao.VertexBuffer?.Count ?? 0;
+  public uint IndexCount => (uint)(Vao.IndexBuffer?.Count ?? 0);
+  public uint VertexCount => Vao.Size / Vao.PerVertexSize;
 
   public VertexArray Vao { get; init; } = null!;
 

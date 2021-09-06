@@ -1,4 +1,5 @@
 ﻿using System;
+using Logger;
 using Silk.NET.Maths;
 using Silk.NET.OpenGL;
 using Sokoban.Engine.Application;
@@ -22,7 +23,7 @@ public class GameObject
                                   * Matrix4X4.CreateScale(Scale)
                                   * Matrix4X4.CreateTranslation(Position);
 
-  public void Draw(Action shaderConfiguration)
+  public unsafe void Draw(Action shaderConfiguration)
   {
     if (Mesh == null || Spo == null) return;
     Spo.Bind();
@@ -30,8 +31,10 @@ public class GameObject
 
     shaderConfiguration();
 
-    App.Gl.DrawArrays(PrimitiveType.Triangles, 0, 36);
-    // App.Gl.DrawElements(PrimitiveType.Triangles, Mesh.Vao.Size, DrawElementsType.UnsignedInt, null);
+    if (Mesh.IndexCount > 0)
+      App.Gl.DrawElements(PrimitiveType.Triangles, Mesh.IndexCount, DrawElementsType.UnsignedInt, null);
+    else
+      App.Gl.DrawArrays(PrimitiveType.Triangles, 0, Mesh.VertexCount);
   }
 }
 }

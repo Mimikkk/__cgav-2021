@@ -32,7 +32,7 @@ public class VertexArray : IDisposable
   }
 
   public uint Size => ((uint?)IndexBuffer?.Count ?? (PerVertexSize != 0 ? VertexBuffer?.Size ?? 0 / PerVertexSize : 0)) * sizeof(float);
-  private uint PerVertexSize => Layout.Size * sizeof(float);
+  public uint PerVertexSize => Layout.Size * sizeof(float);
 
   public VertexArray() => Handle = App.Gl.GenVertexArray();
 
