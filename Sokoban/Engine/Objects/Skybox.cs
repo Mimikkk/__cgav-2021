@@ -1,10 +1,8 @@
 ﻿#nullable enable
-using Silk.NET.OpenGL;
 using Sokoban.Engine.Objects.Primitives.Textures;
 using Sokoban.Engine.Renderers.Buffers.Helpers;
 using Sokoban.Engine.Renderers.Buffers.Objects;
 using Sokoban.Engine.Renderers.Shaders;
-using App = Sokoban.Engine.Application.App;
 using VertexArray = Sokoban.Engine.Renderers.Buffers.Objects.VertexArray;
 
 namespace Sokoban.Engine.Objects

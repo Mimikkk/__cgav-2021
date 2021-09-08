@@ -1,5 +1,4 @@
 ﻿using System;
-using Logger;
 using Silk.NET.Maths;
 using Silk.NET.OpenGL;
 using Sokoban.Engine.Application;
@@ -23,11 +22,14 @@ public class GameObject
                                   * Matrix4X4.CreateScale(Scale)
                                   * Matrix4X4.CreateTranslation(Position);
 
-  public unsafe void Draw(Action shaderConfiguration)
+  public unsafe void Draw(Action shaderConfiguration, bool customBufferLogic = false)
   {
     if (Mesh == null || Spo == null) return;
-    Spo.Bind();
-    Mesh.Vao.Bind();
+    if (!customBufferLogic)
+    {
+      Spo.Bind();
+      Mesh.Vao.Bind();
+    }
 
     shaderConfiguration();
 
