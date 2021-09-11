@@ -9,7 +9,7 @@ using Material = Sokoban.Engine.Objects.Primitives.Textures.Material;
 
 namespace Sokoban.Scripts
 {
-public class QuadBehaviour : MonoBehaviour
+public class MapBehaviour : MonoBehaviour
 {
   protected override void Start()
   {
@@ -50,24 +50,24 @@ public class QuadBehaviour : MonoBehaviour
 
   private static readonly IReadOnlyDictionary<Direction, Matrix4X4<float>> TransformMap = new Dictionary<Direction, Matrix4X4<float>> {
     {
-      Direction.Forward,
-      Matrix4X4.CreateTranslation(-Vector3D<float>.UnitX - Vector3D<float>.UnitZ) * Matrix4X4.CreateRotationY(Scalar.DegreesToRadians(90f))
-    }, {
-      Direction.Backward,
-      Matrix4X4.CreateTranslation(Vector3D<float>.UnitX - Vector3D<float>.UnitZ) * Matrix4X4.CreateRotationY(Scalar.DegreesToRadians(270f))
-    }, {
-      Direction.Right,
-      Matrix4X4.CreateTranslation(Vector3D<float>.Zero) * Matrix4X4.CreateRotationX(Scalar.DegreesToRadians(0f))
-    }, {
       Direction.Top,
-      Matrix4X4.CreateTranslation(Vector3D<float>.UnitY - Vector3D<float>.UnitZ) * Matrix4X4.CreateRotationX(Scalar.DegreesToRadians(90f))
+      Matrix4X4.CreateTranslation(Vector3D<float>.UnitY - 2 * Vector3D<float>.UnitZ) * Matrix4X4.CreateRotationX(Scalar.DegreesToRadians(90f))
     }, {
       Direction.Bottom,
-      Matrix4X4.CreateTranslation(-Vector3D<float>.UnitY - Vector3D<float>.UnitZ) * Matrix4X4.CreateRotationX(Scalar.DegreesToRadians(270f))
+      Matrix4X4.CreateTranslation(-Vector3D<float>.UnitY - 2 * Vector3D<float>.UnitZ) * Matrix4X4.CreateRotationX(Scalar.DegreesToRadians(270f))
+    }, {
+      Direction.Forward,
+      Matrix4X4.CreateTranslation(-Vector3D<float>.UnitX - 2 * Vector3D<float>.UnitZ) * Matrix4X4.CreateRotationY(Scalar.DegreesToRadians(90f))
+    }, {
+      Direction.Backward,
+      Matrix4X4.CreateTranslation(Vector3D<float>.UnitX - 2 * Vector3D<float>.UnitZ) * Matrix4X4.CreateRotationY(Scalar.DegreesToRadians(270f))
     }, {
       Direction.Left,
-      Matrix4X4.CreateTranslation(-2 * Vector3D<float>.UnitZ) * Matrix4X4.CreateRotationX(Scalar.DegreesToRadians(180f))
-    },
+      Matrix4X4.CreateTranslation(- Vector3D<float>.UnitZ) * Matrix4X4.CreateRotationX(Scalar.DegreesToRadians(180f))
+    }, {
+      Direction.Right,
+      Matrix4X4.CreateTranslation(-Vector3D<float>.UnitZ) * Matrix4X4.CreateRotationX(Scalar.DegreesToRadians(0f))
+    }
   };
 
   protected override void Render(double dt)
@@ -86,7 +86,7 @@ public class QuadBehaviour : MonoBehaviour
     {
       for (var j = 0; j < dim.Y; ++j)
       {
-        var model = Matrix4X4.CreateTranslation(new Vector3D<float>(2 * i, 2 * j, 0));
+        var model = Matrix4X4.CreateTranslation(new Vector3D<float>(2 * i, 0, 2*j));
 
         // IReadOnlyList<Direction> neighbours = Neighbour.Grid(new(i, j))
         // .Where(n => n.IsSafe(dim) && n.IsAdjacent(gameMap)).Select(n=>n.direction)
@@ -95,17 +95,12 @@ public class QuadBehaviour : MonoBehaviour
         if (gameMap[i, j] == 1)
         {
           Quad.Draw(() => {
+            Quad.Spo!.SetUniform("model", model * TransformMap[Direction.Top]);
             Quad.Spo!.SetUniform("height_scale", HeightScale);
-            Quad.Spo.SetUniform("model", model * TransformMap[Direction.Bottom]);
           });
         }
       }
     }
-  }
-
-  protected override void Update(double dt)
-  {
-    HeightScale += (float)dt;
   }
 
   private static float HeightScale = 1f;
