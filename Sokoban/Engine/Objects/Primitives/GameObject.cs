@@ -14,11 +14,11 @@ public class GameObject
   public ShaderProgram? Spo { get; set; }
 
   public Vector3D<float> Position { get; set; } = new(0, 0, 0);
-  public Quaternion<float> Rotation { get; set; } = Quaternion<float>.Identity;
+  public Quaternion<float> Orientation { get; set; } = Quaternion<float>.Identity;
   public float Scale { get; set; } = 1f;
 
   public Matrix4X4<float> View => Matrix4X4<float>.Identity
-                                  * Matrix4X4.CreateFromQuaternion(Rotation)
+                                  * Matrix4X4.CreateFromQuaternion(Orientation)
                                   * Matrix4X4.CreateScale(Scale)
                                   * Matrix4X4.CreateTranslation(Position);
 

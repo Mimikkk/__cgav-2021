@@ -33,8 +33,6 @@ public class GhostBehaviour : MonoBehaviour
   }
 
   protected override void Render(double dt) => Ghost.Draw(() => {
-    HeightScale.LogLine();
-
     Ghost.Mesh!.Material!.DiffuseMap?.Bind(0);
     Ghost.Mesh.Material.NormalMap?.Bind(1);
     Ghost.Mesh.Material.DisplacementMap?.Bind(2);

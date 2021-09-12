@@ -10,7 +10,7 @@ public class Mesh
   public Material? Material { get; set; }
 
   public uint IndexCount => (uint)(Vao.IndexBuffer?.Count ?? 0);
-  public uint VertexCount => Vao.Size / Vao.PerVertexSize;
+  public uint VertexCount => Vao.Size / sizeof(float);
 
   public VertexArray Vao { get; init; } = null!;
 

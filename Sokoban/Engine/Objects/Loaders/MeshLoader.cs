@@ -5,6 +5,7 @@ using Silk.NET.Maths;
 using Sokoban.Engine.Renderers;
 using Sokoban.Engine.Renderers.Buffers.Objects;
 using Mesh = Sokoban.Engine.Objects.Primitives.Mesh;
+using Vector3D = Silk.NET.Maths.Vector3D;
 
 namespace Sokoban.Engine.Objects.Loaders
 {
@@ -13,25 +14,38 @@ public static partial class ObjectLoader
   private static class MeshLoader
   {
     public static void Load() => Meshes.AddRange(Scene.Meshes.Select(ToMesh));
-    
+
     private static Mesh ToMesh(Assimp.Mesh mesh) => new() {
       Name = mesh.Name,
       Material = Materials[mesh.MaterialIndex],
       Vao = new VertexArray {
-        VertexBuffer = new(mesh.Vertices.Select(p => new Vector3D<float>(p.X, p.Y, p.Z))
-          .Zip(mesh.TextureCoordinateChannels[0].Select(vec => new Vector2D<float>(vec.X, vec.Y)))
-          .Zip(mesh.Normals.Select(n => new Vector3D<float>(n.X, n.Y, n.Z)))
-          .Select(ptn => new Vertex() {
-            Position = ptn.First.First,
-            TextureCoordinate = ptn.First.Second,
-            Normal = ptn.Second,
-          })),
+        VertexBuffer = new(ToVertices(mesh)),
         IndexBuffer = new(mesh.Faces.SelectMany(ToIndices)),
-        Layout = new(3, 2, 3),
+        Layout = new(3, 2, 3, 3, 3),
       }
     };
-    private static IEnumerable<uint> ToIndices(Face face) => face.Indices.Select(i => (uint)i);
-  }
 
+    private static IEnumerable<Vertex> ToVertices(Assimp.Mesh mesh) => mesh.Vertices.Select(ToVector3D)
+      .Zip(mesh.TextureCoordinateChannels[0].Select(ToVector2D))
+      .Zip(mesh.Normals.Select(ToVector3D))
+      .Zip(mesh.Tangents.Select(ToVector3D))
+      .Zip(mesh.BiTangents.Select(ToVector3D))
+      .Select(ToVertex);
+
+    private static Vertex ToVertex(((((Vector3D<float>, Vector2D<float>), Vector3D<float>), Vector3D<float>), Vector3D<float>) vertex)
+    {
+      var ((((position, textureCoordinate), normal), tangent), biTangent) = vertex;
+      return new Vertex {
+        Position = position,
+        TextureCoordinate = textureCoordinate,
+        Normal = normal,
+        Tangent = tangent,
+        BiTangent = biTangent,
+      };
+    }
+    private static IEnumerable<uint> ToIndices(Face face) => face.Indices.Select(i => (uint)i);
+    private static Vector2D<float> ToVector2D(Assimp.Vector3D vector) => new(vector.X, vector.Y);
+    private static Vector3D<float> ToVector3D(Assimp.Vector3D vector) => new(vector.X, vector.Y, vector.Z);
+  }
 }
 }

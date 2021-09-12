@@ -20,11 +20,11 @@ public static partial class ObjectLoader
 
   public static void Log()
   {
-    $"Loaded <c17 Scene>: <c22{Scene.RootNode.Name}>".LogLine();
-    $"Number of <c15 Meshes>: <c25 {Scene.MeshCount}>".LogLine(2);
-    $"Number of <c15 Materials>: <c25 {Scene.MaterialCount}>".LogLine(2);
-    $"Loaded <c17 Meshes>".LogLine(2);
-    $"Loaded <c17 Materials>".LogLine(2);
+    $"Loaded <c17 Scene|>: <c22{Scene.RootNode.Name}|>".LogLine();
+    $"Number of <c15 Meshes|>: <c25 {Scene.MeshCount}|>".LogLine(2);
+    $"Number of <c15 Materials|>: <c25 {Scene.MaterialCount}|>".LogLine(2);
+    $"Loaded <c17 Meshes|>".LogLine(2);
+    $"Loaded <c17 Materials|>".LogLine(2);
     foreach (var mesh in Meshes) mesh.Log(4);
     foreach (var material in Materials) material.Log(4);
   }
@@ -34,6 +34,7 @@ public static partial class ObjectLoader
                                                | PostProcessSteps.GenerateUVCoords
                                                | PostProcessSteps.CalculateTangentSpace
                                                | PostProcessSteps.ImproveCacheLocality
+                                               | PostProcessSteps.JoinIdenticalVertices
                                                | PostProcessSteps.OptimizeGraph
                                                | PostProcessSteps.OptimizeMeshes;
 
@@ -44,6 +45,7 @@ public static partial class ObjectLoader
     MaterialLoader.Load();
     MeshLoader.Load();
 
+    ObjectLoader.Log();
     return Meshes.Select(Into);
   }
 
