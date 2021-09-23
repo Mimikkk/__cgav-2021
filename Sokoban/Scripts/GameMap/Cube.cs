@@ -68,7 +68,7 @@ public class Cube : GameObject
     Mesh!.Material!.DiffuseMap?.Bind(0);
     Mesh.Material.NormalMap?.Bind(1);
 
-    Spo!.SetUniform("model", View);
+    Spo!.SetUniform("model", Transform.View);
     Spo.SetUniform("material.diffuse", 0);
     Spo.SetUniform("material.specular", 1);
 

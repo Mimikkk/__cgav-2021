@@ -13,14 +13,7 @@ public class GameObject
   public Mesh? Mesh { get; init; }
   public ShaderProgram? Spo { get; set; }
 
-  public Vector3D<float> Position { get; set; } = new(0, 0, 0);
-  public Quaternion<float> Orientation { get; set; } = Quaternion<float>.Identity;
-  public float Scale { get; set; } = 1f;
-
-  public Matrix4X4<float> View => Matrix4X4<float>.Identity
-                                  * Matrix4X4.CreateFromQuaternion(Quaternion<float>.Conjugate(Orientation))
-                                  * Matrix4X4.CreateScale(Scale)
-                                  * Matrix4X4.CreateTranslation(Position);
+  public Transform Transform { get; set; } = new();
 
   public unsafe void Draw(Action shaderConfiguration, bool customBufferLogic = false)
   {
