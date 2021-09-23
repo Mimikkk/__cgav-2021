@@ -56,10 +56,10 @@ public class MapBehaviour : MonoBehaviour
   }
 
   private static readonly IReadOnlyDictionary<Direction, Transform> TransformMap = new Dictionary<Direction, Transform> {
-    { Direction.Top, new() { Position = new(0, 1, 0), Rotation = new(0, -MathF.PI / 2, 0), } },
-    { Direction.Bottom, new() { Position = new(0, -1, 0), Rotation = new(0, MathF.PI / 2, 0), } },
-    { Direction.Forward, new() { Position = new(-1, 0, 0), Rotation = new(-MathF.PI / 2, 0, 0) } },
-    { Direction.Backward, new() { Position = new(1, 0, 0), Rotation = new(MathF.PI / 2, 0, 0) } },
+    { Direction.Top, new() { Position = new(0, 1, 0), Rotation = new(0, MathF.PI / 2, 0), } },
+    { Direction.Bottom, new() { Position = new(0, -1, 0), Rotation = new(0, -MathF.PI / 2, 0), } },
+    { Direction.Forward, new() { Position = new(-1, 0, 0), Rotation = new(MathF.PI / 2, 0, 0) } },
+    { Direction.Backward, new() { Position = new(1, 0, 0), Rotation = new(-MathF.PI / 2, 0, 0) } },
     { Direction.Left, new() { Position = new(0, 0, 1), Rotation = new(MathF.PI, 0, 0) } },
     { Direction.Right, new() { Position = new(0, 0, -1), Rotation = new(0, 0, 0) } }
   };
@@ -74,7 +74,6 @@ public class MapBehaviour : MonoBehaviour
       { 0, 0, 0, 1, 0, 0 },
     };
     var dim = new Vector2D<int>(gameMap.GetLength(0), gameMap.GetLength(1));
-    var (n, m) = (dim.X, dim.Y);
 
     for (var i = 0; i < dim.X; ++i)
     {
