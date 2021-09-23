@@ -7,6 +7,18 @@ namespace Sokoban.Utilities.Extensions
 {
 public static partial class Extension
 {
+  public static bool InBounds<T>(this T value, T leftBound, T rightBound) where T : IComparable<T> =>
+    value.CompareTo(leftBound) > 0 && value.CompareTo(rightBound) < 0;
+
+  public static bool InLeftBound<T>(this T value, T leftBound, T rightBound) where T : IComparable<T> =>
+    value.CompareTo(leftBound) >= 0 && value.CompareTo(rightBound) < 0;
+
+  public static bool InRightBound<T>(this T value, T leftBound, T rightBound) where T : IComparable<T> =>
+    value.CompareTo(leftBound) > 0 && value.CompareTo(rightBound) <= 0;
+
+  public static bool InInclusiveBounds<T>(this T value, T leftBound, T rightBound) where T : IComparable<T> =>
+    value.CompareTo(leftBound) >= 0 && value.CompareTo(rightBound) <= 0;
+
   public static T Or<T>(this bool predicate, T ifTrue, T ifFalse) => predicate switch {
     true  => ifTrue,
     false => ifFalse
