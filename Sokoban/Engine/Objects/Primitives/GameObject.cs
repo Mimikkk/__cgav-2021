@@ -18,7 +18,7 @@ public class GameObject
   public float Scale { get; set; } = 1f;
 
   public Matrix4X4<float> View => Matrix4X4<float>.Identity
-                                  * Matrix4X4.CreateFromQuaternion(Orientation)
+                                  * Matrix4X4.CreateFromQuaternion(Quaternion<float>.Conjugate(Orientation))
                                   * Matrix4X4.CreateScale(Scale)
                                   * Matrix4X4.CreateTranslation(Position);
 

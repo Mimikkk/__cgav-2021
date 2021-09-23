@@ -1,4 +1,5 @@
-﻿using Silk.NET.Input;
+﻿using System;
+using Silk.NET.Input;
 using Silk.NET.Maths;
 using Sokoban.Engine.Controllers;
 using Sokoban.Engine.Objects;
@@ -13,13 +14,13 @@ public class CameraBehaviour : MonoBehaviour
   public override LoadPriority LoadPriority => LoadPriority.Critical;
 
   private static Vector2D<float> LastMousePosition { get; set; }
-  private const float LookSensitivity = 0.1f;
+  private const float LookSensitivity = 0.005f;
 
   protected override void Start()
   {
-    Camera.Position = new(6, 0, 0);
-    Camera.ModifyDirection(-90, 0);
+    Camera.Position = new(12, 8, 6);
 
+    Camera.ModifyDirection(MathF.PI / 2, MathF.PI / 4);
     Controller.OnScroll(scroll => Camera.ModifyZoom(scroll.Y));
 
     Controller.OnHold(Key.W, MoveForwards);
@@ -27,6 +28,7 @@ public class CameraBehaviour : MonoBehaviour
     Controller.OnHold(Key.A, MoveLeft);
     Controller.OnHold(Key.D, MoveRight);
 
+    Controller.OnMove((a) => { });
     Controller.OnMove(MaybeRotateXY);
     Controller.OnMove(UpdatePosition);
   }
@@ -42,10 +44,10 @@ public class CameraBehaviour : MonoBehaviour
   private static void MaybeRotateXY(Vector2D<float> position) => (LastMousePosition != default).Then(RotateXY, position);
   private static void RotateXY(Vector2D<float> position) => Camera.ModifyDirection((position - LastMousePosition) * LookSensitivity);
 
-  private static void MoveForwards(double dt) => Camera.Position += (float)dt * Camera.Front;
-  private static void MoveBackwards(double dt) => Camera.Position -= (float)dt * Camera.Front;
-  private static void MoveLeft(double dt) => Camera.Position -= (float)dt * Vector3D.Normalize(Vector3D.Cross(Camera.Front, Camera.Up));
-  private static void MoveRight(double dt) => Camera.Position += (float)dt * Vector3D.Normalize(Vector3D.Cross(Camera.Front, Camera.Up));
+  private static void MoveForwards(double dt) => Camera.Position += (float)dt * Camera.Forward;
+  private static void MoveBackwards(double dt) => Camera.Position -= (float)dt * Camera.Forward;
+  private static void MoveLeft(double dt) => Camera.Position -= (float)dt * Vector3D.Normalize(Vector3D.Cross(Camera.Forward, Camera.Up));
+  private static void MoveRight(double dt) => Camera.Position += (float)dt * Vector3D.Normalize(Vector3D.Cross(Camera.Forward, Camera.Up));
 
   private static readonly UniformBuffer Ubo = new("VPBlock") {
     Binding = 0,

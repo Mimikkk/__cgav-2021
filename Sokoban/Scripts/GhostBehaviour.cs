@@ -20,6 +20,22 @@ public class GhostBehaviour : MonoBehaviour
     Controller.OnHold(Key.T, dt => HeightScale = (float)(HeightScale + dt));
     Controller.OnHold(Key.G, dt => HeightScale = (float)(HeightScale - dt));
 
+    Controller.OnHold(Key.Keypad4, dt=>Ghost.Position -= Vector3D<float>.UnitZ * (float) dt);
+    Controller.OnHold(Key.Keypad6, dt=>Ghost.Position += Vector3D<float>.UnitZ * (float) dt);
+    Controller.OnHold(Key.Keypad9, dt=>Ghost.Position += Vector3D<float>.UnitY * (float) dt);
+    Controller.OnHold(Key.Keypad7, dt=>Ghost.Position -= Vector3D<float>.UnitY * (float) dt);
+    Controller.OnHold(Key.Keypad8, dt=>Ghost.Position -= Vector3D<float>.UnitX * (float) dt);
+    Controller.OnHold(Key.Keypad2, dt=>Ghost.Position += Vector3D<float>.UnitX * (float) dt);
+
+    Controller.OnHold(Key.KeypadMultiply, dt=>{Ghost.Orientation *= Quaternion<float>.CreateFromYawPitchRoll((float)dt,0,0); });
+    Controller.OnHold(Key.KeypadDivide, dt=>{Ghost.Orientation *= Quaternion<float>.CreateFromYawPitchRoll(-(float)dt,0,0); });
+
+    Controller.OnHold(Key.KeypadAdd, dt=>{Ghost.Orientation *= Quaternion<float>.CreateFromYawPitchRoll(0,(float)dt,0); });
+    Controller.OnHold(Key.KeypadSubtract, dt=>{Ghost.Orientation *= Quaternion<float>.CreateFromYawPitchRoll(0,-(float)dt,0); });
+
+    Controller.OnHold(Key.Keypad1, dt=>{Ghost.Orientation *= Quaternion<float>.CreateFromYawPitchRoll(0,0,(float)dt); });
+    Controller.OnHold(Key.Keypad3, dt=>{Ghost.Orientation *= Quaternion<float>.CreateFromYawPitchRoll(0,0,-(float)dt); });
+
     Ghost.Spo = new("PBR") {
       Fragment = default,
       Vertex = default,
@@ -29,7 +45,6 @@ public class GhostBehaviour : MonoBehaviour
     Ghost.Mesh!.Material!.DiffuseMap = new Texture("Fabric/Color.png");
     Ghost.Mesh.Material.NormalMap = new Texture("Fabric/Normal.png");
     Ghost.Mesh.Material.DisplacementMap = new Texture("Fabric/Displacement.png");
-    Ghost.Position = Vector3D<float>.One;
   }
 
   protected override void Render(double dt) => Ghost.Draw(() => {

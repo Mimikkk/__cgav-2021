@@ -1,10 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using Logger;
 using Silk.NET.Input;
 using Silk.NET.Maths;
 using Sokoban.Engine.Controllers;
 using Sokoban.Engine.Scripts;
 using Sokoban.Scripts.GameMap;
+using Sokoban.Utilities.Extensions;
 using Material = Sokoban.Engine.Objects.Primitives.Textures.Material;
 
 namespace Sokoban.Scripts
@@ -13,8 +16,8 @@ public class MapBehaviour : MonoBehaviour
 {
   protected override void Start()
   {
-    Controller.OnHold(Key.T, dt => HeightScale = (float)(HeightScale + dt));
-    Controller.OnHold(Key.G, dt => HeightScale = (float)(HeightScale - dt));
+    Controller.OnHold(Key.T, dt => Degrees = (float)(Degrees + 10 * dt));
+    Controller.OnHold(Key.G, dt => Degrees = (float)(Degrees - 10 * dt));
     Controller.OnClick(MouseButton.Middle, _ => {
       if (Quad.Mesh!.Material!.Equals(Brick))
       {
@@ -40,45 +43,47 @@ public class MapBehaviour : MonoBehaviour
     public bool IsAdjacent(int[,] gameMap) => gameMap[coord.X, coord.Y] == 1;
 
     private static readonly IReadOnlyList<Neighbour> Neighbours = new List<Neighbour> {
-      new(Direction.Forward, -Vector2D<int>.UnitX),
-      new(Direction.Left, -Vector2D<int>.UnitY),
-      new(Direction.Bottom, Vector2D<int>.Zero),
-      new(Direction.Right, Vector2D<int>.UnitY),
-      new(Direction.Backward, Vector2D<int>.UnitX)
+      new(Direction.Forward, new(0, 0)),
+      new(Direction.Left, new(0, 0)),
+
+      new(Direction.Bottom, new(0, 0)),
+
+      new(Direction.Right, new(0, 0)),
+      new(Direction.Backward, new(0, 0))
     };
   }
+  private record Transform(Vector3D<float> offset, Vector3D<float> rotation);
+  private static float Degrees = 0;
 
-  private static readonly IReadOnlyDictionary<Direction, Matrix4X4<float>> TransformMap = new Dictionary<Direction, Matrix4X4<float>> {
+  private static IReadOnlyDictionary<Direction, Transform> TransformMap => new Dictionary<Direction, Transform> {
     {
       Direction.Top,
-      Matrix4X4.CreateTranslation(Vector3D<float>.UnitY - 2 * Vector3D<float>.UnitZ) * Matrix4X4.CreateRotationX(Scalar.DegreesToRadians(90f))
+      new(new Vector3D<float>(0, 1, 0), new Vector3D<float>(0, -MathF.PI / 2, 0))
     }, {
       Direction.Bottom,
-      Matrix4X4.CreateTranslation(-Vector3D<float>.UnitY - 2 * Vector3D<float>.UnitZ) * Matrix4X4.CreateRotationX(Scalar.DegreesToRadians(270f))
+      new(new Vector3D<float>(0, -1, 0), new Vector3D<float>(0, MathF.PI / 2, 0))
     }, {
       Direction.Forward,
-      Matrix4X4.CreateTranslation(-Vector3D<float>.UnitX - 2 * Vector3D<float>.UnitZ) * Matrix4X4.CreateRotationY(Scalar.DegreesToRadians(90f))
+      new(new Vector3D<float>(-1, 0, 0), new Vector3D<float>(-MathF.PI / 2, 0, 0))
     }, {
       Direction.Backward,
-      Matrix4X4.CreateTranslation(Vector3D<float>.UnitX - 2 * Vector3D<float>.UnitZ) * Matrix4X4.CreateRotationY(Scalar.DegreesToRadians(270f))
+      new(new Vector3D<float>(1, 0, 0), new Vector3D<float>(MathF.PI / 2, 0, 0))
     }, {
       Direction.Left,
-      Matrix4X4.CreateTranslation(- Vector3D<float>.UnitZ) * Matrix4X4.CreateRotationX(Scalar.DegreesToRadians(180f))
+      new(new Vector3D<float>(0, 0, 1), new Vector3D<float>(MathF.PI, 0, 0))
     }, {
       Direction.Right,
-      Matrix4X4.CreateTranslation(-Vector3D<float>.UnitZ) * Matrix4X4.CreateRotationX(Scalar.DegreesToRadians(0f))
+      new(new Vector3D<float>(0, 0, -1), new Vector3D<float>(0, 0, 0))
     }
   };
 
   protected override void Render(double dt)
   {
+    $"{Degrees}".LogLine();
     var gameMap = new[,] {
-      { 0, 1, 1, 1, 0, 1 },
-      { 1, 1, 1, 1, 1, 1 },
-      { 1, 1, 1, 0, 1, 1 },
-      { 1, 1, 1, 0, 1, 1 },
-      { 1, 1, 1, 1, 1, 1 },
-      { 1, 1, 1, 1, 1, 1 },
+      { 0, 0, 1, 1, 1 },
+      { 0, 0, 1, 1, 1 },
+      { 0, 0, 1, 1, 1 },
     };
     var dim = new Vector2D<int>(gameMap.GetLength(0), gameMap.GetLength(1));
     var (n, m) = (dim.X, dim.Y);
@@ -86,19 +91,31 @@ public class MapBehaviour : MonoBehaviour
     {
       for (var j = 0; j < dim.Y; ++j)
       {
-        var model = Matrix4X4.CreateTranslation(new Vector3D<float>(2 * i, 0, 2*j));
+        if (gameMap[i, j] != 1) continue;
 
-        // IReadOnlyList<Direction> neighbours = Neighbour.Grid(new(i, j))
-        // .Where(n => n.IsSafe(dim) && n.IsAdjacent(gameMap)).Select(n=>n.direction)
-        // .ToList();
+        IReadOnlyList<Direction> neighbours = Neighbour.Grid(new(i, j))
+          .Where(n => n.IsSafe(dim) && n.IsAdjacent(gameMap))
+          .Select(n => n.direction)
+          .ToList();
 
-        if (gameMap[i, j] == 1)
-        {
+        neighbours.ForEach((direction) => {
+          var (offset, rotation) = TransformMap[direction];
+
+          var position = new Vector3D<float>(2 * i, 0, 2 * j) + offset;
+
+          var orientation = Quaternion<float>.Identity
+                            * Quaternion<float>.CreateFromYawPitchRoll(rotation.X, rotation.Y, rotation.Z);
+
+          var model = Matrix4X4<float>.Identity
+                      * Matrix4X4.CreateFromQuaternion(Quaternion<float>.Conjugate(orientation))
+                      * Matrix4X4.CreateTranslation(position);
+
           Quad.Draw(() => {
-            Quad.Spo!.SetUniform("model", model * TransformMap[Direction.Top]);
+            Quad.Spo!.SetUniform("model", model);
             Quad.Spo!.SetUniform("height_scale", HeightScale);
           });
-        }
+        });
+
       }
     }
   }
