@@ -1,4 +1,5 @@
 ﻿using Sokoban.Engine.Objects.Primitives.Textures;
+using Sokoban.Engine.Renderers.Shaders;
 
 namespace Sokoban.Resources
 {
@@ -20,6 +21,19 @@ public class ResourceManager
       DiffuseMap = new("Rock/Color.png"),
       NormalMap = new("Rock/Normal.png"),
       DisplacementMap = new("Rock/Displacement.png")
+    };
+  }
+  public static class ShaderPrograms
+  {
+    public static readonly ShaderProgram PBR = new("PBR") {
+      Vertex = default,
+      Fragment = default,
+      ShouldLink = true
+    };
+    public static readonly ShaderProgram Skybox = new("Skybox") {
+      Vertex = default,
+      Fragment = default,
+      ShouldLink = true
     };
   }
 }

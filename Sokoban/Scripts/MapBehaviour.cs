@@ -11,8 +11,8 @@ public class MapBehaviour : MonoBehaviour
 {
   protected override void Start()
   {
-    Controller.OnHold(Key.T, dt => HeightScale = (float)(HeightScale + dt));
-    Controller.OnHold(Key.G, dt => HeightScale = (float)(HeightScale - dt));
+    Controller.OnHold(Key.T, dt => HeightScale = HeightScale + dt);
+    Controller.OnHold(Key.G, dt => HeightScale = HeightScale - dt);
     Controller.OnClick(MouseButton.Middle, _ => {
       if (Quad.Mesh!.Material!.Equals(Brick))
       {
