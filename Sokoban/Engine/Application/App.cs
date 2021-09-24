@@ -31,7 +31,7 @@ public static partial class App
     PreferredBitDepth = new(24),
     PreferredDepthBufferBits = 24,
     PreferredStencilBufferBits = 24,
-    ShouldSwapAutomatically = true,
+    ShouldSwapAutomatically = true
   };
   private const ClearBufferMask ClearMask = ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit;
   private static readonly IWindow Window;

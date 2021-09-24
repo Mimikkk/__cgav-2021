@@ -8,6 +8,6 @@ public enum LoadPriority
   Normal = 0,
   Low = 1,
   VeryLow = 2,
-  Unimportant = 3,
+  Unimportant = 3
 }
 }

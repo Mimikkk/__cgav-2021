@@ -5,7 +5,7 @@ using Sokoban.Engine.Objects.Primitives.Textures;
 using Sokoban.Engine.Renderers.Buffers.Objects;
 using Sokoban.Engine.Renderers.Shaders;
 
-namespace Sokoban.Scripts.GameMap
+namespace Sokoban.Scripts.Map
 {
 public class Quad : GameObject
 {
@@ -19,7 +19,7 @@ public class Quad : GameObject
     Spo = QuadSpo;
     Mesh = new Mesh {
       Material = material,
-      Vao = QuadVao,
+      Vao = QuadVao
     };
   }
 
@@ -29,12 +29,12 @@ public class Quad : GameObject
     1f, -1f, 0f, 0f, 0f, 1f, 1f, 0f, 1f, 0f, 0f, 0f, 1f, 0f,
     -1f, 1f, 0f, 0f, 0f, 1f, 0f, 1f, 1f, 0f, 0f, 0f, 1f, 0f,
     1f, -1f, 0f, 0f, 0f, 1f, 1f, 0f, 1f, 0f, 0f, 0f, 1f, 0f,
-    1f, 1f, 0f, 0f, 0f, 1f, 1f, 1f, 1f, 0f, 0f, 0f, 1f, 0f,
+    1f, 1f, 0f, 0f, 0f, 1f, 1f, 1f, 1f, 0f, 0f, 0f, 1f, 0f
   };
   private static readonly ShaderProgram QuadSpo = new("Quad") {
     Vertex = "PBR",
     Fragment = "PBR",
-    ShouldLink = true,
+    ShouldLink = true
   };
   private static readonly VertexArray QuadVao = new() {
     VertexBuffer = new(Vertices),

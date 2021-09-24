@@ -5,7 +5,7 @@ using Sokoban.Engine.Renderers.Shaders;
 using Material = Sokoban.Engine.Objects.Primitives.Textures.Material;
 using Mesh = Sokoban.Engine.Objects.Primitives.Mesh;
 
-namespace Sokoban.Scripts.GameMap
+namespace Sokoban.Scripts.Map
 {
 public class Cube : GameObject
 {
@@ -57,11 +57,11 @@ public class Cube : GameObject
   private static readonly ShaderProgram CubeSpo = new("Cube") {
     Vertex = default,
     Fragment = default,
-    ShouldLink = true,
+    ShouldLink = true
   };
   private static readonly VertexArray CubeVao = new() {
     VertexBuffer = new(Vertices),
-    Layout = new(3, 3, 2),
+    Layout = new(3, 3, 2)
   };
   private void BaseShaderConfiguration()
   {
@@ -85,7 +85,7 @@ public class Cube : GameObject
     Spo = CubeSpo;
     Mesh = new Mesh {
       Material = material,
-      Vao = CubeVao,
+      Vao = CubeVao
     };
   }
 

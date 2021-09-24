@@ -1,24 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace Sokoban.Utilities.Extensions
 {
 public static partial class Extension
 {
-  public static bool InBounds<T>(this T value, T leftBound, T rightBound) where T : IComparable<T> =>
-    value.CompareTo(leftBound) > 0 && value.CompareTo(rightBound) < 0;
-
-  public static bool InLeftBound<T>(this T value, T leftBound, T rightBound) where T : IComparable<T> =>
-    value.CompareTo(leftBound) >= 0 && value.CompareTo(rightBound) < 0;
-
-  public static bool InRightBound<T>(this T value, T leftBound, T rightBound) where T : IComparable<T> =>
-    value.CompareTo(leftBound) > 0 && value.CompareTo(rightBound) <= 0;
-
-  public static bool InInclusiveBounds<T>(this T value, T leftBound, T rightBound) where T : IComparable<T> =>
-    value.CompareTo(leftBound) >= 0 && value.CompareTo(rightBound) <= 0;
-
   public static T Or<T>(this bool predicate, T ifTrue, T ifFalse) => predicate switch {
     true  => ifTrue,
     false => ifFalse
@@ -87,5 +76,11 @@ public static partial class Extension
     }
     source.ToImmutableList().ForEach(AggregatedAction);
   }
+  
+  [DoesNotReturn] public static IEnumerable<Y> Repeating<Y>(Y value)
+  {
+    while (true) yield return value;
+  }
+
 }
 }

@@ -39,7 +39,7 @@ public class GhostBehaviour : MonoBehaviour
     Ghost.Spo = new("PBR") {
       Fragment = default,
       Vertex = default,
-      ShouldLink = true,
+      ShouldLink = true
     };
 
     Ghost.Mesh!.Material!.DiffuseMap = new Texture("Fabric/Color.png");
