@@ -18,7 +18,7 @@ public class CameraBehaviour : MonoBehaviour
 
   protected override void Start()
   {
-    Camera.Position = new(12, 8, 6);
+    Camera.Transform.Position = new(12, 8, 6);
 
     Camera.ModifyDirection(MathF.PI / 2, MathF.PI / 4);
     Controller.OnScroll(scroll => Camera.ModifyZoom(scroll.Y));
@@ -28,14 +28,13 @@ public class CameraBehaviour : MonoBehaviour
     Controller.OnHold(Key.A, MoveLeft);
     Controller.OnHold(Key.D, MoveRight);
 
-    Controller.OnMove((a) => { });
     Controller.OnMove(MaybeRotateXY);
     Controller.OnMove(UpdatePosition);
   }
   protected override void Render(double dt)
   {
     Ubo.Bind();
-    Ubo.SetUniform("position", Camera.Position);
+    Ubo.SetUniform("position", Camera.Transform.Position);
     Ubo.SetUniform("view", Camera.View);
     Ubo.SetUniform("projection", Camera.Projection);
   }
@@ -44,10 +43,10 @@ public class CameraBehaviour : MonoBehaviour
   private static void MaybeRotateXY(Vector2D<float> position) => (LastMousePosition != default).Then(RotateXY, position);
   private static void RotateXY(Vector2D<float> position) => Camera.ModifyDirection((position - LastMousePosition) * LookSensitivity);
 
-  private static void MoveForwards(double dt) => Camera.Position += (float)dt * Camera.Forward;
-  private static void MoveBackwards(double dt) => Camera.Position -= (float)dt * Camera.Forward;
-  private static void MoveLeft(double dt) => Camera.Position -= (float)dt * Vector3D.Normalize(Vector3D.Cross(Camera.Forward, Camera.Up));
-  private static void MoveRight(double dt) => Camera.Position += (float)dt * Vector3D.Normalize(Vector3D.Cross(Camera.Forward, Camera.Up));
+  private static void MoveForwards(float dt) => Camera.Transform.Translate(dt * Camera.Transform.Forward);
+  private static void MoveBackwards(float dt) => Camera.Transform.Translate(-dt * Camera.Transform.Forward);
+  private static void MoveLeft(float dt) => Camera.Transform.Translate(-dt * Vector3D.Normalize(Vector3D.Cross(Camera.Transform.Forward, Camera.Transform.Up)));
+  private static void MoveRight(float dt) => Camera.Transform.Translate(dt * Vector3D.Normalize(Vector3D.Cross(Camera.Transform.Forward, Camera.Transform.Up)));
 
   private static readonly UniformBuffer Ubo = new("VPBlock") {
     Binding = 0,

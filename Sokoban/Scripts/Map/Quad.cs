@@ -51,7 +51,7 @@ public class Quad : GameObject
     Spo.SetUniform("displacement_map", 2);
 
     Spo.SetUniform("model", Transform.View);
-    Spo.SetUniform("light_position", Camera.Position);
+    Spo.SetUniform("light_position", Camera.Transform.Position);
     Spo.SetUniform("is_discardable", false);
   }
 }

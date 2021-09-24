@@ -77,7 +77,7 @@ public class Cube : GameObject
     if (Mesh.Material.AmbientColor != null) Spo.SetUniform("light.ambient", Mesh.Material.AmbientColor.Value);
     if (Mesh.Material.DiffuseColor != null) Spo.SetUniform("light.diffuse", Mesh.Material.DiffuseColor.Value);
     if (Mesh.Material.SpecularColor != null) Spo.SetUniform("light.specular", Mesh.Material.SpecularColor.Value);
-    Spo.SetUniform("light.position", Camera.Position);
+    Spo.SetUniform("light.position", Camera.Transform.Position);
   }
 
   public Cube(Material material)

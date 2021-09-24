@@ -3,15 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using Silk.NET.Maths;
 using Sokoban.Engine.Objects.Primitives;
+using Sokoban.Engine.Objects.Primitives.Textures;
+using Sokoban.Resources;
 using static System.Linq.Enumerable;
+using static Sokoban.Resources.ResourceManager.Materials;
 using static Sokoban.Utilities.Extensions.Extension;
 
 namespace Sokoban.Scripts.Map
 {
-public enum ObstacleType { Wall = 0, Empty = 1 }
+public enum SpaceType { Wall, Empty, Star, Box }
 public enum Direction { Forward, Backward, Right, Left, Top, Bottom }
 
-public record Obstacle(ObstacleType Type, Transform Transform, Direction Direction);
+public record Wall(SpaceType Type, Transform Transform, Direction Direction, Material Material);
 
 public class GameMap
 {
@@ -36,25 +39,25 @@ public class GameMap
     }
   }
 
-  public ObstacleType[,] Layout {
+  public SpaceType[,] Layout {
     private get { return _layout; }
     set {
       _layout = value.Pad(2, 2);
-      Recalculate();
+      CalculateWalls();
     }
   }
 
-  public List<Obstacle> Obstacles { get; private set; } = new();
+  public IReadOnlyList<Wall> Walls { get; private set; } = new List<Wall>();
 
   public int Height => Layout.GetLength(0);
   public int Width => Layout.GetLength(1);
 
-  public ObstacleType this[int i, int j] => Layout[i, j];
-  public ObstacleType this[Vector2D<int> dim] => this[dim.X, dim.Y];
+  public SpaceType this[int i, int j] => Layout[i, j];
+  public SpaceType this[Vector2D<int> dim] => this[dim.X, dim.Y];
 
-  private void Recalculate()
+  private void CalculateWalls()
   {
-    IEnumerable<Obstacle> HandleWall(int i, int j)
+    IEnumerable<Wall> HandleWall(int i, int j)
     {
       bool ShouldShow(Neighbour neighbour) =>
         neighbour.direction == Direction.Bottom || !InBounds(neighbour.coord);
@@ -62,7 +65,7 @@ public class GameMap
       return Neighbour.CloseTo(new(i, j))
         .Where(ShouldShow)
         .Zip(Repeating(new Vector2D<int>(i, j)))
-        .Select(ToObstacle)
+        .Select(ToWall)
         .Select(obstacle => {
           if (obstacle.Direction == Direction.Bottom) obstacle.Transform.Position += 2 * Vector3D<float>.UnitY;
           else obstacle.Transform.Orientation = Quaternion<float>.Conjugate(obstacle.Transform.Orientation);
@@ -70,7 +73,7 @@ public class GameMap
         })
         .ToList();
     }
-    IEnumerable<Obstacle> HandleEmpty(int i, int j)
+    IEnumerable<Wall> HandleEmpty(int i, int j)
     {
       bool ShouldShow(Neighbour neighbour) =>
         neighbour.direction == Direction.Bottom || !InBounds(neighbour.coord) || !IsAdjacent(neighbour.coord);
@@ -78,31 +81,35 @@ public class GameMap
       return Neighbour.CloseTo(new(i, j))
         .Where(ShouldShow)
         .Zip(Repeating(new Vector2D<int>(i, j)))
-        .Select(ToObstacle);
+        .Select(ToWall);
     }
 
-    Obstacles = Range(0, Height)
+    Walls = Range(0, Height)
       .SelectMany(i => Range(0, Width)
         .SelectMany(j => this[i, j] switch {
-          ObstacleType.Wall  => HandleWall(i, j),
-          ObstacleType.Empty => HandleEmpty(i, j)
+          SpaceType.Wall => HandleWall(i, j),
+          _              => HandleEmpty(i, j)
         }))
       .ToList();
+  }
+
+  private Wall ToWall((Neighbour, Vector2D<int> position) pair)
+  {
+    var ((direction, _), position) = pair;
+    var (x, y) = (position.X, position.Y);
+    var transform = TransformMap[direction].OffsetBy(new(2 * x, 0, 2 * y));
+    var material = direction switch {
+      Direction.Bottom => Fabric,
+      _                => Brick
+    };
+
+    return new Wall(this[position], transform, direction, material);
   }
 
   private bool InBounds(Vector2D<int> coord) => InBounds(coord.X, coord.Y);
   private bool InBounds(int x, int y) => x >= 0 && x < Height && y >= 0 && y < Width;
 
-  private Obstacle ToObstacle((Neighbour, Vector2D<int> position) pair)
-  {
-    var ((direction, _), position) = pair;
-    var (x, y) = (position.X, position.Y);
-    var transform = TransformMap[direction].OffsetBy(new(2 * x, 0, 2 * y));
-
-    return new Obstacle(this[position], transform, direction);
-  }
-
-  private bool IsAdjacent(Vector2D<int> coord) => this[coord] == ObstacleType.Empty;
+  private bool IsAdjacent(Vector2D<int> coord) => this[coord] == SpaceType.Empty;
   private static readonly IReadOnlyDictionary<Direction, Transform> TransformMap = new Dictionary<Direction, Transform> {
     { Direction.Top, new() { Position = new(0, 1, 0), Rotation = new(0, MathF.PI / 2, 0) } },
     { Direction.Bottom, new() { Position = new(0, -1, 0), Rotation = new(0, -MathF.PI / 2, 0) } },
@@ -111,6 +118,6 @@ public class GameMap
     { Direction.Left, new() { Position = new(0, 0, 1), Rotation = new(MathF.PI, 0, 0) } },
     { Direction.Right, new() { Position = new(0, 0, -1), Rotation = new(0, 0, 0) } }
   };
-  private ObstacleType[,] _layout = { };
+  private SpaceType[,] _layout = { };
 }
 }

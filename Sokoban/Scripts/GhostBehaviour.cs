@@ -57,7 +57,7 @@ public class GhostBehaviour : MonoBehaviour
     Ghost.Spo.SetUniform("displacement_map", 2);
     
     Ghost.Spo.SetUniform("height_scale", HeightScale);
-    Ghost.Spo.SetUniform("light_position", Camera.Position);
+    Ghost.Spo.SetUniform("light_position", Camera.Transform.Position);
     Ghost.Spo.SetUniform("is_discardable", false);
     Ghost.Spo.SetUniform("model", Ghost.Transform.View);
   });

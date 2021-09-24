@@ -12,7 +12,7 @@ public static partial class Controller
   public static void OnRelease(Key key, Action what, Func<bool>? when = null) =>
     Keyboard.KeyUp += HandleStateChange(key, what, when);
 
-  public static void OnHold(Key key, Action<double> action, Func<bool>? when = null) =>
+  public static void OnHold(Key key, Action<float> action, Func<bool>? when = null) =>
     OnHoldActions.Add(HandleState(key, action, when));
 
   private static Action<IKeyboard, Key, int> HandleStateChange(Key wanted, Action action, Func<bool>? predicate = null) =>
@@ -21,10 +21,10 @@ public static partial class Controller
       (_, stroked, _) => (predicate!() && stroked == wanted).Then(action)
     );
 
-  private static Action<double> HandleState(Key wanted, Action<double> action, Func<bool>? predicate = null) =>
+  private static Action<double> HandleState(Key wanted, Action<float> action, Func<bool>? predicate = null) =>
     (predicate is null).Or<Action<double>>(
-      dt => Keyboard.IsKeyPressed(wanted).Then(action, dt),
-      dt => (predicate!() && Keyboard.IsKeyPressed(wanted)).Then(action, dt)
+      dt => Keyboard.IsKeyPressed(wanted).Then(action, (float)dt),
+      dt => (predicate!() && Keyboard.IsKeyPressed(wanted)).Then(action, (float)dt)
     );
 }
 }

@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Logger;
-using Silk.NET.Input;
-using Silk.NET.Maths;
+﻿using Silk.NET.Input;
 using Sokoban.Engine.Controllers;
-using Sokoban.Engine.Objects.Primitives;
 using Sokoban.Engine.Scripts;
 using Sokoban.Scripts.Map;
 using Sokoban.Utilities.Extensions;
-using Material = Sokoban.Engine.Objects.Primitives.Textures.Material;
+using static Sokoban.Resources.ResourceManager.Materials;
 
 namespace Sokoban.Scripts
 {
@@ -34,41 +28,27 @@ public class MapBehaviour : MonoBehaviour
   }
   protected override void Render(double dt)
   {
-    void RenderQuad(Obstacle obstacle)
+    void RenderQuad(Wall obstacle)
     {
       Quad.Transform = obstacle.Transform;
+      Quad.Mesh!.Material = obstacle.Material;
+
       Quad.Draw(() => Quad.Spo!.SetUniform("height_scale", HeightScale));
     }
 
-    Map.Obstacles.ForEach(RenderQuad);
+    Map.Walls.ForEach(RenderQuad);
   }
 
   private static float HeightScale = 1f;
 
-  private static readonly Material Rock = new() {
-    DiffuseMap = new("Rock/Color.png"),
-    NormalMap = new("Rock/Normal.png"),
-    DisplacementMap = new("Rock/Displacement.png")
-  };
-  private static readonly Material Fabric = new() {
-    DiffuseMap = new("Fabric/Color.png"),
-    NormalMap = new("Fabric/Normal.png"),
-    DisplacementMap = new("Fabric/Displacement.png")
-  };
-  private static readonly Material Brick = new() {
-    DiffuseMap = new("Brick/Color.jpg"),
-    NormalMap = new("Brick/Normal.jpg"),
-    DisplacementMap = new("Brick/Displacement.jpg")
-  };
-
   private static readonly Quad Quad = new(Fabric);
   private static readonly GameMap Map = new() {
     Layout = new[,] {
-      { ObstacleType.Wall, ObstacleType.Wall, ObstacleType.Empty, ObstacleType.Empty, ObstacleType.Empty, ObstacleType.Wall },
-      { ObstacleType.Wall, ObstacleType.Wall, ObstacleType.Empty, ObstacleType.Empty, ObstacleType.Empty, ObstacleType.Empty },
-      { ObstacleType.Wall, ObstacleType.Wall, ObstacleType.Empty, ObstacleType.Empty, ObstacleType.Empty, ObstacleType.Wall },
-      { ObstacleType.Wall, ObstacleType.Wall, ObstacleType.Empty, ObstacleType.Wall, ObstacleType.Empty, ObstacleType.Wall },
-      { ObstacleType.Wall, ObstacleType.Wall, ObstacleType.Wall, ObstacleType.Empty, ObstacleType.Wall, ObstacleType.Wall }
+      { SpaceType.Wall, SpaceType.Wall, SpaceType.Empty, SpaceType.Empty, SpaceType.Empty, SpaceType.Wall },
+      { SpaceType.Wall, SpaceType.Wall, SpaceType.Empty, SpaceType.Empty, SpaceType.Empty, SpaceType.Empty },
+      { SpaceType.Wall, SpaceType.Wall, SpaceType.Empty, SpaceType.Empty, SpaceType.Empty, SpaceType.Wall },
+      { SpaceType.Wall, SpaceType.Wall, SpaceType.Empty, SpaceType.Wall, SpaceType.Empty, SpaceType.Wall },
+      { SpaceType.Wall, SpaceType.Wall, SpaceType.Wall, SpaceType.Empty, SpaceType.Wall, SpaceType.Wall }
     }
   };
 }
