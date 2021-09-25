@@ -25,12 +25,22 @@ public class ResourceManager
   }
   public static class ShaderPrograms
   {
+    public static readonly ShaderProgram Skybox = new("Skybox") {
+      Vertex = default,
+      Fragment = default,
+      ShouldLink = true
+    };
     public static readonly ShaderProgram PBR = new("PBR") {
       Vertex = default,
       Fragment = default,
       ShouldLink = true
     };
-    public static readonly ShaderProgram Skybox = new("Skybox") {
+    public static readonly ShaderProgram Box = new("Box") {
+      Vertex = default,
+      Fragment = default,
+      ShouldLink = true
+    };
+    public static readonly ShaderProgram Target = new("Target") {
       Vertex = default,
       Fragment = default,
       ShouldLink = true

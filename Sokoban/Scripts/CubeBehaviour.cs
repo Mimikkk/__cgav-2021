@@ -12,6 +12,7 @@ public class CubeBehaviour : MonoBehaviour
 
   protected override void Start()
   {
+    Cube.Transform.Position = new (6,3,6);
     Controller.OnHold(Key.T, dt => Cube.Transform.Scale += dt);
     Controller.OnHold(Key.G, dt => Cube.Transform.Scale -= dt);
 
