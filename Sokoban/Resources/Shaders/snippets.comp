@@ -5,10 +5,18 @@ layout (location = 2) in vec2 texture_coordinate;
 layout (location = 3) in vec3 tangent;
 layout (location = 4) in vec3 biTangent;
 
-// Camera block
-layout (std140, binding = 0) uniform CameraBlock { vec3 position; mat4 view; mat4 projection; } camera;
+// Uniform Blocks
+layout (std140, binding = 0) uniform CameraBlock { vec3 position; mat4 view, projection; } camera;
 
-// Light block
 layout (std140, binding = 1) uniform LightBlock { vec3 position; mat4 color; } lights[];
+
+out VsOut { int meat; } vs_out;
+
+// Constants
+#define PI (3.14159265358979323846)
+#define GAMMA (2.2)
+
+uniform float epxosure;
+vec3 apply_exposure_tonemapping(vec3 color) { return vec3(1.0) -exp(-color * exposure); }
 
 // OpenGl 5 >>> OpenGl 4

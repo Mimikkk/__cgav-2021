@@ -1,8 +1,6 @@
 ﻿#version 450 core
 
-in VsOut {
-    vec2 texture_coordinate;
-};
+in VsOut { vec2 texture_coordinate; };
 
 uniform sampler2D diffuse_map;
 

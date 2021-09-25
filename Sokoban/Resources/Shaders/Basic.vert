@@ -6,9 +6,7 @@ layout (location = 2) in vec2 texture_coordinate;
 layout (location = 3) in vec3 tangent;
 layout (location = 4) in vec3 biTangent;
 
-out VsOut {
-    vec2 texture_coordinate;
-} vs_out;
+out VsOut { vec2 texture_coordinate; } vs_out;
 
 layout (std140, binding = 0) uniform CameraBlock { vec3 position; mat4 view; mat4 projection; } camera;
 
