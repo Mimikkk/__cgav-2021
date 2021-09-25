@@ -48,16 +48,16 @@ public class CubeBehaviour : MonoBehaviour
     Cube.Draw();
     Box.Draw(() => {
       Box.Mesh!.Material!.DiffuseMap!.Bind(0);
-      Box.Mesh!.Material!.NormalMap!.Bind(1);
-      Box.Mesh!.Material!.ReflectionMap!.Bind(2);
-      Box.Mesh!.Material!.HeightMap!.Bind(3);
-      Box.Mesh!.Material!.AmbientOcclusionMap!.Bind(4);
+      // Box.Mesh!.Material!.NormalMap!.Bind(1);
+      // Box.Mesh!.Material!.ReflectionMap!.Bind(2);
+      // Box.Mesh!.Material!.HeightMap!.Bind(3);
+      // Box.Mesh!.Material!.AmbientOcclusionMap!.Bind(4);
 
       Box.Spo.SetUniform("albedoMap" ,0);
-      Box.Spo.SetUniform("normalMap" ,1);
-      Box.Spo.SetUniform("metallicMap" ,2);
-      Box.Spo.SetUniform("roughnessMap" ,3);
-      Box.Spo.SetUniform("aoMap" ,4);
+      // Box.Spo.SetUniform("normalMap" ,1);
+      // Box.Spo.SetUniform("metallicMap" ,2);
+      // Box.Spo.SetUniform("roughnessMap" ,3);
+      // Box.Spo.SetUniform("aoMap" ,4);
 
       Box.Spo!.SetUniform("lightPositions[0]", Camera.Transform.Position);
       Box.Spo!.SetUniform("lightColors[0]", new Vector3D<float>(255,255,150));

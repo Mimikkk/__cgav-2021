@@ -6,6 +6,11 @@ layout (location = 2) in vec2 texture_coordinate;
 layout (location = 3) in vec3 tangent;
 layout (location = 4) in vec3 biTangent;
 
+uniform mat4 model;
+uniform vec3 light_position;
+
+layout (std140, binding = 0) uniform CameraBlock { vec3 position; mat4 view; mat4 projection; } camera;
+
 out VsOut {
     vec3 position;
     vec3 tangent_position;
@@ -13,15 +18,6 @@ out VsOut {
     vec3 tangent_light_position;
     vec3 tangent_view_position;
 } vs_out;
-
-layout (std140, binding = 0) uniform CameraBlock {
-    vec3 position;
-    mat4 view;
-    mat4 projection;
-} camera;
-
-uniform mat4 model;
-uniform vec3 light_position;
 
 void main()
 {

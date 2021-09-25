@@ -2,11 +2,7 @@
 
 layout (location = 0) in vec3 position;
 
-layout (std140, binding = 0) uniform CameraBlock {
-    vec3 position;
-    mat4 view;
-    mat4 projection;
-} camera;
+layout (std140, binding = 0) uniform CameraBlock { vec3 position; mat4 view; mat4 projection; } camera;
 
 out VsOut { vec3 texture_coordinate; } vs_out;
 

@@ -86,7 +86,7 @@ void main() {
 
     vec3 ambient = 0.1 * diffuse_color;
 
-    vec3 diffuse = max(dot(reflect_direction, normal), 0.0) * diffuse_color;
+    vec3 diffuse = diffuse_color * max(dot(reflect_direction, normal), 0.0);
     vec3 specular = vec3(0.2) * pow(max(dot(normal, halfway_direction), 0.0), 32.0);
 
     color = vec4(ambient + diffuse + specular, 1.0);
