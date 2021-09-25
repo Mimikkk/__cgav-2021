@@ -47,6 +47,11 @@ public class ResourceManager
       Fragment = default,
       ShouldLink = true
     };
+    public static readonly ShaderProgram Pbr = new("Pbr") {
+      Vertex = default,
+      Fragment = default,
+      ShouldLink = true
+    };
   }
 }
 }

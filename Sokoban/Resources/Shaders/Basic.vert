@@ -19,6 +19,6 @@ layout (std140, binding = 0) uniform CameraBlock {
 uniform mat4 model;
 
 void main() {
-    vs_out.texture_coordinate= texture_coordinate;
+    vs_out.texture_coordinate = texture_coordinate;
     gl_Position = camera.projection * camera.view * model * vec4(position, 1.0);
 }

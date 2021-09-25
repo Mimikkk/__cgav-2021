@@ -6,8 +6,8 @@ in VsOut {
 
 uniform sampler2D diffuse_map;
 
-void main() {
-    vec3 color = texture(diffuse_map, texture_coordinate).xyz;
+out vec4 color;
 
-    gl_FragColor = vec4(texture(diffuse_map, texture_coordinate).xyz, 1);
+void main() {
+    color = texture(diffuse_map, texture_coordinate);
 }

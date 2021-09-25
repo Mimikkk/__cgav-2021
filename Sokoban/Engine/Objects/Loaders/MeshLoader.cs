@@ -21,7 +21,7 @@ public static partial class ObjectLoader
       Vao = new VertexArray {
         VertexBuffer = new(ToVertices(mesh)),
         IndexBuffer = new(mesh.Faces.SelectMany(ToIndices)),
-        Layout = new(3, 2, 3, 3, 3)
+        Layout = new(3, 3, 2, 3, 3)
       }
     };
 
