@@ -76,11 +76,16 @@ public static partial class Extension
     }
     source.ToImmutableList().ForEach(AggregatedAction);
   }
-  
+
+  public static T S<T>(Action preAction, T value)
+  {
+    preAction();
+    return value;
+  }
+  public static T S<T>(Func<T> preAction) => preAction();
   [DoesNotReturn] public static IEnumerable<Y> Repeating<Y>(Y value)
   {
     while (true) yield return value;
   }
-
 }
 }

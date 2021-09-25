@@ -45,7 +45,7 @@ public static partial class ObjectLoader
     MaterialLoader.Load();
     MeshLoader.Load();
 
-    ObjectLoader.Log();
+    Log();
     return Meshes.Select(Into);
   }
 

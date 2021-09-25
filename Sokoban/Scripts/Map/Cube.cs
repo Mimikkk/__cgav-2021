@@ -57,7 +57,7 @@ public class Cube : GameObject
 
   private static readonly VertexArray CubeVao = new() {
     VertexBuffer = new(Vertices),
-    Layout = new(3, 3, 2)
+    Layout = new(3, 2, 3)
   };
   private void BaseShaderConfiguration()
   {
@@ -77,7 +77,7 @@ public class Cube : GameObject
 
   public Cube(Material material)
   {
-    Spo = ResourceManager.ShaderPrograms.PBR;
+    Spo = ResourceManager.ShaderPrograms.ParallaxMapping;
     Mesh = new Mesh {
       Material = material,
       Vao = CubeVao

@@ -22,6 +22,13 @@ public class ResourceManager
       NormalMap = new("Rock/Normal.png"),
       DisplacementMap = new("Rock/Displacement.png")
     };
+    public static readonly Material RustedIron = new() {
+      DiffuseMap = new("RustedIron/Color.png"),
+      NormalMap = new("RustedIron/Normal.png"),
+      AmbientOcclusionMap = new("RustedIron/AmbientOcclusion.png"),
+      ReflectionMap = new("RustedIron/Metallic.png"),
+      HeightMap = new("RustedIron/Roughness.png")
+    };
   }
   public static class ShaderPrograms
   {
@@ -30,12 +37,7 @@ public class ResourceManager
       Fragment = default,
       ShouldLink = true
     };
-    public static readonly ShaderProgram PBR = new("PBR") {
-      Vertex = default,
-      Fragment = default,
-      ShouldLink = true
-    };
-    public static readonly ShaderProgram Box = new("Box") {
+    public static readonly ShaderProgram ParallaxMapping = new("ParallaxMapping") {
       Vertex = default,
       Fragment = default,
       ShouldLink = true

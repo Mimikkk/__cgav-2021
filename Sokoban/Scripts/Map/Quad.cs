@@ -17,7 +17,7 @@ public class Quad : GameObject
 
   public Quad(Material material)
   {
-    Spo = ResourceManager.ShaderPrograms.PBR;
+    Spo = ResourceManager.ShaderPrograms.ParallaxMapping;
     Mesh = new Mesh {
       Material = material,
       Vao = QuadVao
