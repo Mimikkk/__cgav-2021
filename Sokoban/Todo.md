@@ -8,7 +8,7 @@
         - [ ] Renderowanie Mapy.
     - [ ] **Obiekty**:
         - [ ] Gracz.
-        - [ ] Skrzynia.
+        - [x] Skrzynia.
         - [ ] Cel.
     - [ ] **Logika Gry**:
         - [ ] Poruszanie.
