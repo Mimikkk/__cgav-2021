@@ -1,0 +1,24 @@
+﻿Readme
+
+- **Gra**:
+    - [ ] **Mapa**:
+        - [ ] Generowanie.
+        - [ ] Światła.
+        - [ ] Rozmieszczanie obiektów.
+        - [ ] Renderowanie Mapy.
+    - [ ] **Obiekty**:
+        - [ ] Gracz.
+        - [ ] Skrzynia.
+        - [ ] Cel.
+    - [ ] **Logika Gry**:
+        - [ ] Poruszanie.
+        - [ ] Reagowanie otoczenia.
+        - [ ] Obsługa stanów.
+        - [ ] Cofanie.
+- **Ulepszenia**:
+- [ ] Statystyki i teksty.
+- [ ] Particle.
+- [ ] Zaawansowane generowanie obiektu mapy.
+- [ ] Spojrzenia kamery
+- [ ] Zaawansowane animacje obiektów.
+- [ ] Filtry na renderowany obraz i własny antialiasing.
