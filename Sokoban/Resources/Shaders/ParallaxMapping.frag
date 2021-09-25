@@ -17,7 +17,6 @@ uniform bool is_discardable;
 
 out vec4 color;
 
-
 vec2 MapParallax(vec2 coord, vec3 view_direction) {
     const float minLayers = 36;
     const float maxLayers = 128;

@@ -20,9 +20,8 @@ public class CubeBehaviour : MonoBehaviour
   protected override void Start()
   {
     Box.Transform.Position = new(6, 3, 6);
-    Box.Spo = ResourceManager.ShaderPrograms.ParallaxMapping;
-    Box.Mesh!.Material = ResourceManager.Materials.RustedIron;
-    Box.Mesh!.Material.DiffuseMap = new("Felix.png");
+    Box.Spo = ResourceManager.ShaderPrograms.Basic;
+    Box.Mesh!.Material!.DiffuseMap = new("Felix.png");
     
     Controller.OnHold(Key.T, dt => Cube.Transform.Scale += dt);
     Controller.OnHold(Key.G, dt => Cube.Transform.Scale -= dt);
@@ -47,18 +46,10 @@ public class CubeBehaviour : MonoBehaviour
   {
     Cube.Draw();
     Box.Draw(() => {
-      Box.Mesh!.Material!.DiffuseMap?.Bind(0);
-      Box.Mesh.Material.NormalMap?.Bind(1);
-      Box.Mesh.Material.HeightMap?.Bind(2);
-
-      Box.Spo!.SetUniform("diffuse_map", 0);
-      Box.Spo.SetUniform("normal_map", 1);
-      Box.Spo.SetUniform("displacement_map", 2);
-
-      Box.Spo.SetUniform("height_scale",  Box.Transform.Scale);
-      Box.Spo.SetUniform("light_position", Camera.Transform.Position);
-      Box.Spo.SetUniform("is_discardable", false);
-      Box.Spo.SetUniform("model", Box.Transform.View);
+      Box.Mesh!.Material!.DiffuseMap!.Bind(0);
+      Box.Spo.SetUniform("diffuse_map" ,0);
+      
+      Box.Spo!.SetUniform("model", Box.Transform.View);
     });
   }
 }
