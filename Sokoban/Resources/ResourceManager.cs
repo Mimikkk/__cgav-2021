@@ -42,7 +42,7 @@ public class ResourceManager
       Fragment = default,
       ShouldLink = true
     };
-    public static readonly ShaderProgram Target = new("Target") {
+    public static readonly ShaderProgram Basic = new("Basic") {
       Vertex = default,
       Fragment = default,
       ShouldLink = true
