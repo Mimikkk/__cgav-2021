@@ -52,15 +52,23 @@ public class CubeBehaviour : MonoBehaviour
       Box.Mesh!.Material!.ReflectionMap!.Bind(2);
       Box.Mesh!.Material!.HeightMap!.Bind(3);
       Box.Mesh!.Material!.AmbientOcclusionMap!.Bind(4);
+      
+
 
       Box.Spo.SetUniform("albedo_map" ,0);
       Box.Spo.SetUniform("normal_map" ,1);
       Box.Spo.SetUniform("metallic_map" ,2);
       Box.Spo.SetUniform("roughness_map" ,3);
       Box.Spo.SetUniform("ambient_occlusion_map" ,4);
+      
+      // Box.Spo.SetUniform("irradiance_map" ,5);
+      // Box.Spo.SetUniform("prefilter_map" ,6);
+      // Box.Spo.SetUniform("brdf_LUT" ,7);
 
       Box.Spo!.SetUniform("light_positions[0]", Camera.Transform.Position);
+      Box.Spo!.SetUniform("light_positions[1]", new Vector3D<float>(6,5,5.5f));
       Box.Spo!.SetUniform("light_colors[0]", new Vector3D<float>(100,100,100));
+      Box.Spo!.SetUniform("light_colors[1]", new Vector3D<float>(0,0,100));
 
       Box.Spo!.SetUniform("model", Box.Transform.View);
     });

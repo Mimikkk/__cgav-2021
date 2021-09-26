@@ -25,6 +25,7 @@ public static partial class App
       Gl.Enable(GLEnum.Samples, 4);
       Gl.Enable(EnableCap.DepthTest);
       Gl.Enable(EnableCap.Blend);
+      Gl.Enable(EnableCap.TextureCubeMapSeamless);
       Gl.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
       Gl.Enable(EnableCap.Multisample);
       Gl.Enable(EnableCap.LineSmooth);

@@ -3,6 +3,7 @@
 #define GAMMA (2.2)
 #define DIA_ELECTRIC_REFLECTANCE (vec3(0.04))
 #define LIGHT_COUNT (50)
+#define MAX_REFLECTION_LOD (4.0)
 
 in VsOut { vec2 texture_coordinate; mat3 TBN; vec3 world_position; };
 
@@ -12,6 +13,12 @@ uniform sampler2D normal_map;
 uniform sampler2D metallic_map;
 uniform sampler2D roughness_map;
 uniform sampler2D ambient_occlusion_map;
+
+// IBL
+uniform samplerCube irradiance_map;
+uniform samplerCube prefilter_map;
+uniform sampler2D brdf_LUT;
+
 
 // TODO abstract Light into uniform block[]
 uniform vec3 light_positions[LIGHT_COUNT];
@@ -23,24 +30,39 @@ uniform mat4 model;
 
 out vec4 fragment_color;
 
-vec3 normal_from_map();
-float distribution_GGX(vec3 N, vec3 H, float roughness);
-float geometry_schlick_GGX(float NV, float roughness);
-float geometry_smith(vec3 N, vec3 V, vec3 L, float roughness);
-vec3 fresnel_schlick(float cosTheta, vec3 F0);
+float max_dot(vec3 first, vec3 second) { return max(dot(first, second), 0); }
 
-vec3 correct_gamma(vec3);
-vec3 apply_hdr_tonemapping(vec3);
-vec4 apply_diffuse(vec3);
+vec3 color_texture() { return texture(albedo_map, texture_coordinate).rgb; }
+vec3 normal_texture() { return texture(normal_map, texture_coordinate).xyz; }
+float metallic_texture() { return texture(metallic_map, texture_coordinate).r; }
+float roughness_texture() { return texture(roughness_map, texture_coordinate).r; }
+float ambient_occlusion_texture() { return texture(ambient_occlusion_map, texture_coordinate).r; }
 
-vec3 calculate_albedo();
-vec3 color_texture();
-vec3 normal_texture();
-float metallic_texture();
-float roughness_texture();
-float ambient_occlusion_texture();
+vec3 irradiance_texture(vec3 N) { return texture(irradiance_map, N).rgb; }
+vec3 prefilter_texture(vec3 R, float roughness) { return textureLod(prefilter_map, R, roughness * MAX_REFLECTION_LOD).rgb; }
+vec2 brdf_texture(float NV, float roughness) { return texture(brdf_LUT, vec2(NV, roughness)).rg; }
 
-float max_dot(vec3, vec3);
+vec3 calculate_normal_map_tangent() { return 2 * normal_texture() - 1; }
+vec3 normal_from_map() { return normalize(TBN * calculate_normal_map_tangent()); }
+
+float distribution_GGX(vec3 N, vec3 H, float roughness) {
+    float a2 = pow(roughness, 4);
+    float NH2 = pow(max_dot(N, H), 2);
+
+    return a2 / (PI * pow(1 + (a2 - 1) * NH2, 2));
+}
+float geometry_schlick_GGX(float NV, float roughness) {
+    float k = pow(roughness, 2) / 2.0;
+    return NV / (k + NV * (1 - k));
+}
+float geometry_smith(vec3 N, vec3 V, vec3 L, float roughness) {
+    return geometry_schlick_GGX(max_dot(N, V), roughness) * geometry_schlick_GGX(max_dot(N, L), roughness);
+}
+vec3 fresnel_schlick(float cosTheta, vec3 F0) { return F0 + (1 - F0) * pow(max(1 - cosTheta, 0), 5); }
+vec3 fresnel_schlick_roughness(float cosTheta, vec3 F0, float roughness) {
+    return F0 + (max(vec3(1.0 - roughness), F0) - F0) * pow(max(1.0 - cosTheta, 0.0), 5.0);
+}
+
 vec3 calculate_F0(vec3 albedo, float metallic) {
     return mix(DIA_ELECTRIC_REFLECTANCE, albedo, metallic);
 }
@@ -51,6 +73,7 @@ vec3 calculate_radiance(vec3 light_position, vec3 light_color) {
 vec3 calculate_reflectance(vec3 albedo, float metallic, float roughness) {
     vec3 N = normal_from_map();
     vec3 V = normalize(camera.position - world_position);
+    vec3 R = reflect(-V, N);
 
     vec3 outgoing_radiance = vec3(0);
     vec3 F0 = calculate_F0(albedo, metallic);
@@ -61,7 +84,6 @@ vec3 calculate_reflectance(vec3 albedo, float metallic, float roughness) {
         float NDF = distribution_GGX(N, H, roughness);
         float G = geometry_smith(N, V, L, roughness);
         vec3 F = fresnel_schlick(max_dot(H, V), F0);
-
         vec3 kS = F;
         vec3 kD = (vec3(1.0) - kS) * (1 - metallic);
 
@@ -73,43 +95,32 @@ vec3 calculate_reflectance(vec3 albedo, float metallic, float roughness) {
     return outgoing_radiance;
 }
 
+vec3 apply_gamma_correction(vec3 color) { return pow(color, vec3(1.0 / GAMMA)); }
+vec3 apply_hdr_tonemapping(vec3 color) { return color / (color + vec3(1.0)); }
+vec4 apply_diffuse(vec3 color) { return mix(vec4(color, 1.0), vec4(color_texture(), 1.0), 0.2); }
 vec3 calculate_ambience(vec3 albedo) { return vec3(0.03) * albedo * ambient_occlusion_texture(); }
 vec3 apply_ambience(vec3 color, vec3 albedo) { return color + calculate_ambience(albedo); }
+vec3 calculate_albedo() { return pow(color_texture(), vec3(GAMMA)); }
 
 void main() {
     vec3 albedo = calculate_albedo();
-    vec3 reflectance = calculate_reflectance(albedo, metallic_texture(), roughness_texture());
+    float metallic = metallic_texture();
 
-    fragment_color = apply_diffuse(correct_gamma(apply_hdr_tonemapping(apply_ambience(reflectance, albedo))));
+    vec3 reflectance = calculate_reflectance(albedo, metallic, roughness_texture());
+
+//    vec3 N = normal_from_map();
+//    vec3 V = normalize(camera.position - world_position);
+//    vec3 R = reflect(-V, N);
+//    float roughness = roughness_texture();
+//
+//    vec3 F0 = calculate_F0(albedo, metallic);
+//    vec3 F = fresnel_schlick_roughness(max_dot(N, V), F0, roughness);
+//    vec3 kS = F;
+//    vec3 kD = (1.0 - kS) * (1.0 - metallic);
+//    vec3 diffuse = albedo * irradiance_texture(N);
+//
+//    vec3 prefilter = prefilter_texture(R, roughness);
+//    vec2 brdf = brdf_texture(max_dot(N, V), roughness);
+
+    fragment_color = apply_diffuse(apply_gamma_correction(apply_hdr_tonemapping(apply_ambience(reflectance, albedo))));
 }
-
-vec3 calculate_albedo() { return pow(color_texture(), vec3(2.2)); }
-vec3 color_texture() { return texture(albedo_map, texture_coordinate).rgb; }
-vec3 normal_texture() { return texture(normal_map, texture_coordinate).xyz; }
-float metallic_texture() { return texture(metallic_map, texture_coordinate).r; }
-float roughness_texture() { return texture(roughness_map, texture_coordinate).r; }
-float ambient_occlusion_texture() { return texture(ambient_occlusion_map, texture_coordinate).r; }
-
-vec3 calculate_normal_map_tangent() { return 2 * normal_texture() - 1; }
-
-float max_dot(vec3 first, vec3 second) { return max(dot(first, second), 0); }
-vec3 normal_from_map() { return normalize(TBN * calculate_normal_map_tangent()); }
-
-float distribution_GGX(vec3 N, vec3 H, float roughness) {
-    float a2 = pow(roughness, 4);
-    float NH2 = pow(max_dot(N, H), 2);
-
-    return a2 / (PI * pow(1 + (a2 - 1) * NH2, 2));
-}
-float geometry_schlick_GGX(float NV, float roughness) {
-    float k = pow(1 + roughness, 2) / 8;
-    return NV / (k + NV * (1 - k));
-}
-
-float geometry_smith(vec3 N, vec3 V, vec3 L, float roughness) {
-    return geometry_schlick_GGX(max_dot(N, V), roughness) * geometry_schlick_GGX(max_dot(N, L), roughness);
-}
-vec3 fresnel_schlick(float cosTheta, vec3 F0) { return F0 + (1 - F0) * pow(max(1 - cosTheta, 0), 5); }
-vec3 correct_gamma(vec3 color) { return pow(color, vec3(1.0 / GAMMA)); }
-vec3 apply_hdr_tonemapping(vec3 color) { return color / (color + vec3(1.0)); }
-vec4 apply_diffuse(vec3 color) { return mix(vec4(color, 1.0), vec4(color_texture(), 1.0), 0.2); }
