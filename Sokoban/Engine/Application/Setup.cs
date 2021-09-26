@@ -10,13 +10,20 @@ public static partial class App
 {
   public static void OnLoad(Action action) => Window.Load += action;
   public static void OnClose(Action action) => Window.Closing += action;
-  public static Vector2D<int> Size => Window.Size;
+  public static Vector2D<int> Size {
+    get => Window.Size;
+    set => Window.Size = value;
+  }
 
   private static class Setup
   {
     public static void Run()
     {
       Window.Center();
+      Window.Resize += size => {
+        Gl.Viewport(0, 0, (uint)size.X, (uint)size.Y);
+        Size = size;
+      };
       SetupOpenGl();
     }
     private static void SetupOpenGl()
@@ -32,6 +39,7 @@ public static partial class App
       Gl.Enable(EnableCap.InterlaceSgix);
       Gl.Enable(EnableCap.StencilTest);
       Gl.Enable(EnableCap.TextureCubeMapSeamless);
+      Gl.DepthFunc(DepthFunction.Lequal);
       Gl.Hint(HintTarget.LineSmoothHint, HintMode.Nicest);
       Gl.Hint(HintTarget.PolygonSmoothHint, HintMode.Nicest);
     }

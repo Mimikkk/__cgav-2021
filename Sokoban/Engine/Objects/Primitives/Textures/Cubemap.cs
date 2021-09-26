@@ -5,9 +5,7 @@ using Silk.NET.Maths;
 using Silk.NET.OpenGL;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
-using Sokoban.Scripts.Map;
 using Sokoban.Utilities;
-using Sokoban.Utilities.Extensions;
 using App = Sokoban.Engine.Application.App;
 
 namespace Sokoban.Engine.Objects.Primitives.Textures

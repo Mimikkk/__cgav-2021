@@ -1,5 +1,4 @@
 ﻿using System;
-using Logger;
 using Silk.NET.Maths;
 using Sokoban.Engine.Application;
 using Sokoban.Engine.Objects.Primitives;

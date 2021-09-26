@@ -5,7 +5,6 @@ using Silk.NET.Maths;
 using Sokoban.Engine.Renderers;
 using Sokoban.Engine.Renderers.Buffers.Objects;
 using Mesh = Sokoban.Engine.Objects.Primitives.Mesh;
-using Vector3D = Silk.NET.Maths.Vector3D;
 
 namespace Sokoban.Engine.Objects.Loaders
 {

@@ -1,5 +1,4 @@
 ﻿using System;
-using Silk.NET.Maths;
 using Silk.NET.OpenGL;
 using Sokoban.Engine.Application;
 using Sokoban.Engine.Renderers.Shaders;

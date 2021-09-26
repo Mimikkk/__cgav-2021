@@ -4,7 +4,6 @@ using System.Linq;
 using Silk.NET.Maths;
 using Sokoban.Engine.Objects.Primitives;
 using Sokoban.Engine.Objects.Primitives.Textures;
-using Sokoban.Resources;
 using static System.Linq.Enumerable;
 using static Sokoban.Resources.ResourceManager.Materials;
 using static Sokoban.Utilities.Extensions.Extension;
