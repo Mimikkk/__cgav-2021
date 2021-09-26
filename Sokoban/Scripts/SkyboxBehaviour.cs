@@ -11,6 +11,7 @@ public class SkyboxBehaviour : MonoBehaviour
 
   protected override void Render(double dt)
   {
+    return;
     App.Gl.DepthFunc(DepthFunction.Lequal);
     Skybox.Vao.Bind();
     Skybox.Spo.Bind();

@@ -1,63 +1,65 @@
-﻿using Sokoban.Engine.Objects;
+﻿using Silk.NET.OpenGL;
+using Sokoban.Engine.Application;
+using Sokoban.Engine.Objects;
 using Sokoban.Engine.Objects.Primitives;
-using Sokoban.Engine.Renderers.Buffers.Objects;
-using Sokoban.Engine.Renderers.Shaders;
 using Sokoban.Resources;
 using Material = Sokoban.Engine.Objects.Primitives.Textures.Material;
 using Mesh = Sokoban.Engine.Objects.Primitives.Mesh;
+using VertexArray = Sokoban.Engine.Renderers.Buffers.Objects.VertexArray;
 
 namespace Sokoban.Scripts.Map
 {
 public class Cube : GameObject
 {
   private static readonly float[] Vertices = {
-    //X    Y      Z       Normals             U     V
-    -1f, -1f, -1f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f,
-    1f, -1f, -1f, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f,
-    1f, 1f, -1f, 0.0f, 0.0f, -1.0f, 1.0f, 1.0f,
-    1f, 1f, -1f, 0.0f, 0.0f, -1.0f, 1.0f, 1.0f,
-    -1f, 1f, -1f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f,
-    -1f, -1f, -1f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f,
+    // Position/Normal/TextureCoordinate
 
-    -1f, -1f, 1f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
-    1f, -1f, 1f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f,
-    1f, 1f, 1f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f,
-    1f, 1f, 1f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f,
-    -1f, 1f, 1f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f,
-    -1f, -1f, 1f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+    -1, -1, -1, 0, 0, -1, 0, 0,
+    1, 1, -1, 0, 0, -1, 1, 1,
+    1, -1, -1, 0, 0, -1, 1, 0,
+    1, 1, -1, 0, 0, -1, 1, 1,
+    -1, -1, -1, 0, 0, -1, 0, 0,
+    -1, 1, -1, 0, 0, -1, 0, 1,
 
-    -1f, 1f, 1f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-    -1f, 1f, -1f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
-    -1f, -1f, -1f, -1.0f, 0.0f, 0.0f, 1.0f, 1.0f,
-    -1f, -1f, -1f, -1.0f, 0.0f, 0.0f, 1.0f, 1.0f,
-    -1f, -1f, 1f, -1.0f, 0.0f, 0.0f, 0.0f, 1.0f,
-    -1f, 1f, 1f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+    -1, -1, 1, 0, 0, 1, 0, 0,
+    1, -1, 1, 0, 0, 1, 1, 0,
+    1, 1, 1, 0, 0, 1, 1, 1,
+    1, 1, 1, 0, 0, 1, 1, 1,
+    -1, 1, 1, 0, 0, 1, 0, 1,
+    -1, -1, 1, 0, 0, 1, 0, 0,
 
-    1f, 1f, 1f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-    1f, 1f, -1f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
-    1f, -1f, -1f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f,
-    1f, -1f, -1f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f,
-    1f, -1f, 1f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f,
-    1f, 1f, 1f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+    -1, 1, 1, -1, 0, 0, 1, 0,
+    -1, 1, -1, -1, 0, 0, 1, 1,
+    -1, -1, -1, -1, 0, 0, 0, 1,
+    -1, -1, -1, -1, 0, 0, 0, 1,
+    -1, -1, 1, -1, 0, 0, 0, 0,
+    -1, 1, 1, -1, 0, 0, 1, 0,
 
-    -1f, -1f, -1f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f,
-    1f, -1f, -1f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f,
-    1f, -1f, 1f, 0.0f, -1.0f, 0.0f, 1.0f, 1.0f,
-    1f, -1f, 1f, 0.0f, -1.0f, 0.0f, 1.0f, 1.0f,
-    -1f, -1f, 1f, 0.0f, -1.0f, 0.0f, 0.0f, 1.0f,
-    -1f, -1f, -1f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+    1, 1, 1, 1, 0, 0, 1, 0,
+    1, -1, -1, 1, 0, 0, 0, 1,
+    1, 1, -1, 1, 0, 0, 1, 1,
+    1, -1, -1, 1, 0, 0, 0, 1,
+    1, 1, 1, 1, 0, 0, 1, 0,
+    1, -1, 1, 1, 0, 0, 0, 0,
 
-    -1f, 1f, -1f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f,
-    1f, 1f, -1f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
-    1f, 1f, 1f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f,
-    1f, 1f, 1f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f,
-    -1f, 1f, 1f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
-    -1f, 1f, -1f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f
+    -1, -1, -1, 0, -1, 0, 0, 1,
+    1, -1, -1, 0, -1, 0, 1, 1,
+    1, -1, 1, 0, -1, 0, 1, 0,
+    1, -1, 1, 0, -1, 0, 1, 0,
+    -1, -1, 1, 0, -1, 0, 0, 0,
+    -1, -1, -1, 0, -1, 0, 0, 1,
+
+    -1, 1, -1, 0, 1, 0, 0, 1,
+    1, 1, 1, 0, 1, 0, 1, 0,
+    1, 1, -1, 0, 1, 0, 1, 1,
+    1, 1, 1, 0, 1, 0, 1, 0,
+    -1, 1, -1, 0, 1, 0, 0, 1,
+    -1, 1, 1, 0, 1, 0, 0, 0
   };
 
   private static readonly VertexArray CubeVao = new() {
     VertexBuffer = new(Vertices),
-    Layout = new(3, 2, 3)
+    Layout = new(3, 3, 2)
   };
   private void BaseShaderConfiguration()
   {
@@ -69,7 +71,7 @@ public class Cube : GameObject
     Spo.SetUniform("normal_map", 1);
     Spo.SetUniform("displacement_map", 2);
 
-    Spo.SetUniform("height_scale",  Transform.Scale);
+    Spo.SetUniform("height_scale", Transform.Scale);
     Spo.SetUniform("light_position", Camera.Transform.Position);
     Spo.SetUniform("is_discardable", false);
     Spo.SetUniform("model", Transform.View);
@@ -84,6 +86,11 @@ public class Cube : GameObject
     };
   }
 
+  public static void DrawRaw()
+  {
+    CubeVao.Bind();
+    App.Gl.DrawArrays(PrimitiveType.Triangles, 0, 36);
+  }
   public void Draw() => base.Draw(BaseShaderConfiguration);
 }
 }

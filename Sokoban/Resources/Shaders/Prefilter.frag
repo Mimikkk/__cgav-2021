@@ -2,7 +2,7 @@
 #define PI (3.14159265358979323846)
 #define SAMPLE_COUNT (1024u)
 #define CUBE_RESOLUTION (512.0)
-#define CUBE_RESOLUTION2 (262144)
+#define CUBE_RESOLUTION2 (262144.0)
 
 in VsOut { vec3 position; };
 

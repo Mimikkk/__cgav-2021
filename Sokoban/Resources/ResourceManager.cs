@@ -32,17 +32,12 @@ public class ResourceManager
   }
   public static class ShaderPrograms
   {
-    public static readonly ShaderProgram Skybox = new("Skybox") {
+    public static readonly ShaderProgram Background = new("Background") {
       Vertex = default,
       Fragment = default,
       ShouldLink = true
     };
     public static readonly ShaderProgram ParallaxMapping = new("ParallaxMapping") {
-      Vertex = default,
-      Fragment = default,
-      ShouldLink = true
-    };
-    public static readonly ShaderProgram Basic = new("Basic") {
       Vertex = default,
       Fragment = default,
       ShouldLink = true
@@ -54,23 +49,23 @@ public class ResourceManager
     };
 
     public static readonly ShaderProgram EquirectangularToCubemap = new("EquirectangularToCubemap") {
-      Vertex = "Cube",
+      Vertex = "Cubemap",
       Fragment = default,
       ShouldLink = true,
     };
     public static readonly ShaderProgram Irradiance = new("IrradianceConvolution") {
-      Vertex = "Cube",
+      Vertex = "Cubemap",
+      Fragment = default,
+      ShouldLink = true,
+    };
+    public static readonly ShaderProgram Prefilter = new("Prefilter") {
+      Vertex = "Cubemap",
       Fragment = default,
       ShouldLink = true,
     };
     public static readonly ShaderProgram Brdf = new("Brdf") {
       Fragment = default,
       Vertex = default,
-      ShouldLink = true,
-    };
-    public static readonly ShaderProgram Prefilter = new("Prefilter") {
-      Vertex = "Cube",
-      Fragment = default,
       ShouldLink = true,
     };
   }
