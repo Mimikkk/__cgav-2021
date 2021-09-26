@@ -2,6 +2,7 @@
 using Sokoban.Engine.Controllers;
 using Sokoban.Engine.Scripts;
 using Sokoban.Scripts.Map;
+using Sokoban.Scripts.Map.Object;
 using Sokoban.Utilities.Extensions;
 using static Sokoban.Resources.ResourceManager.Materials;
 

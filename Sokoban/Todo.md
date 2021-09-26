@@ -3,9 +3,9 @@
 - **Gra**:
     - [ ] **Mapa**:
         - [ ] Generowanie.
-        - [ ] Światła.
+        - [x] Światła.
         - [ ] Rozmieszczanie obiektów.
-        - [ ] Renderowanie Mapy.
+        - [x] Renderowanie Mapy.
     - [ ] **Obiekty**:
         - [ ] Gracz.
         - [x] Skrzynia.

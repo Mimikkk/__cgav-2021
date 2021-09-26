@@ -8,34 +8,34 @@ using Sokoban.Engine.Objects.Primitives;
 using Sokoban.Engine.Scripts;
 using Sokoban.Resources;
 using Sokoban.Scripts.Map;
+using Sokoban.Scripts.Map.Object;
 
 namespace Sokoban.Scripts
 {
 public partial class CubeBehaviour : MonoBehaviour
 {
-  private static readonly Cube Cube = new(ResourceManager.Materials.Brick);
   private static readonly GameObject Box = ObjectLoader.Load("Box").First();
 
   private static void SetupController()
   {
-    Controller.OnHold(Key.T, dt => Cube.Transform.Scale += dt);
-    Controller.OnHold(Key.G, dt => Cube.Transform.Scale -= dt);
+    Controller.OnHold(Key.T, dt => Box.Transform.Scale += dt);
+    Controller.OnHold(Key.G, dt => Box.Transform.Scale -= dt);
 
-    Controller.OnHold(Key.Keypad4, dt => Cube.Transform.Translate(dt, 0, 0));
-    Controller.OnHold(Key.Keypad6, dt => Cube.Transform.Translate(-dt, 0, 0));
-    Controller.OnHold(Key.Keypad9, dt => Cube.Transform.Translate(0, dt, 0));
-    Controller.OnHold(Key.Keypad7, dt => Cube.Transform.Translate(0, -dt, 0));
-    Controller.OnHold(Key.Keypad8, dt => Cube.Transform.Translate(0, 0, dt));
-    Controller.OnHold(Key.Keypad2, dt => Cube.Transform.Translate(0, 0, -dt));
+    Controller.OnHold(Key.Keypad4, dt => Box.Transform.Translate(dt, 0, 0));
+    Controller.OnHold(Key.Keypad6, dt => Box.Transform.Translate(-dt, 0, 0));
+    Controller.OnHold(Key.Keypad9, dt => Box.Transform.Translate(0, dt, 0));
+    Controller.OnHold(Key.Keypad7, dt => Box.Transform.Translate(0, -dt, 0));
+    Controller.OnHold(Key.Keypad8, dt => Box.Transform.Translate(0, 0, dt));
+    Controller.OnHold(Key.Keypad2, dt => Box.Transform.Translate(0, 0, -dt));
 
-    Controller.OnHold(Key.KeypadMultiply, dt => Cube.Transform.Rotate(dt, 0, 0));
-    Controller.OnHold(Key.KeypadDivide, dt => Cube.Transform.Rotate(-dt, 0, 0));
+    Controller.OnHold(Key.KeypadMultiply, dt => Box.Transform.Rotate(dt, 0, 0));
+    Controller.OnHold(Key.KeypadDivide, dt => Box.Transform.Rotate(-dt, 0, 0));
 
-    Controller.OnHold(Key.KeypadAdd, dt => Cube.Transform.Rotate(0, dt, 0));
-    Controller.OnHold(Key.KeypadSubtract, dt => Cube.Transform.Rotate(0, -dt, 0));
+    Controller.OnHold(Key.KeypadAdd, dt => Box.Transform.Rotate(0, dt, 0));
+    Controller.OnHold(Key.KeypadSubtract, dt => Box.Transform.Rotate(0, -dt, 0));
 
-    Controller.OnHold(Key.Keypad1, dt => Cube.Transform.Rotate(0, 0, dt));
-    Controller.OnHold(Key.Keypad3, dt => Cube.Transform.Rotate(0, 0, -dt));
+    Controller.OnHold(Key.Keypad1, dt => Box.Transform.Rotate(0, 0, dt));
+    Controller.OnHold(Key.Keypad3, dt => Box.Transform.Rotate(0, 0, -dt));
   }
   private static void SetupCube()
   {
@@ -52,20 +52,6 @@ public partial class CubeBehaviour : MonoBehaviour
   }
   protected override void Render(double dt)
   {
-    Cube.Mesh!.Material!.DiffuseMap?.Bind(0);
-    Cube.Mesh.Material.NormalMap?.Bind(1);
-    Cube.Mesh.Material.DisplacementMap?.Bind(2);
-
-    Cube.Spo!.SetUniform("diffuse_map", 0);
-    Cube.Spo.SetUniform("normal_map", 1);
-    Cube.Spo.SetUniform("displacement_map", 2);
-
-    Cube.Spo.SetUniform("height_scale", Cube.Transform.Scale);
-    Cube.Spo.SetUniform("light_position", Camera.Transform.Position);
-    Cube.Spo.SetUniform("is_discardable", false);
-    Cube.Spo.SetUniform("model", Cube.Transform.View);
-    Cube.DrawRaw();
-
     Box.Draw(() => {
       Box.Mesh!.Material!.DiffuseMap!.Bind(0);
       Box.Mesh!.Material!.NormalMap!.Bind(1);
@@ -76,7 +62,7 @@ public partial class CubeBehaviour : MonoBehaviour
       ResourceManager.Textures.Prefilter.Bind(6);
       ResourceManager.Textures.BrdfLUT.Bind(7);
 
-      Box.Spo.SetUniform("albedo_map", 0);
+      Box.Spo!.SetUniform("albedo_map", 0);
       Box.Spo.SetUniform("normal_map", 1);
       Box.Spo.SetUniform("metallic_map", 2);
       Box.Spo.SetUniform("roughness_map", 3);

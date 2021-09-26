@@ -8,7 +8,7 @@ using Material = Sokoban.Engine.Objects.Primitives.Textures.Material;
 using Mesh = Sokoban.Engine.Objects.Primitives.Mesh;
 using VertexArray = Sokoban.Engine.Renderers.Buffers.Objects.VertexArray;
 
-namespace Sokoban.Scripts.Map
+namespace Sokoban.Scripts.Map.Object
 {
 public class Quad : GameObject
 {

@@ -1,4 +1,8 @@
 ﻿#version 450 core
+#define MIN_LAYERS (16)
+#define MAX_LAYERS (128)
+#define RIGHT (vec3(0.0, 0.0, 1.0))
+
 
 in VsOut {
     vec3 position;
@@ -17,65 +21,52 @@ uniform bool is_discardable;
 
 out vec4 color;
 
-vec2 MapParallax(vec2 coord, vec3 view_direction) {
-    const float minLayers = 36;
-    const float maxLayers = 128;
+float max_dot(vec3 first, vec3 second) { return max(dot(first, second), 0); }
 
-    float numLayers = mix(maxLayers, minLayers, abs(dot(vec3(0.0, 0.0, 1.0), view_direction)));
+vec2 map_parallax(vec2 coord, vec3 view_direction) {
+    float layer_count = mix(MAX_LAYERS, MIN_LAYERS, abs(dot(RIGHT, view_direction)));
 
-    // calculate the size of each layer
-    float layerDepth = 1.0 / numLayers;
+    float layer_depth = 1.0 / layer_count;
+    float current_depth = 0.0;
 
-    // depth of current layer
-    float currentLayerDepth = 0.0;
-
-    // the amount to shift the texture coordinates per layer (from vector P)
     vec2 P = view_direction.xy / view_direction.z * height_scale;
-    vec2 deltaTexCoords = P / numLayers;
+    vec2 sample_size = P / layer_count;
 
-    // get initial values
-    vec2  currentTexCoords = coord;
-    float currentDepthMapValue = texture(displacement_map, currentTexCoords).r;
+    vec2  current_coordinate = coord;
+    float depth_value = texture(displacement_map, current_coordinate).r;
 
-    while (currentLayerDepth < currentDepthMapValue)
+    while (current_depth < depth_value)
     {
-        // shift texture coordinates along direction of P
-        currentTexCoords -= deltaTexCoords;
-        // get depthmap value at current texture coordinates
-        currentDepthMapValue = texture(displacement_map, currentTexCoords).r;
-        // get depth of next layer
-        currentLayerDepth += layerDepth;
+        current_coordinate -= sample_size;
+        depth_value = texture(displacement_map, current_coordinate).r;
+        current_depth += layer_depth;
     }
 
-    // get texture coordinates before collision (reverse operations)
-    vec2 prevTexCoords = currentTexCoords + deltaTexCoords;
+    vec2 previous_coordinate = current_coordinate + sample_size;
 
-    // get depth after and before collision for linear interpolation
-    float afterDepth  = currentDepthMapValue - currentLayerDepth;
-    float beforeDepth = texture(displacement_map, prevTexCoords).r - currentLayerDepth + layerDepth;
+    float after_depth  = depth_value - current_depth;
+    float before_depth = texture(displacement_map, previous_coordinate).r - current_depth + layer_depth;
 
-    // interpolation of texture coordinates
-    float weight = afterDepth / (afterDepth - beforeDepth);
-    vec2 finalTexCoords = prevTexCoords * weight + currentTexCoords * (1.0 - weight);
+    float weight = after_depth / (after_depth - before_depth);
 
-    return finalTexCoords;
+    return previous_coordinate * weight + current_coordinate * (1.0 - weight);
 }
 
-bool ShouldDiscard(float x, float y) {
+bool should_discard(float x, float y) {
     return x > 1.0 || x < 0.0 || y > 1.0 || x < 0.0;
 }
-bool ShouldDiscard(vec2 vec) {
-    return ShouldDiscard(vec.x, vec.y);
+bool should_discard(vec2 vec) {
+    return should_discard(vec.x, vec.y);
 }
-void DiscardTextureCoordinate(vec2 coordinate) {
-    if (is_discardable && ShouldDiscard(coordinate)) discard;
+void discard_texture_coordinate(vec2 coordinate) {
+    if (is_discardable && should_discard(coordinate)) discard;
 }
 
 void main() {
     vec3 view_direction = normalize(tangent_view_position - tangent_position);
 
-    vec2 offset_texture_coord = MapParallax(texture_coordinate, view_direction);
-    DiscardTextureCoordinate(offset_texture_coord);
+    vec2 offset_texture_coord = map_parallax(texture_coordinate, view_direction);
+    discard_texture_coordinate(offset_texture_coord);
 
     vec3 light_direction = normalize(tangent_light_position - tangent_position);
     vec3 diffuse_color = texture(diffuse_map, offset_texture_coord).rgb;
@@ -86,8 +77,8 @@ void main() {
 
     vec3 ambient = 0.1 * diffuse_color;
 
-    vec3 diffuse = diffuse_color * max(dot(reflect_direction, normal), 0.0);
-    vec3 specular = vec3(0.2) * pow(max(dot(normal, halfway_direction), 0.0), 32.0);
+    vec3 diffuse = diffuse_color * max_dot(reflect_direction, normal);
+    vec3 specular = vec3(0.2) * pow(max_dot(normal, halfway_direction), 32.0);
 
     color = vec4(ambient + diffuse + specular, 1.0);
 }
