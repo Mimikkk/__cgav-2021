@@ -1,7 +1,7 @@
 ﻿#version 450 core
 #define PI (3.14159265358979323846)
 #define SAMPLE_COUNT (1024u)
-in VsOut { vec2 texture_coordinate; } vs_out;
+in VsOut { vec2 texture_coordinate; };
 out vec2 color;
 
 float max_dot(vec3 first, vec3 second) { return max(dot(first, second), 0); }
@@ -18,7 +18,8 @@ vec2 hammersley(uint i, uint N) {
     return vec2(float(i)/float(N), radical_inverse_VdC(i));
 }
 
-vec3 calculate_halfway(vec2 Xi) {
+vec3 calculate_halfway(vec2 Xi, float roughness) {
+    float a = pow(roughness, 2);
     float phi = 2.0 * PI * Xi.x;
     float cosTheta = sqrt((1.0 - Xi.y) / (1.0 + (pow(a, 2) - 1.0) * Xi.y));
     float sinTheta = sqrt(1.0 - cosTheta*cosTheta);
@@ -26,8 +27,7 @@ vec3 calculate_halfway(vec2 Xi) {
 }
 
 vec3 importance_sample_GGX(vec2 Xi, vec3 N, float roughness) {
-    float a = pow(roughness, 2);
-    vec3 H = calculate_halfway(Xi);
+    vec3 H = calculate_halfway(Xi, roughness);
 
     vec3 up = abs(N.z) < 0.999 ? vec3(0.0, 0.0, 1.0) : vec3(1.0, 0.0, 0.0);
     vec3 tangent = normalize(cross(up, N));
@@ -78,5 +78,5 @@ vec2 integrate_BRDF(float NV, float roughness) {
 }
 
 void main() {
-    color = IntegrateBRDF(texture_coordinate.x, texture_coordinate.y);
+    color = integrate_BRDF(texture_coordinate.x, texture_coordinate.y);
 }

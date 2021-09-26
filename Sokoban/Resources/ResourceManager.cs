@@ -52,6 +52,27 @@ public class ResourceManager
       Fragment = default,
       ShouldLink = true
     };
+
+    public static readonly ShaderProgram EquirectangularToCubemap = new("EquirectangularToCubemap") {
+      Vertex = "Cube",
+      Fragment = default,
+      ShouldLink = true,
+    };
+    public static readonly ShaderProgram Irradiance = new("IrradianceConvolution") {
+      Vertex = "Cube",
+      Fragment = default,
+      ShouldLink = true,
+    };
+    public static readonly ShaderProgram Brdf = new("Brdf") {
+      Fragment = default,
+      Vertex = default,
+      ShouldLink = true,
+    };
+    public static readonly ShaderProgram Prefilter = new("Prefilter") {
+      Vertex = "Cube",
+      Fragment = default,
+      ShouldLink = true,
+    };
   }
 }
 }

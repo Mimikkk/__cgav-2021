@@ -29,13 +29,20 @@ float radical_inverse_VdC(uint bits) {
     return float(bits) * 2.3283064365386963e-10;
 }
 
-vec2 Hammersley(uint i, uint N) {
+vec2 hammersley(uint i, uint N) {
     return vec2(float(i)/float(N), radical_inverse_VdC(i));
 }
 
-vec3 importance_sample_GGX(vec2 Xi, vec3 N, float roughness) {
+vec3 calculate_halfway(vec2 Xi, float roughness) {
     float a = pow(roughness, 2);
-    vec3 H = calculate_halfway(Xi);
+    float phi = 2.0 * PI * Xi.x;
+    float cosTheta = sqrt((1.0 - Xi.y) / (1.0 + (pow(a, 2) - 1.0) * Xi.y));
+    float sinTheta = sqrt(1.0 - cosTheta*cosTheta);
+    return vec3(cos(phi) * sinTheta, sin(phi) * sinTheta, cosTheta);
+}
+
+vec3 importance_sample_GGX(vec2 Xi, vec3 N, float roughness) {
+    vec3 H = calculate_halfway(Xi, roughness);
 
     vec3 up = abs(N.z) < 0.999 ? vec3(0.0, 0.0, 1.0) : vec3(1.0, 0.0, 0.0);
     vec3 tangent = normalize(cross(up, N));
@@ -45,7 +52,7 @@ vec3 importance_sample_GGX(vec2 Xi, vec3 N, float roughness) {
     return normalize(sample_vec);
 }
 
-vec3 environment_map(vec2 texture_coordinate, float mipLevel) {
+vec3 environment_texture(vec3 texture_coordinate, float mipLevel) {
     return textureLod(environment_map, texture_coordinate, mipLevel).rgb;
 }
 

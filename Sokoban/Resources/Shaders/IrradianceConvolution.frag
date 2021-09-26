@@ -8,8 +8,8 @@ uniform samplerCube environment_map;
 
 out vec4 color;
 
-vec3 environment_texture(vec2 texture_coordinate) {
-    return texture(environmentMap, texture_coordinate).rgb;
+vec3 environment_texture(vec3 texture_coordinate) {
+    return texture(environment_map, texture_coordinate).rgb;
 }
 vec3 spherical_to_cartesian(float theta, float phi) {
     return vec3(sin(theta) * cos(phi), sin(theta) * sin(phi), cos(theta));

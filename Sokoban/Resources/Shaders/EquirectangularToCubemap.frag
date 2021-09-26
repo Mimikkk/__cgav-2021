@@ -13,5 +13,5 @@ vec2 sample_spherical_map(vec3 position) {
 vec3 equirectangular_texture(vec2 texture_coordinate) { return texture(equirectangular_map, texture_coordinate).rgb; }
 
 void main() {
-    color = vec4(equirectangular_texture(SampleSphericalMap(normalize(position))), 1.0);
+    color = vec4(equirectangular_texture(sample_spherical_map(normalize(position))), 1.0);
 }
