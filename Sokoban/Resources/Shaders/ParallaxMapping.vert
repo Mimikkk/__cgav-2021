@@ -1,4 +1,4 @@
-﻿#version 330 core
+﻿#version 450 core
 
 layout (location = 0) in vec3 position;
 layout (location = 1) in vec3 normal;
@@ -19,18 +19,20 @@ out VsOut {
     vec3 tangent_view_position;
 } vs_out;
 
-void main()
-{
+mat3 rotation = mat3(model);
+mat3 calculate_tbn() {
+    vec3 T = normalize(rotation * tangent);
+    vec3 B = normalize(rotation * biTangent);
+    vec3 N = normalize(rotation * normal);
+    return mat3(T, B, N);
+}
+
+void main() {
     vs_out.position = vec3(model * vec4(position, 1.0));
     vs_out.texture_coordinate = texture_coordinate;
 
-    vec3 T = normalize(mat3(model) * tangent);
-    vec3 B = normalize(mat3(model) * biTangent);
-    vec3 N = normalize(mat3(model) * normal);
-    mat3 TBN = transpose(mat3(T, B, N));
-
+    mat3 TBN = transpose(calculate_tbn());
     vs_out.tangent_light_position = TBN * light_position;
-
     vs_out.tangent_view_position  = TBN * camera.position;
     vs_out.tangent_position  = TBN * vs_out.position;
 
