@@ -23,6 +23,8 @@ out vec4 color;
 
 float max_dot(vec3 first, vec3 second) { return max(dot(first, second), 0); }
 
+float displacement_texture(vec2 coordinate) { return texture(displacement_map, coordinate).r; }
+
 vec2 map_parallax(vec2 coord, vec3 view_direction) {
     float layer_count = mix(MAX_LAYERS, MIN_LAYERS, abs(dot(RIGHT, view_direction)));
 
@@ -33,19 +35,19 @@ vec2 map_parallax(vec2 coord, vec3 view_direction) {
     vec2 sample_size = P / layer_count;
 
     vec2  current_coordinate = coord;
-    float depth_value = texture(displacement_map, current_coordinate).r;
+    float depth_value = displacement_texture(current_coordinate);
 
     while (current_depth < depth_value)
     {
         current_coordinate -= sample_size;
-        depth_value = texture(displacement_map, current_coordinate).r;
+        depth_value = displacement_texture(current_coordinate);
         current_depth += layer_depth;
     }
 
     vec2 previous_coordinate = current_coordinate + sample_size;
 
     float after_depth  = depth_value - current_depth;
-    float before_depth = texture(displacement_map, previous_coordinate).r - current_depth + layer_depth;
+    float before_depth = displacement_texture(previous_coordinate) - current_depth + layer_depth;
 
     float weight = after_depth / (after_depth - before_depth);
 
@@ -62,16 +64,17 @@ void discard_texture_coordinate(vec2 coordinate) {
     if (is_discardable && should_discard(coordinate)) discard;
 }
 
+vec3 normal_texture(vec2 coord) { return normalize(2 * texture(normal_map, coord).rgb - 1); }
+
 void main() {
     vec3 view_direction = normalize(tangent_view_position - tangent_position);
 
     vec2 offset_texture_coord = map_parallax(texture_coordinate, view_direction);
-    offset_texture_coord = texture_coordinate;
     discard_texture_coordinate(offset_texture_coord);
 
     vec3 light_direction = normalize(tangent_light_position - tangent_position);
     vec3 diffuse_color = texture(diffuse_map, offset_texture_coord).rgb;
-    vec3 normal = normalize(2*texture(normal_map, offset_texture_coord).rgb -1);
+    vec3 normal = normal_texture(offset_texture_coord);
 
     vec3 reflect_direction = reflect(-light_direction, normal);
     vec3 halfway_direction = normalize(light_direction + view_direction);

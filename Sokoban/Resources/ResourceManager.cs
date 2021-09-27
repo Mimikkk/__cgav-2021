@@ -21,17 +21,26 @@ public class ResourceManager
     public static readonly Material Fabric = new() {
       DiffuseMap = new("Fabric/Color.png"),
       NormalMap = new("Fabric/Normal.png"),
-      DisplacementMap = new("Fabric/Displacement.png")
+      DisplacementMap = new("Fabric/Displacement.png"),
+      AmbientOcclusionMap = new("Plastic/AmbientOcclusion.png"),
+      ReflectionMap = new("Plastic/Metallic.png"),
+      HeightMap = new("Plastic/Roughness.png")
     };
     public static readonly Material Brick = new() {
       DiffuseMap = new("Brick/Color.jpg"),
       NormalMap = new("Brick/Normal.jpg"),
-      DisplacementMap = new("Brick/Displacement.jpg")
+      DisplacementMap = new("Brick/Displacement.jpg"),
+      AmbientOcclusionMap = new("Plastic/AmbientOcclusion.png"),
+      ReflectionMap = new("Plastic/Metallic.png"),
+      HeightMap = new("Plastic/Roughness.png")
     };
     public static readonly Material Rock = new() {
       DiffuseMap = new("Rock/Color.png"),
       NormalMap = new("Rock/Normal.png"),
-      DisplacementMap = new("Rock/Displacement.png")
+      DisplacementMap = new("Rock/Displacement.png"),
+      AmbientOcclusionMap = new("Plastic/AmbientOcclusion.png"),
+      ReflectionMap = new("Plastic/Metallic.png"),
+      HeightMap = new("Plastic/Roughness.png")
     };
     public static readonly Material RustedIron = new() {
       DiffuseMap = new("RustedIron/Color.png"),

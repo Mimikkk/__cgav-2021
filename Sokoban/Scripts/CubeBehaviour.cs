@@ -17,10 +17,12 @@ public partial class CubeBehaviour : MonoBehaviour
 {
   private static readonly GameObject Box = ObjectLoader.Load("Box").First();
 
+
+  private static float HeightScale = 1;
   private static void SetupController()
   {
-    Controller.OnHold(Key.T, dt => Box.Transform.Scale += dt);
-    Controller.OnHold(Key.G, dt => Box.Transform.Scale -= dt);
+    Controller.OnHold(Key.T, dt => HeightScale += dt);
+    Controller.OnHold(Key.G, dt => HeightScale -= dt);
 
     Controller.OnHold(Key.Keypad4, dt => Box.Transform.Translate(dt, 0, 0));
     Controller.OnHold(Key.Keypad6, dt => Box.Transform.Translate(-dt, 0, 0));
@@ -42,8 +44,8 @@ public partial class CubeBehaviour : MonoBehaviour
   {
     Box.Transform.Position = new(6, 3, 6);
     Box.Spo = ResourceManager.ShaderPrograms.Pbr;
-    Box.Mesh!.Material = ResourceManager.Materials.Plastic;
-    Box.Mesh!.Material.DiffuseMap = new("Felix.png");
+    Box.Mesh!.Material = ResourceManager.Materials.Brick;
+    // Box.Mesh!.Material.DiffuseMap = new("Felix.png");
   }
 
   protected override void Start()
@@ -59,27 +61,33 @@ public partial class CubeBehaviour : MonoBehaviour
       Box.Mesh!.Material!.ReflectionMap!.Bind(2);
       Box.Mesh!.Material!.HeightMap!.Bind(3);
       Box.Mesh!.Material!.AmbientOcclusionMap!.Bind(4);
-      ResourceManager.Textures.Irradiance.Bind(5);
-      ResourceManager.Textures.Prefilter.Bind(6);
-      ResourceManager.Textures.BrdfLUT.Bind(7);
+
+      Box.Mesh!.Material!.DisplacementMap!.Bind(5);
+
+      ResourceManager.Textures.Irradiance.Bind(6);
+      ResourceManager.Textures.Prefilter.Bind(7);
+      ResourceManager.Textures.BrdfLUT.Bind(8);
 
       Box.Spo!.SetUniform("albedo_map", 0);
       Box.Spo.SetUniform("normal_map", 1);
       Box.Spo.SetUniform("metallic_map", 2);
       Box.Spo.SetUniform("roughness_map", 3);
       Box.Spo.SetUniform("ambient_occlusion_map", 4);
+      Box.Spo.SetUniform("ambient_occlusion_map", 5);
 
-      Box.Spo.SetUniform("irradiance_map", 5);
-      Box.Spo.SetUniform("prefilter_map", 6);
-      Box.Spo.SetUniform("brdf_LUT_map", 7);
+      Box.Spo.SetUniform("irradiance_map", 6);
+      Box.Spo.SetUniform("prefilter_map", 7);
+      Box.Spo.SetUniform("brdf_LUT_map", 8);
+
+      Box.Spo.SetUniform("height_scale", HeightScale);
 
       Box.Spo!.SetUniform("lights[0].position", Camera.Transform.Position);
       Box.Spo!.SetUniform("lights[0].color", new Vector3D<float>(6, 5, 5.5f));
 
       for (var i = 1; i < Lights.Count + 1; ++i)
       {
-        Box.Spo!.SetUniform($"lights[{i}].position", Lights[i-1].Transform.Position);
-        Box.Spo!.SetUniform($"lights[{i}].color", Lights[i-1].Color.AsVector3D());
+        Box.Spo!.SetUniform($"lights[{i}].position", Lights[i - 1].Transform.Position);
+        Box.Spo!.SetUniform($"lights[{i}].color", Lights[i - 1].Color.AsVector3D());
       }
 
       Box.Spo!.SetUniform("model", Box.Transform.View);

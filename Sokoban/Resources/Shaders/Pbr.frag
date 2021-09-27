@@ -4,6 +4,9 @@
 #define DIA_ELECTRIC_REFLECTANCE (vec3(0.04))
 #define LIGHT_COUNT (50)
 #define MAX_REFLECTION_LOD (4.0)
+#define MIN_LAYERS (16)
+#define MAX_LAYERS (128)
+#define RIGHT (vec3(0.0, 0.0, 1.0))
 
 in VsOut { vec2 texture_coordinate; mat3 TBN; vec3 world_position; };
 
@@ -14,11 +17,14 @@ uniform sampler2D metallic_map;
 uniform sampler2D roughness_map;
 uniform sampler2D ambient_occlusion_map;
 
+// Parallax
+uniform sampler2D displacement_map;
+uniform float height_scale;
+
 // IBL
 uniform samplerCube irradiance_map;
 uniform samplerCube prefilter_map;
 uniform sampler2D brdf_LUT_map;
-
 
 // TODO abstract Light into uniform block[]
 
@@ -33,18 +39,20 @@ out vec4 fragment_color;
 
 float max_dot(vec3 first, vec3 second) { return max(dot(first, second), 0); }
 
-vec3 color_texture() { return texture(albedo_map, texture_coordinate).rgb; }
-vec3 normal_texture() { return texture(normal_map, texture_coordinate).xyz; }
-float metallic_texture() { return texture(metallic_map, texture_coordinate).r; }
-float roughness_texture() { return texture(roughness_map, texture_coordinate).r; }
-float ambient_occlusion_texture() { return texture(ambient_occlusion_map, texture_coordinate).r; }
+vec2 coordinate;
+vec3 color_texture() { return texture(albedo_map, coordinate).rgb; }
+vec3 normal_texture() { return texture(normal_map, coordinate).rgb; }
+float metallic_texture() { return texture(metallic_map, coordinate).r; }
+float roughness_texture() { return texture(roughness_map, coordinate).r; }
+float ambient_occlusion_texture() { return texture(ambient_occlusion_map, coordinate).r; }
+float displacement_texture(vec2 coord) { return texture(displacement_map, coord).r; }
+
 
 vec3 irradiance_texture(vec3 N) { return texture(irradiance_map, N).rgb; }
 vec3 prefilter_texture(vec3 R, float roughness) { return textureLod(prefilter_map, R, roughness * MAX_REFLECTION_LOD).rgb; }
 vec2 brdf_texture(float NV, float roughness) { return texture(brdf_LUT_map, vec2(NV, roughness)).rg; }
 
-vec3 calculate_normal_map_tangent() { return 2 * normal_texture() - 1; }
-vec3 normal_from_map() { return normalize(TBN * calculate_normal_map_tangent()); }
+vec3 normal_from_map() { return normalize(2 * normal_texture() - 1); }
 
 float distribution_GGX(vec3 N, vec3 H, float roughness) {
     float a2 = pow(roughness, 4);
@@ -64,22 +72,21 @@ vec3 fresnel_schlick_roughness(float cosTheta, vec3 F0, float roughness) {
     return F0 + (max(vec3(1.0 - roughness), F0) - F0) * pow(max(1.0 - cosTheta, 0.0), 5.0);
 }
 
+
+vec3 N, V, R;
 vec3 calculate_F0(vec3 albedo, float metallic) {
     return mix(DIA_ELECTRIC_REFLECTANCE, albedo, metallic);
 }
 vec3 calculate_radiance(Light light) {
-    float attenuation = 1.0 / pow(length(light.position - world_position), 2);
+    float attenuation = 1.0 / pow(length(TBN * light.position - TBN * world_position), 2);
     return light.color * attenuation;
 }
 vec3 calculate_reflectance(vec3 albedo, float metallic, float roughness) {
-    vec3 N = normal_from_map();
-    vec3 V = normalize(camera.position - world_position);
-    vec3 R = reflect(-V, N);
 
     vec3 outgoing_radiance = vec3(0);
     vec3 F0 = calculate_F0(albedo, metallic);
     for (int i = 0; i < LIGHT_COUNT; ++i) {
-        vec3 L = normalize(lights[i].position - world_position);
+        vec3 L = normalize(TBN * lights[i].position - TBN * world_position);
         vec3 H = normalize(V + L);
 
         float NDF = distribution_GGX(N, H, roughness);
@@ -102,14 +109,44 @@ vec3 calculate_ambience(vec3 albedo) { return vec3(0.03) * albedo * ambient_occl
 vec3 apply_ambience(vec3 color, vec3 albedo) { return color + calculate_ambience(albedo); }
 vec3 calculate_albedo() { return pow(color_texture(), vec3(GAMMA)); }
 
+vec2 map_parallax(vec2 coord, vec3 view_direction) {
+    float layer_count = mix(MAX_LAYERS, MIN_LAYERS, abs(dot(RIGHT, view_direction)));
+
+    float layer_depth = 1.0 / layer_count;
+    float current_depth = 0.0;
+
+    vec2 P = view_direction.xy / view_direction.z * height_scale;
+    vec2 sample_size = P / layer_count;
+
+    vec2  current_coordinate = coord;
+    float depth_value = displacement_texture(current_coordinate);
+
+    while (current_depth < depth_value)
+    {
+        current_coordinate -= sample_size;
+        depth_value = displacement_texture(current_coordinate);
+        current_depth += layer_depth;
+    }
+
+    vec2 previous_coordinate = current_coordinate + sample_size;
+
+    float after_depth  = depth_value - current_depth;
+    float before_depth = displacement_texture(previous_coordinate) - current_depth + layer_depth;
+
+    float weight = after_depth / (after_depth - before_depth);
+
+    return previous_coordinate * weight + current_coordinate * (1.0 - weight);
+}
+
 void main() {
     vec3 albedo = calculate_albedo();
     float metallic = metallic_texture();
+    vec3 view_direction = normalize(TBN * camera.position - TBN * world_position);
+    coordinate = map_parallax(texture_coordinate, view_direction);
 
-
-    vec3 N = normal_from_map();
-    vec3 V = normalize(camera.position - world_position);
-    vec3 R = reflect(-V, N);
+    N = normal_from_map();
+    V = view_direction;
+    R = reflect(-V, N);
     float roughness = roughness_texture();
 
     vec3 F0 = calculate_F0(albedo, metallic);
@@ -123,7 +160,7 @@ void main() {
 
     vec3 specular = prefilter * (F * brdf.x + brdf.y);
     vec3 ambient = (kD*diffuse+specular) * ambient_occlusion_texture();
-    vec3 color = ambient + calculate_reflectance(albedo, metallic, roughness_texture());
+    vec3 color = ambient + calculate_reflectance(albedo, metallic, roughness);
 
     fragment_color = vec4(apply_gamma_correction(apply_hdr_tonemapping(color)), 1);
 }

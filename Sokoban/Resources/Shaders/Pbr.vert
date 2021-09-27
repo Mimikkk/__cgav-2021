@@ -23,7 +23,7 @@ vec3 calculate_world_position() { return vec3(model * vec4(position, 1.0)); }
 void main() {
     vs_out.texture_coordinate = texture_coordinate;
     vs_out.world_position = calculate_world_position();
-    vs_out.TBN = calculate_tbn();
+    vs_out.TBN = inverse(calculate_tbn());
 
-    gl_Position =  camera.projection * camera.view * vec4(vs_out.world_position, 1.0);
+    gl_Position = camera.projection * camera.view * model * vec4(position, 1.0);
 }

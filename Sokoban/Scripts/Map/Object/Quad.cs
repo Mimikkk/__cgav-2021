@@ -13,7 +13,7 @@ namespace Sokoban.Scripts.Map.Object
 public class Quad : GameObject
 {
   public void Draw(Action additionalShaderConfiguration) => base.Draw(() => {
-    BaseShaderConfiguration();
+    // BaseShaderConfiguration();
     additionalShaderConfiguration();
   });
   public static void DrawRaw()
