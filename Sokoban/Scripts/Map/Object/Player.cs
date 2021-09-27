@@ -15,15 +15,16 @@ public static class Player
   public static readonly Transform Transform = new() {
     Position = -Vector3D<float>.UnitY,
   };
+  public static Direction Direction { get; set; }
 
   static Player()
   {
     foreach (var guraPart in Gura) guraPart.Mesh!.Material = Material;
   }
 
-  public static void Draw()
+  public static void Draw(Vector3D<float> offset, Vector3D<float> rotation)
   {
-    ResourceManager.ShaderPrograms.PbrShaderConfiguration(Material, Transform);
+    ResourceManager.ShaderPrograms.PbrShaderConfiguration(Material, Transform.OffsetBy(offset).RotatedBy(rotation));
     foreach (var guraPart in Gura) guraPart.Draw();
   }
 

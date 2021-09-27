@@ -20,22 +20,6 @@ namespace Sokoban.Scripts
 {
 public class MapBehaviour : MonoBehaviour
 {
-  protected override void Render(double dt)
-  {
-    void RenderQuad(Wall obstacle)
-    {
-      Quad.Transform = obstacle.Transform;
-      Quad.Mesh!.Material = obstacle.Material;
-
-      Quad.DrawPbr();
-    }
-    Map.Walls.ForEach(RenderQuad);
-    
-    Player.Draw();
-    Box.DrawRaw();
-  }
-
-  private static readonly Quad Quad = new(Fabric);
   private static readonly GameMap Map = new() {
     LayoutInt = new[,] {
       { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
@@ -51,5 +35,22 @@ public class MapBehaviour : MonoBehaviour
       { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
     }
   };
+
+  protected override void Render(double dt)
+  {
+    Map.Walls.ForEach(w => w.Draw());
+    Map.BoxLocations.ForEach(location => {
+      var (x, y) = (location.X, location.Y);
+      Box.Draw(new(2 * x, 0, 2 * y), Vector3D<float>.Zero);
+    });
+    Map.TargetLocations.ForEach(location => {
+      var (x, y) = (location.X, location.Y);
+
+      Target.Transform.Position = new Vector3D<float>(2 * x, 0, 2 * y);
+      Target.Draw(new(2 * x, 0, 2 * y), Vector3D<float>.Zero);
+    });
+    var (x, y) = (Map.PlayerLocation.X, Map.PlayerLocation.Y);
+    Player.Draw(new(2 * x, 1, 2 * y), Vector3D<float>.Zero);
+  }
 }
 }
