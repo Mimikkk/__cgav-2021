@@ -12,6 +12,9 @@ public record Color(float R, float G, float B)
 {
   public static readonly Color BrightWhite = new(255, 255, 255);
   public static readonly Color DimWhite = BrightWhite * 0.2f;
+
+  public static readonly Color BrightSunny = new(R: 255, G: 219, B: 109);
+
   public static readonly Color Red = new(255, 0, 0);
   public static readonly Color Green = new(0, 255, 0);
   public static readonly Color Blue = new(0, 0, 255);

@@ -153,7 +153,7 @@ public class GameMap
     var (x, y) = (position.X, position.Y);
     var transform = TransformMap[direction].OffsetBy(new(2 * x, 0, 2 * y));
     var material = direction switch {
-      Direction.Bottom => RustedIron,
+      Direction.Bottom => Rock,
       _                => Brick
     };
 

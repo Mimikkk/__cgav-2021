@@ -17,16 +17,53 @@ namespace Sokoban.Resources
 public class ResourceManager
 {
   public static readonly List<Light> Lights = new() {
+    new() {
+      Color = Color.Blue * 50,
+      Transform = new() {
+        Position = new(20, 10, 20),
+      },
+    },
+    new() {
+      Color = Color.Green * 50,
+      Transform = new() {
+        Position = new(0, 10, 0),
+      },
+    },
+    new() {
+      Color = Color.BrightSunny * 50,
+      Transform = new() {
+        Position = new(0, 10, 20),
+      },
+
+    },
+    new() {
+      Color = Color.Red * 50,
+      Transform = new() {
+        Position = new(20, 10, 0),
+      },
+    },
+    new() {
+      Color = Color.BrightSunny * 250,
+      Transform = new() {
+        Position = new(12, 13, 0),
+      }
+    },
+    new() {
+      Color = Color.Blue * 40,
+      Transform = new() {
+        Position = new(0, 0, 0),
+      }
+    }
   };
   public static class Materials
   {
     public static readonly Material Cube = new() {
-      DiffuseMap = new("Felix.png"),
+      DiffuseMap = new("Rock/Color.png"),
       DisplacementMap = new("Fabric/Displacement.png"),
-      NormalMap = new("Plastic/Normal.png"),
-      AmbientOcclusionMap = new("Plastic/AmbientOcclusion.png"),
-      ReflectionMap = new("Plastic/Metallic.png"),
-      HeightMap = new("Plastic/Roughness.png")
+      NormalMap = new("Rock/Normal.png"),
+      AmbientOcclusionMap = new("Rock/AmbientOcclusion.png"),
+      ReflectionMap = new("Rock/Metallic.png"),
+      HeightMap = new("Rock/Roughness.png")
     };
 
     public static readonly Material Fabric = new() {
@@ -67,6 +104,13 @@ public class ResourceManager
       AmbientOcclusionMap = new("Plastic/AmbientOcclusion.png"),
       ReflectionMap = new("Plastic/Metallic.png"),
       HeightMap = new("Plastic/Roughness.png")
+    };
+    public static readonly Material Gold = new() {
+      DiffuseMap = new("Gold/Color.png"),
+      NormalMap = new("Gold/Normal.png"),
+      AmbientOcclusionMap = new("Gold/AmbientOcclusion.png"),
+      ReflectionMap = new("Gold/Metallic.png"),
+      HeightMap = new("Gold/Roughness.png")
     };
   }
   public static class Textures

@@ -100,6 +100,7 @@ public class PlayerBehaviour : MonoBehaviour
     TargetPosition = OldPosition + TargetPositionOffset(LerpDirection);
     IsMoving = true;
   }
+  
   private static void Lerp(double dt)
   {
     Vector3D<float> LerpMove()
@@ -128,9 +129,6 @@ public class PlayerBehaviour : MonoBehaviour
     {
       Player.Transform.Position = LerpFinale();
       MapBehaviour.Map.PlayerLocation += TargetLocationOffset(LerpDirection);
-
-      $"Player: {MapBehaviour.Map.PlayerLocation}".LogLine();
-      MapBehaviour.Map.BoxLocations.ForEach(x => x.LogLine());
 
       ElapsedLerpTime = 0;
       IsMoving = false;

@@ -13,11 +13,12 @@ public static class Box
   {
     Go.Spo = ResourceManager.ShaderPrograms.Pbr;
     Go.Mesh!.Material = ResourceManager.Materials.Cube;
+    Go.Transform.Scale = 0.75f;
   }
     
   
   public static void Draw(Vector3D<float> offset, Vector3D<float> rotation){
-    Go.Draw(() => ResourceManager.ShaderPrograms.PbrShaderConfiguration(Go.Mesh!.Material, Go.Transform.OffsetBy(offset).RotatedBy(rotation)));
+    Go.Draw(() => ResourceManager.ShaderPrograms.PbrShaderConfiguration(Go.Mesh!.Material!, Go.Transform.OffsetBy(offset).RotatedBy(rotation)));
   }
 }
 }

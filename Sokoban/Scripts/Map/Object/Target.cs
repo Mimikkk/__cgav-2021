@@ -20,6 +20,6 @@ public class Target
     Go.Draw();
   }
 
-  private static readonly Material Material = ResourceManager.Materials.Plastic;
+  private static readonly Material Material = ResourceManager.Materials.Gold;
 }
 }
