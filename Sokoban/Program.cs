@@ -10,17 +10,6 @@ internal static class Program
   {
     Invoker.Static(typeof(ScriptLoader));
     App.Run();
-    
-    // To
-    Unit.Hey(4 switch {4 => Unit.Bye, _ => Unit.Bye});
-    // Zamiast
-    
-    switch (4)
-    {
-      case 4: // OBSZAR KRYTYCZNY //
-        break;
-      default: // OBSZAR KRYTYCZNY //
-    }
   }
 }
 }

@@ -1,4 +1,5 @@
-﻿using Silk.NET.Input;
+﻿using Logger;
+using Silk.NET.Input;
 using Sokoban.Engine.Controllers;
 using Sokoban.Engine.Scripts;
 using Sokoban.Scripts.Map;
@@ -12,8 +13,8 @@ public class MapBehaviour : MonoBehaviour
 {
   protected override void Start()
   {
-    Controller.OnHold(Key.T, dt => HeightScale = HeightScale + dt);
-    Controller.OnHold(Key.G, dt => HeightScale = HeightScale - dt);
+    Controller.OnHold(Key.T, dt => HeightScale += dt);
+    Controller.OnHold(Key.G, dt => HeightScale -= dt);
     Controller.OnClick(MouseButton.Middle, _ => {
       if (Quad.Mesh!.Material!.Equals(Brick))
       {
@@ -33,7 +34,7 @@ public class MapBehaviour : MonoBehaviour
     {
       Quad.Transform = obstacle.Transform;
       Quad.Mesh!.Material = obstacle.Material;
-
+      HeightScale.LogLine();
       Quad.Draw(() => Quad.Spo!.SetUniform("height_scale", HeightScale));
     }
 
