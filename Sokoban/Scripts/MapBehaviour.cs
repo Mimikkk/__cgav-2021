@@ -12,16 +12,16 @@ public class MapBehaviour : MonoBehaviour
 {
   public static readonly GameMap Map = new() {
     LayoutInt = new[,] {
-      { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-      { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-      { 0, 0, 1, 1, 2, 0, 0, 0, 0, 0 },
-      { 0, 0, 1, 3, 0, 0, 0, 0, 0, 0 },
+      { 0, 0, 0, 0, 0, 0, 2, 0, 2, 0 },
+      { 0, 0, 0, 0, 0, 0, 2, 0, 2, 0 },
+      { 0, 0, 1, 1, 2, 1, 0, 0, 0, 1 },
+      { 0, 0, 1, 3, 0, 0, 1, 2, 1, 0 },
       { 0, 0, 0, 1, 0, 0, 0, 0, 0, 0 },
-      { 0, 0, 0, 4, 2, 1, 1, 1, 0, 0 },
+      { 0, 0, 0, 4, 2, 1, 0, 0, 0, 0 },
       { 0, 0, 2, 1, 3, 1, 3, 1, 0, 0 },
-      { 0, 0, 0, 1, 1, 0, 0, 0, 0, 0 },
-      { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-      { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+      { 0, 0, 0, 1, 1, 0, 1, 0, 0, 0 },
+      { 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 },
+      { 0, 0, 0, 0, 0, 0, 1, 1, 0, 0 },
       { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
     }
   };
@@ -46,7 +46,7 @@ public class MapBehaviour : MonoBehaviour
         new((float)Angle / 7.0f, (float)Angle / 19.0f, (float)Angle),
         new(0, (float)Angle, (float)Angle / 12.0f),
         new((float)Angle, 0, (float)Angle),
-      }[index];
+      }[index % 3];
 
       Target.Draw(new(2 * x, (float)Math.Atan2(x, y) + 0.5f * (float)Math.Cos(Angle), 2 * y), rotation);
     }
