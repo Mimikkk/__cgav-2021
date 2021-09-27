@@ -3,7 +3,6 @@ using Silk.NET.OpenGL;
 using Sokoban.Engine.Objects.Primitives.Textures;
 using Sokoban.Engine.Renderers.Shaders;
 using Sokoban.Resources;
-using Sokoban.Scripts.Map;
 using Sokoban.Scripts.Map.Object;
 
 namespace Sokoban.Engine.Objects

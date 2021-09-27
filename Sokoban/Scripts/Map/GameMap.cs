@@ -48,10 +48,9 @@ public class GameMap
     }
   }
   public Vector2D<int> PlayerLocation;
-  public Direction PlayerDirection = Direction.Forward;
+
   public readonly List<Vector2D<int>> BoxLocations = new();
   public readonly List<Vector2D<int>> TargetLocations = new();
-
 
   public SpaceType[,] Layout {
     private get { return _layout; }

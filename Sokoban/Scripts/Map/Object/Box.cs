@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using Silk.NET.Maths;
-using Sokoban.Engine.Objects;
 using Sokoban.Engine.Objects.Loaders;
 using Sokoban.Engine.Objects.Primitives;
 using Sokoban.Resources;

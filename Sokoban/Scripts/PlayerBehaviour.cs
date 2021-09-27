@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Numerics;
+using Logger;
 using Silk.NET.Input;
 using Silk.NET.Maths;
 using Sokoban.Engine.Controllers;
 using Sokoban.Engine.Scripts;
 using Sokoban.Scripts.Map;
 using Sokoban.Scripts.Map.Object;
-using Sokoban.Utilities;
 
 namespace Sokoban.Scripts
 {
@@ -63,26 +62,42 @@ public class PlayerBehaviour : MonoBehaviour
     }
   }
   private const double LerpDuration = 1f;
-  
+
+  private static Vector3D<float> TargetPositionOffset(Direction direction)
+  {
+    return direction switch {
+      Direction.Forward  => Forwards,
+      Direction.Backward => Backwards,
+      Direction.Right    => Right,
+      Direction.Left     => Left,
+    };
+  }
+
+  private static Vector2D<int> TargetLocationOffset(Direction direction)
+  {
+    return direction switch {
+      Direction.Forward  => new(1, 0),
+      Direction.Backward => new(-1, 0),
+      Direction.Right    => new(0, 1),
+      Direction.Left     => new(0, -1),
+    };
+  }
+  private static bool HasCollisions(Vector2D<int> target) => MapBehaviour.Map.BoxLocations.Contains(target) || MapBehaviour.Map[target] == SpaceType.Wall;
   private static void MaybeStartLerp(Direction direction)
   {
     if (IsMoving) return;
-    StartLerp(direction);    
+    if (HasCollisions(MapBehaviour.Map.PlayerLocation + TargetLocationOffset(direction)))
+    {
+      "Would Collide!".LogLine();
+      return;
+    }
+    StartLerp(direction);
   }
   private static void StartLerp(Direction direction)
   {
-    Vector3D<float> TargetOffset()
-    {
-      return direction switch {
-        Direction.Forward  => Forwards,
-        Direction.Backward => Backwards,
-        Direction.Right    => Right,
-        Direction.Left     => Left,
-      };
-    }
     LerpDirection = direction;
     OldPosition = Player.Transform.Position;
-    TargetPosition = OldPosition + TargetOffset();
+    TargetPosition = OldPosition + TargetPositionOffset(LerpDirection);
     IsMoving = true;
   }
   private static void Lerp(double dt)
@@ -100,23 +115,28 @@ public class PlayerBehaviour : MonoBehaviour
     Vector3D<float> LerpFinale()
     {
       return LerpDirection switch {
-        Direction.Forward or Direction.Backward => new Vector3D<float>(TargetPosition.X, Player.Transform.Position.Y, Player.Transform.Position.Z),
-        Direction.Right or Direction.Left       => new Vector3D<float>(Player.Transform.Position.X, Player.Transform.Position.Y, TargetPosition.Z),
+        Direction.Forward or Direction.Backward => new Vector3D<float>(OldPosition.X, Player.Transform.Position.Y, Player.Transform.Position.Z),
+        Direction.Right or Direction.Left       => new Vector3D<float>(Player.Transform.Position.X, Player.Transform.Position.Y, OldPosition.Z),
         _                                       => throw new ArgumentOutOfRangeException()
       };
     }
+
 
     if (!IsMoving) return;
 
     if (ElapsedLerpTime > LerpDuration)
     {
       Player.Transform.Position = LerpFinale();
+      MapBehaviour.Map.PlayerLocation += TargetLocationOffset(LerpDirection);
+
+      $"Player: {MapBehaviour.Map.PlayerLocation}".LogLine();
+      MapBehaviour.Map.BoxLocations.ForEach(x => x.LogLine());
+
       ElapsedLerpTime = 0;
       IsMoving = false;
     } else
     {
       Player.Transform.Position = LerpMove();
-
       ElapsedLerpTime += dt;
     }
   }

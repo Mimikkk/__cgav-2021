@@ -7,7 +7,6 @@ using Sokoban.Engine.Objects;
 using Sokoban.Engine.Objects.Primitives;
 using Sokoban.Engine.Objects.Primitives.Textures;
 using Sokoban.Engine.Renderers.Shaders;
-using Sokoban.Scripts.Map;
 using Sokoban.Scripts.Map.Object;
 using Framebuffer = Sokoban.Engine.Renderers.Buffers.Objects.Framebuffer;
 using Renderbuffer = Sokoban.Engine.Renderers.Buffers.Objects.Renderbuffer;

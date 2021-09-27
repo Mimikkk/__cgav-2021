@@ -1,6 +1,5 @@
 ﻿using Silk.NET.OpenGL;
 using Sokoban.Engine.Application;
-using Sokoban.Engine.Objects;
 using Sokoban.Engine.Objects.Primitives;
 using Sokoban.Resources;
 using Material = Sokoban.Engine.Objects.Primitives.Textures.Material;

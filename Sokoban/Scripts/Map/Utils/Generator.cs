@@ -1,6 +1,4 @@
-﻿using Silk.NET.Maths;
-
-namespace Sokoban.Scripts.Map.Utils
+﻿namespace Sokoban.Scripts.Map.Utils
 {
 public class Generator
 {
