@@ -10,7 +10,7 @@ using static Sokoban.Utilities.Extensions.Extension;
 
 namespace Sokoban.Scripts.Map
 {
-public enum SpaceType { Wall, Empty, Star, Box }
+public enum SpaceType { Wall, Empty, Target, Box, PlayerStart }
 public enum Direction { Forward, Backward, Right, Left, Top, Bottom }
 
 public record Wall(SpaceType Type, Transform Transform, Direction Direction, Material Material);
@@ -45,6 +45,18 @@ public class GameMap
       CalculateWalls();
     }
   }
+  public int[,] LayoutInt {
+    init {
+      var (n, m) = (value.GetLength(0), value.GetLength(1));
+      var layout = new SpaceType[n, m];
+
+      for (var i = 0; i < n; i++)
+      for (var j = 0; j < m; j++)
+        layout[i, j] = (SpaceType)value[i, j];
+
+      Layout = layout;
+    }
+  }
 
   public IReadOnlyList<Wall> Walls { get; private set; } = new List<Wall>();
 
@@ -67,7 +79,7 @@ public class GameMap
         .Select(ToWall)
         .Select(obstacle => {
           if (obstacle.Direction == Direction.Bottom) obstacle.Transform.Position += 2 * Vector3D<float>.UnitY;
-          else obstacle.Transform.Orientation = obstacle.Transform.Orientation * Quaternion<float>.CreateFromYawPitchRoll(MathF.PI,0,0);
+          else obstacle.Transform.Orientation = obstacle.Transform.Orientation * Quaternion<float>.CreateFromYawPitchRoll(MathF.PI, 0, 0);
           return obstacle;
         })
         .ToList();
@@ -108,7 +120,7 @@ public class GameMap
   private bool InBounds(Vector2D<int> coord) => InBounds(coord.X, coord.Y);
   private bool InBounds(int x, int y) => x >= 0 && x < Height && y >= 0 && y < Width;
 
-  private bool IsAdjacent(Vector2D<int> coord) => this[coord] == SpaceType.Empty;
+  private bool IsAdjacent(Vector2D<int> coord) => this[coord] != SpaceType.Wall;
   private static readonly IReadOnlyDictionary<Direction, Transform> TransformMap = new Dictionary<Direction, Transform> {
     { Direction.Top, new() { Position = new(0, 1, 0), Rotation = new(0, MathF.PI / 2, 0) } },
     { Direction.Bottom, new() { Position = new(0, -1, 0), Rotation = new(0, -MathF.PI / 2, 0) } },

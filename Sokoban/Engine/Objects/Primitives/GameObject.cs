@@ -14,12 +14,12 @@ public class GameObject
 
   public Transform Transform { get; set; } = new();
 
-  public unsafe void Draw(Action shaderConfiguration)
+  public unsafe void Draw(Action? shaderConfiguration = null)
   {
-    if (Mesh == null || Spo == null) return;
+    if (Mesh == null) return;
     Mesh.Vao.Bind();
 
-    shaderConfiguration();
+    shaderConfiguration?.Invoke();
 
     if (Mesh.IndexCount > 0)
       App.Gl.DrawElements(PrimitiveType.Triangles, Mesh.IndexCount, DrawElementsType.UnsignedInt, null);

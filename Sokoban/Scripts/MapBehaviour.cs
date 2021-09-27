@@ -1,9 +1,14 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Logger;
 using Silk.NET.Input;
 using Silk.NET.Maths;
+using Silk.NET.OpenGL;
 using Sokoban.Engine.Controllers;
 using Sokoban.Engine.Objects;
+using Sokoban.Engine.Objects.Loaders;
+using Sokoban.Engine.Objects.Primitives;
+using Sokoban.Engine.Objects.Primitives.Textures;
 using Sokoban.Engine.Scripts;
 using Sokoban.Resources;
 using Sokoban.Scripts.Map;
@@ -25,18 +30,25 @@ public class MapBehaviour : MonoBehaviour
       Quad.DrawPbr();
     }
     Map.Walls.ForEach(RenderQuad);
-
+    
+    Player.Draw();
     Box.DrawRaw();
   }
 
   private static readonly Quad Quad = new(Fabric);
   private static readonly GameMap Map = new() {
-    Layout = new[,] {
-      { SpaceType.Wall, SpaceType.Wall, SpaceType.Empty, SpaceType.Empty, SpaceType.Empty, SpaceType.Wall },
-      { SpaceType.Wall, SpaceType.Wall, SpaceType.Empty, SpaceType.Empty, SpaceType.Empty, SpaceType.Empty },
-      { SpaceType.Wall, SpaceType.Wall, SpaceType.Empty, SpaceType.Empty, SpaceType.Empty, SpaceType.Wall },
-      { SpaceType.Wall, SpaceType.Wall, SpaceType.Empty, SpaceType.Wall, SpaceType.Empty, SpaceType.Wall },
-      { SpaceType.Wall, SpaceType.Wall, SpaceType.Wall, SpaceType.Empty, SpaceType.Wall, SpaceType.Wall }
+    LayoutInt = new[,] {
+      { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+      { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+      { 0, 0, 1, 1, 2, 0, 0, 0, 0, 0 },
+      { 0, 0, 1, 3, 0, 0, 0, 0, 0, 0 },
+      { 0, 0, 0, 1, 0, 0, 0, 0, 0, 0 },
+      { 0, 0, 0, 4, 2, 1, 1, 1, 0, 0 },
+      { 0, 0, 2, 1, 3, 1, 3, 1, 0, 0 },
+      { 0, 0, 0, 1, 1, 0, 0, 0, 0, 0 },
+      { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+      { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+      { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
     }
   };
 }
