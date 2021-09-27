@@ -21,8 +21,9 @@ uniform sampler2D brdf_LUT_map;
 
 
 // TODO abstract Light into uniform block[]
-uniform vec3 light_positions[LIGHT_COUNT];
-uniform vec3 light_colors[LIGHT_COUNT];
+
+struct Light { vec3 position, color; };
+uniform Light lights[LIGHT_COUNT];
 
 layout (std140, binding = 0) uniform CameraBlock { vec3 position; mat4 view, projection; } camera;
 
@@ -66,9 +67,9 @@ vec3 fresnel_schlick_roughness(float cosTheta, vec3 F0, float roughness) {
 vec3 calculate_F0(vec3 albedo, float metallic) {
     return mix(DIA_ELECTRIC_REFLECTANCE, albedo, metallic);
 }
-vec3 calculate_radiance(vec3 light_position, vec3 light_color) {
-    float attenuation = 1.0 / pow(length(light_position - world_position), 2);
-    return light_color * attenuation;
+vec3 calculate_radiance(Light light) {
+    float attenuation = 1.0 / pow(length(light.position - world_position), 2);
+    return light.color * attenuation;
 }
 vec3 calculate_reflectance(vec3 albedo, float metallic, float roughness) {
     vec3 N = normal_from_map();
@@ -78,7 +79,7 @@ vec3 calculate_reflectance(vec3 albedo, float metallic, float roughness) {
     vec3 outgoing_radiance = vec3(0);
     vec3 F0 = calculate_F0(albedo, metallic);
     for (int i = 0; i < LIGHT_COUNT; ++i) {
-        vec3 L = normalize(light_positions[i] - world_position);
+        vec3 L = normalize(lights[i].position - world_position);
         vec3 H = normalize(V + L);
 
         float NDF = distribution_GGX(N, H, roughness);
@@ -88,7 +89,7 @@ vec3 calculate_reflectance(vec3 albedo, float metallic, float roughness) {
         vec3 kD = (vec3(1.0) - kS) * (1 - metallic);
 
         vec3 specular = vec3(1) / (4 * max_dot(N, V) * max_dot(N, L) + 0.00001);
-        vec3 radiance = calculate_radiance(light_positions[i], light_colors[i]);
+        vec3 radiance = calculate_radiance(lights[i]);
         outgoing_radiance += (NDF * G * F) * (kD * albedo / PI + specular) * radiance * max_dot(N, L);
     }
 

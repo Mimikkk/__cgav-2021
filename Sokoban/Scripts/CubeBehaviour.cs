@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Silk.NET.Input;
 using Silk.NET.Maths;
 using Sokoban.Engine.Controllers;
@@ -72,13 +73,54 @@ public partial class CubeBehaviour : MonoBehaviour
       Box.Spo.SetUniform("prefilter_map", 6);
       Box.Spo.SetUniform("brdf_LUT_map", 7);
 
-      Box.Spo!.SetUniform("light_positions[0]", Camera.Transform.Position);
-      Box.Spo!.SetUniform("light_positions[1]", new Vector3D<float>(6, 5, 5.5f));
-      Box.Spo!.SetUniform("light_colors[0]", new Vector3D<float>(100, 100, 100));
-      Box.Spo!.SetUniform("light_colors[1]", new Vector3D<float>(0, 0, 100));
+      Box.Spo!.SetUniform("lights[0].position", Camera.Transform.Position);
+      Box.Spo!.SetUniform("lights[0].color", new Vector3D<float>(6, 5, 5.5f));
+
+      for (var i = 1; i < Lights.Count + 1; ++i)
+      {
+        Box.Spo!.SetUniform($"lights[{i}].position", Lights[i-1].Transform.Position);
+        Box.Spo!.SetUniform($"lights[{i}].color", Lights[i-1].Color.AsVector3D());
+      }
 
       Box.Spo!.SetUniform("model", Box.Transform.View);
     });
   }
+
+  private static readonly List<Light> Lights = new() {
+    new() {
+      Color = Color.Red * 0.4f,
+      Transform = new() {
+        Position = new(6, 8, 6),
+      },
+    },
+    new() {
+      Color = Color.Green * 1f,
+      Transform = new() {
+        Position = new(6, 6, 8),
+      },
+    },
+  };
+}
+
+public record Color(float R, float G, float B)
+{
+  public static readonly Color BrightWhite = new(255, 255, 255);
+  public static readonly Color DimWhite = BrightWhite * 0.2f;
+  public static readonly Color Red = new(255, 0, 0);
+  public static readonly Color Green = new(0, 255, 0);
+  public static readonly Color Blue = new(0, 0, 255);
+
+
+  public Color(Vector3D<float> vector)
+    : this(vector.X, vector.Y, vector.Z) { }
+
+  public Vector3D<float> AsVector3D() => new(R, G, B);
+  public static Color operator *(Color color, float value) => new(color.AsVector3D() * value);
+};
+
+public class Light
+{
+  public Transform Transform { get; set; } = new();
+  public Color Color { get; set; } = Color.BrightWhite;
 }
 }

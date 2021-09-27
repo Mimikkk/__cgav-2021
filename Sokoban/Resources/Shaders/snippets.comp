@@ -19,11 +19,15 @@ out VsOut { int meat; } vs_out;
 #define GAMMA (2.2)
 vec3 apply_gamma_correction(vec3 color) { return pow(color, vec3(1.0 / GAMMA)); }
 
-// 
-uniform float exposure;
 
+uniform float exposure;
 vec3 apply_exposure_tonemapping(vec3 color) { return vec3(1.0) -exp(-color * exposure); }
 vec3 apply_hdr_tonemapping(vec3 color) { return color / (color + vec3(1.0)); }
+
+//Lights
+#define LIGHT_COUNT (50)
+struct Light { vec3 position, color; };
+uniform Light lights[LIGHT_COUNT];
 
 // Math
 float max_dot(vec3 first, vec3 second) { return max(dot(first, second), 0); }

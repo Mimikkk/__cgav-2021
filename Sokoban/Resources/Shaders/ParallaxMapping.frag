@@ -66,6 +66,7 @@ void main() {
     vec3 view_direction = normalize(tangent_view_position - tangent_position);
 
     vec2 offset_texture_coord = map_parallax(texture_coordinate, view_direction);
+    offset_texture_coord = texture_coordinate;
     discard_texture_coordinate(offset_texture_coord);
 
     vec3 light_direction = normalize(tangent_light_position - tangent_position);
