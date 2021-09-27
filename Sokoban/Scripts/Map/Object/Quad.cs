@@ -12,14 +12,10 @@ namespace Sokoban.Scripts.Map.Object
 {
 public class Quad : GameObject
 {
-  public void Draw(Action additionalShaderConfiguration) => base.Draw(() => {
-    // BaseShaderConfiguration();
-    additionalShaderConfiguration();
-  });
   public static void DrawRaw()
   {
     QuadVao.Bind();
-    App.Gl.DrawArrays(PrimitiveType.TriangleStrip, 0, 4);
+    App.Gl.DrawArrays(PrimitiveType.TriangleStrip, 0, 6);
   }
   public Quad(Material material)
   {
@@ -43,19 +39,5 @@ public class Quad : GameObject
     VertexBuffer = new(Vertices),
     Layout = new(3, 3, 2, 3, 3)
   };
-  private void BaseShaderConfiguration()
-  {
-    Mesh!.Material!.DiffuseMap?.Bind(0);
-    Mesh.Material.NormalMap?.Bind(1);
-    Mesh.Material.DisplacementMap?.Bind(2);
-
-    Spo!.SetUniform("diffuse_map", 0);
-    Spo.SetUniform("normal_map", 1);
-    Spo.SetUniform("displacement_map", 2);
-
-    Spo.SetUniform("model", Transform.View);
-    Spo.SetUniform("light_position", Camera.Transform.Position);
-    Spo.SetUniform("is_discardable", false);
-  }
 }
 }
