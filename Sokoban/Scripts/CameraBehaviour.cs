@@ -43,10 +43,10 @@ public class CameraBehaviour : MonoBehaviour
   private static void MaybeRotateXY(Vector2D<float> position) => (LastMousePosition != default).Then(RotateXY, position);
   private static void RotateXY(Vector2D<float> position) => Camera.ModifyDirection((position - LastMousePosition) * LookSensitivity);
 
-  private static void MoveForwards(float dt) => Camera.Transform.Translate(dt * Camera.Transform.Forward);
-  private static void MoveBackwards(float dt) => Camera.Transform.Translate(-dt * Camera.Transform.Forward);
-  private static void MoveLeft(float dt) => Camera.Transform.Translate(-dt * Vector3D.Normalize(Vector3D.Cross(Camera.Transform.Forward, Camera.Transform.Up)));
-  private static void MoveRight(float dt) => Camera.Transform.Translate(dt * Vector3D.Normalize(Vector3D.Cross(Camera.Transform.Forward, Camera.Transform.Up)));
+  private static void MoveForwards(float dt) => Camera.Transform.Translate(5 * dt * Camera.Transform.Forward);
+  private static void MoveBackwards(float dt) => Camera.Transform.Translate(5 * -dt * Camera.Transform.Forward);
+  private static void MoveLeft(float dt) => Camera.Transform.Translate(5 * -dt * Vector3D.Normalize(Vector3D.Cross(Camera.Transform.Forward, Camera.Transform.Up)));
+  private static void MoveRight(float dt) => Camera.Transform.Translate(5 * dt * Vector3D.Normalize(Vector3D.Cross(Camera.Transform.Forward, Camera.Transform.Up)));
 
   private static readonly UniformBuffer Ubo = new("VPBlock") {
     Binding = 0,

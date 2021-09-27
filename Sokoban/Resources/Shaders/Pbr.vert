@@ -12,7 +12,6 @@ uniform mat4 model;
 
 mat3 rotation = mat3(model);
 mat3 calculate_tbn() {
-    mat3 rotation = mat3(model);
     vec3 T = normalize(rotation * tangent);
     vec3 B = normalize(rotation * biTangent);
     vec3 N = normalize(rotation * normal);
@@ -23,7 +22,7 @@ vec3 calculate_world_position() { return vec3(model * vec4(position, 1.0)); }
 void main() {
     vs_out.texture_coordinate = texture_coordinate;
     vs_out.world_position = calculate_world_position();
-    vs_out.TBN = inverse(calculate_tbn());
+    vs_out.TBN = calculate_tbn();
 
-    gl_Position = camera.projection * camera.view * model * vec4(position, 1.0);
+    gl_Position = camera.projection * camera.view * vec4(vs_out.world_position, 1.0);
 }

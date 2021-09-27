@@ -77,6 +77,8 @@ void main() {
     vec3 normal = normal_texture(offset_texture_coord);
 
     vec3 reflect_direction = reflect(-light_direction, normal);
+    
+    
     vec3 halfway_direction = normalize(light_direction + view_direction);
 
     vec3 ambient = 0.1 * diffuse_color;
