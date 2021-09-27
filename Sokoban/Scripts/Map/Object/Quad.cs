@@ -12,6 +12,13 @@ namespace Sokoban.Scripts.Map.Object
 {
 public class Quad : GameObject
 {
+  public void DrawPbr()
+  {
+    QuadVao.Bind();
+    ResourceManager.ShaderPrograms.PbrShaderConfiguration(Mesh!.Material!, Transform);
+    App.Gl.DrawArrays(PrimitiveType.TriangleStrip, 0, 6);
+  }
+
   public static void DrawRaw()
   {
     QuadVao.Bind();

@@ -61,21 +61,6 @@ public class Cube : GameObject
     VertexBuffer = new(Vertices),
     Layout = new(3, 3, 2)
   };
-  private void BaseShaderConfiguration()
-  {
-    Mesh!.Material!.DiffuseMap?.Bind(0);
-    Mesh.Material.NormalMap?.Bind(1);
-    Mesh.Material.DisplacementMap?.Bind(2);
-
-    Spo!.SetUniform("diffuse_map", 0);
-    Spo.SetUniform("normal_map", 1);
-    Spo.SetUniform("displacement_map", 2);
-
-    Spo.SetUniform("height_scale", Transform.Scale);
-    Spo.SetUniform("light_position", Camera.Transform.Position);
-    Spo.SetUniform("is_discardable", false);
-    Spo.SetUniform("model", Transform.View);
-  }
 
   public Cube(Material material)
   {
@@ -91,6 +76,5 @@ public class Cube : GameObject
     CubeVao.Bind();
     App.Gl.DrawArrays(PrimitiveType.Triangles, 0, 36);
   }
-  public void Draw() => base.Draw(BaseShaderConfiguration);
 }
 }

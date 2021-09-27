@@ -9,12 +9,16 @@ namespace Sokoban.Scripts.Map.Object
 {
 public static class Box
 {
-  private static readonly GameObject Go = ObjectLoader.Load("Box").First();
+  public static readonly GameObject Go = ObjectLoader.Load("Box").First();
   static Box()
   {
     Go.Spo = ResourceManager.ShaderPrograms.Pbr;
     Go.Mesh!.Material = ResourceManager.Materials.Cube;
   }
+    
   
+  public static void DrawRaw() {
+    Go.Draw(() => ResourceManager.ShaderPrograms.PbrShaderConfiguration(Go.Mesh!.Material, Go.Transform));
+  }
 }
 }

@@ -67,7 +67,7 @@ public class GameMap
         .Select(ToWall)
         .Select(obstacle => {
           if (obstacle.Direction == Direction.Bottom) obstacle.Transform.Position += 2 * Vector3D<float>.UnitY;
-          else obstacle.Transform.Orientation = Quaternion<float>.Conjugate(obstacle.Transform.Orientation);
+          else obstacle.Transform.Orientation = obstacle.Transform.Orientation * Quaternion<float>.CreateFromYawPitchRoll(MathF.PI,0,0);
           return obstacle;
         })
         .ToList();

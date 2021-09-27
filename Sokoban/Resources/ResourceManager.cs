@@ -18,18 +18,6 @@ namespace Sokoban.Resources
 public class ResourceManager
 {
   public static readonly List<Light> Lights = new() {
-    new() {
-      Color = Color.Red * 0.4f,
-      Transform = new() {
-        Position = new(6, 8, 6),
-      },
-    },
-    new() {
-      Color = Color.Green * 1f,
-      Transform = new() {
-        Position = new(6, 6, 8),
-      },
-    },
   };
   public static class Materials
   {
@@ -211,23 +199,21 @@ public class ResourceManager
       Pbr.SetUniform("metallic_map", 2);
       Pbr.SetUniform("roughness_map", 3);
       Pbr.SetUniform("ambient_occlusion_map", 4);
-      Pbr.SetUniform("ambient_occlusion_map", 5);
-      Pbr.SetUniform("irradiance_map", 6);
-      Pbr.SetUniform("prefilter_map", 7);
-      Pbr.SetUniform("brdf_LUT_map", 8);
+      Pbr.SetUniform("irradiance_map", 5);
+      Pbr.SetUniform("prefilter_map", 6);
+      Pbr.SetUniform("brdf_LUT_map", 7);
 
       material.DiffuseMap!.Bind(0);
       material.NormalMap!.Bind(1);
       material.ReflectionMap!.Bind(2);
       material.HeightMap!.Bind(3);
       material.AmbientOcclusionMap!.Bind(4);
-      material.DisplacementMap!.Bind(5);
-      Textures.Irradiance.Bind(6);
-      Textures.Prefilter.Bind(7);
-      Textures.BrdfLUT.Bind(8);
+      Textures.Irradiance.Bind(5);
+      Textures.Prefilter.Bind(6);
+      Textures.BrdfLUT.Bind(7);
 
       Pbr.SetUniform("lights[0].position", Camera.Transform.Position);
-      Pbr.SetUniform("lights[0].color", new Vector3D<float>(6, 5, 5.5f));
+      Pbr.SetUniform("lights[0].color", Camera.Color);
 
       for (var i = 1; i < Lights.Count + 1; ++i)
       {

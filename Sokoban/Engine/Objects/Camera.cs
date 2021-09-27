@@ -7,10 +7,9 @@ namespace Sokoban.Engine.Objects
 {
 public static class Camera
 {
-  public static Transform Transform {get;set;} = new();
-
-  private static float Yaw { get; set; }
-  private static float AspectRatio { get; set; } = App.Size.X / (float)App.Size.Y;
+  public static Transform Transform { get; set; } = new();
+  public static Color Color { get; set; } = new(255, 255, 255);
+  private static float AspectRatio => App.Size.X / (float)App.Size.Y;
 
   private static float Zoom { get; set; } = 45f;
 
@@ -19,9 +18,9 @@ public static class Camera
 
   public static void ModifyDirection(Vector2D<float> offset) => ModifyDirection(offset.X, offset.Y);
   public static void ModifyDirection(float x, float y)
-  { 
-    Transform.Rotate(x,0,0);
-    Transform.RotateLocal(0,-y,0);
+  {
+    Transform.Rotate(x, 0, 0);
+    Transform.RotateLocal(0, -y, 0);
   }
 
   public static Matrix4X4<float> View =>

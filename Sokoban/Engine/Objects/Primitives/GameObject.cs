@@ -14,14 +14,10 @@ public class GameObject
 
   public Transform Transform { get; set; } = new();
 
-  public unsafe void Draw(Action shaderConfiguration, bool customBufferLogic = false)
+  public unsafe void Draw(Action shaderConfiguration)
   {
     if (Mesh == null || Spo == null) return;
-    if (!customBufferLogic)
-    {
-      Spo.Bind();
-      Mesh.Vao.Bind();
-    }
+    Mesh.Vao.Bind();
 
     shaderConfiguration();
 

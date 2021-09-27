@@ -4,6 +4,7 @@ using System.Numerics;
 using Logger;
 using Silk.NET.Maths;
 using Silk.NET.OpenGL;
+using Sokoban.Engine.Objects.Primitives;
 using Sokoban.Utilities.Extensions;
 using App = Sokoban.Engine.Application.App;
 
@@ -69,6 +70,8 @@ public class ShaderProgram : IDisposable
     App.Gl.Uniform2(UniformLocation(name), (Vector2)value);
   public void SetUniform(string name, Vector3D<float> value) =>
     App.Gl.Uniform3(UniformLocation(name), (Vector3)value);
+  public void SetUniform(string name, Color value) =>
+    App.Gl.Uniform3(UniformLocation(name), (Vector3)value.AsVector3D());
   public void SetUniform(string name, Vector4D<float> value) =>
     App.Gl.Uniform4(UniformLocation(name), (Vector4)value);
 

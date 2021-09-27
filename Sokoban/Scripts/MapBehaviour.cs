@@ -22,10 +22,11 @@ public class MapBehaviour : MonoBehaviour
       Quad.Transform = obstacle.Transform;
       Quad.Mesh!.Material = obstacle.Material;
 
-      ResourceManager.ShaderPrograms.PbrShaderConfiguration(Quad.Mesh.Material, Quad.Transform);
-      Quad.DrawRaw();
+      Quad.DrawPbr();
     }
     Map.Walls.ForEach(RenderQuad);
+
+    Box.DrawRaw();
   }
 
   private static readonly Quad Quad = new(Fabric);
